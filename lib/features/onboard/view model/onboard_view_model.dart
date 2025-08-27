@@ -1,3 +1,3 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final onboardDotController = StateProvider<int>((ref) => 0);
+final onboardDotController = StateProvider.autoDispose<int>((ref) => 0);

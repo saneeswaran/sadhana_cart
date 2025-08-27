@@ -15,11 +15,12 @@ class RoundedSigninButton extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(50),
       child: Container(
-        height: size.height * 0.1,
-        width: size.width * 0.3,
+        height: size.height * 0.07,
+        width: size.width * 0.15,
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
+          border: Border.all(color: Colors.grey.shade300, width: 1.4),
           shape: BoxShape.circle,
         ),
         child: SvgPicture.asset(imagePath, fit: BoxFit.contain),

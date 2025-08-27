@@ -6,27 +6,22 @@ import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
 import 'package:sadhana_cart/core/widgets/rounded_signin_button.dart';
-import 'package:sadhana_cart/features/auth/view/sign%20up/view/sign_in_mobile.dart';
 
-class SignUpMobile extends ConsumerStatefulWidget {
-  const SignUpMobile({super.key});
+class SignInMobile extends ConsumerStatefulWidget {
+  const SignInMobile({super.key});
 
   @override
-  ConsumerState<SignUpMobile> createState() => _SignUpMobileState();
+  ConsumerState<SignInMobile> createState() => _SignInMobileState();
 }
 
-class _SignUpMobileState extends ConsumerState<SignUpMobile> {
-  final nameController = TextEditingController();
+class _SignInMobileState extends ConsumerState<SignInMobile> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
 
   @override
   void dispose() {
-    nameController.dispose();
     emailController.dispose();
     passwordController.dispose();
-    confirmPasswordController.dispose();
     super.dispose();
   }
 
@@ -39,9 +34,9 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 20,
           children: [
-            const SizedBox(height: 30),
+            const SizedBox(height: 100),
             const Text(
-              "Create\nyour account ",
+              "log into\nyour account ",
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 32,
@@ -50,10 +45,6 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
             ),
             const SizedBox(height: 10),
             CustomTextFormField(
-              controller: nameController,
-              labelText: "Enter your name",
-            ),
-            CustomTextFormField(
               controller: emailController,
               labelText: "Email address",
             ),
@@ -61,15 +52,18 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
               controller: passwordController,
               labelText: "Password",
             ),
-            CustomTextFormField(
-              controller: confirmPasswordController,
-              labelText: "Confirm password",
+            Align(
+              alignment: Alignment.centerRight,
+              child: CustomTextButton(
+                text: "Forgot Password?",
+                onPressed: () {},
+              ),
             ),
             const SizedBox(height: 20),
             Center(
               child: CustomElevatedButton(
                 child: const Text(
-                  "Sign Up",
+                  "Sign In",
                   style: customElevatedButtonTextStyle,
                 ),
                 onPressed: () {},
@@ -98,11 +92,11 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Already have an account? "),
+                const Text("Don't have an account? "),
                 CustomTextButton(
-                  text: "Sign In",
+                  text: "Sign Up",
                   onPressed: () {
-                    navigateTo(context: context, screen: const SignInMobile());
+                    navigateBack(context: context);
                   },
                 ),
               ],
