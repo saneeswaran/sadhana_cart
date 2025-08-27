@@ -3,20 +3,20 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
-import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/oboard_button.dart';
 import 'package:sadhana_cart/features/auth/view/sign%20up/view/sign_up_mobile.dart';
+import 'package:sadhana_cart/features/onboard/model/onboard_model.dart';
 import 'package:sadhana_cart/features/onboard/view%20model/onboard_view_model.dart';
 
-class OnboardScreen extends ConsumerStatefulWidget {
-  const OnboardScreen({super.key});
+class OnboardPageModel extends ConsumerStatefulWidget {
+  const OnboardPageModel({super.key});
 
   @override
-  ConsumerState<OnboardScreen> createState() => _OnboardScreenState();
+  ConsumerState<OnboardPageModel> createState() => _OnboardPageModelState();
 }
 
-class _OnboardScreenState extends ConsumerState<OnboardScreen> {
+class _OnboardPageModelState extends ConsumerState<OnboardPageModel> {
   late PageController _pageController;
 
   @override
@@ -58,7 +58,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
                     SlideInRight(
                       duration: const Duration(milliseconds: 500),
                       child: Text(
-                        item['title']!,
+                        item.title,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -70,7 +70,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
                     SlideInRight(
                       delay: const Duration(milliseconds: 300),
                       child: Text(
-                        item['subtitle']!,
+                        item.subtitle,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w300,
@@ -86,7 +86,7 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
                         color: AppColors.onboardGreyColor,
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
-                          image: AssetImage(item['imagePath']!),
+                          image: AssetImage(item.imagePath),
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -130,7 +130,10 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
                     curve: Curves.easeInOut,
                   );
                 } else {
-                  navigateTo(context: context, screen: const SignUpMobile());
+                  navigateToReplacement(
+                    context: context,
+                    screen: const SignUpMobile(),
+                  );
                 }
               },
             ),
@@ -141,26 +144,8 @@ class _OnboardScreenState extends ConsumerState<OnboardScreen> {
   }
 }
 
-final List<Map<String, String>> onboardData = [
-  {
-    'title': "Discover Something New",
-    'subtitle': "Special New Arrival",
-    'imagePath': AppImages.onboard1,
-  },
-  {
-    'title': "Update Your Style",
-    'subtitle': "Favorite Collection",
-    'imagePath': AppImages.onboard2,
-  },
-  {
-    'title': "Explore Something New",
-    'subtitle': "Relax and let us bring you something new",
-    'imagePath': AppImages.onboard3,
-  },
-];
-
 final List<Widget> onboardPages = [
-  const OnboardScreen(),
-  const OnboardScreen(),
-  const OnboardScreen(),
+  const OnboardPageModel(),
+  const OnboardPageModel(),
+  const OnboardPageModel(),
 ];
