@@ -1,7 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/common%20repo/category_notifier.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CategoriesListMobile extends ConsumerWidget {
   const CategoriesListMobile({super.key});
@@ -9,9 +12,10 @@ class CategoriesListMobile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final category = ref.watch(categoryProvider);
+    final loader = ref.watch(loadingProvider);
     final Size size = MediaQuery.of(context).size;
     return SizedBox(
-      height: size.height * 0.1,
+      height: size.height * 0.12,
       width: size.width * 1,
       child: ListView.builder(
         itemCount: category.length,
@@ -20,18 +24,65 @@ class CategoriesListMobile extends ConsumerWidget {
         physics: const ClampingScrollPhysics(),
         itemBuilder: (context, index) {
           final cat = category[index];
-          return Container(
-            height: size.height * 0.1,
-            width: size.width * 0.2,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: CachedNetworkImageProvider(
-                  cat.imageUrl,
-                  cacheKey: cat.id,
-                ),
-              ),
-            ),
-          );
+          return loader
+              ? Skeletonizer(
+                  child: Container(
+                    height: size.height * 0.1,
+                    width: size.width * 0.2,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                )
+              : Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      height: size.height * 0.06,
+                      width: size.width * 0.14,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(
+                          color: AppColors.primaryColor,
+                          width: 0.9,
+                        ),
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.transparent,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          height: size.height * 0.06,
+                          width: size.width * 0.14,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: AppColors.primaryColor,
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                cat.image,
+                                cacheKey: cat.id,
+                              ),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      cat.name,
+                      style: const TextStyle(
+                        color: AppColors.onboardButtonColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ],
+                );
         },
       ),
     );

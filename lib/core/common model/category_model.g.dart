@@ -19,7 +19,7 @@ class CategoryModelAdapter extends TypeAdapter<CategoryModel> {
     return CategoryModel(
       id: fields[0] as String,
       name: fields[1] as String,
-      imageUrl: fields[2] as String,
+      image: fields[2] as String,
     );
   }
 
@@ -32,7 +32,7 @@ class CategoryModelAdapter extends TypeAdapter<CategoryModel> {
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.imageUrl);
+      ..write(obj.image);
   }
 
   @override

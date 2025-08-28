@@ -11,7 +11,9 @@ class HomePageMobile extends StatelessWidget {
     return Scaffold(
       drawer: const CustomHomePageDrawer(),
       appBar: appBar,
-      body: const Column(children: [CategoriesListMobile()]),
+      body: const Column(
+        children: [SizedBox(height: 30), CategoriesListMobile()],
+      ),
     );
   }
 }

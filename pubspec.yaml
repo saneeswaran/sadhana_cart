@@ -58,6 +58,7 @@ dependencies:
   stylish_bottom_bar: ^1.1.1
   shared_preferences: ^2.5.3
   connectivity_plus: ^6.1.5
+  carousel_slider: ^5.1.1
 
 dev_dependencies:
   flutter_test:

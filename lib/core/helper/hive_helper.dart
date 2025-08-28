@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:sadhana_cart/core/common%20model/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/category_model.dart';
 
-class HiveHelper<T> {
+class HiveHelper {
   static const String bannerBox = 'bannerBox';
   static const String categoryBox = 'categoryBox';
 

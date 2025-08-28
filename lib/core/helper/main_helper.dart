@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:sadhana_cart/core/common%20model/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/category_model.dart';
+import 'package:sadhana_cart/firebase_options.dart';
 
 class MainHelper {
   //inits
@@ -9,6 +11,10 @@ class MainHelper {
     //bindings
     WidgetsFlutterBinding.ensureInitialized();
 
+    //initialize firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     //initialize hive
     await Hive.initFlutter();
 
