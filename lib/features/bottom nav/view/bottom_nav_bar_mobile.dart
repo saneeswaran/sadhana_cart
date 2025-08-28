@@ -13,6 +13,7 @@ class BottomNavBarMobile extends ConsumerWidget {
     return Scaffold(
       bottomNavigationBar: StylishBottomBar(
         borderRadius: BorderRadius.circular(15),
+        backgroundColor: const Color(0xffFFFFFF),
         currentIndex: currentIndex,
         items: bottomBarItems,
         option: AnimatedBarOptions(iconStyle: IconStyle.animated),

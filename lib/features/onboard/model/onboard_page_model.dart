@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/helper/shared_preference_helper.dart';
 import 'package:sadhana_cart/core/widgets/oboard_button.dart';
 import 'package:sadhana_cart/features/auth/view/sign%20up/view/sign_up_mobile.dart';
 import 'package:sadhana_cart/features/onboard/model/onboard_model.dart';
@@ -121,7 +122,7 @@ class _OnboardPageModelState extends ConsumerState<OnboardPageModel> {
               text: currentIndex == onboardData.length - 1
                   ? "Start Shopping"
                   : "Next",
-              onPressed: () {
+              onPressed: () async {
                 final currentIndex = ref.read(onboardDotController);
                 if (currentIndex < onboardData.length - 1) {
                   ref.read(onboardDotController.notifier).state++;
@@ -130,10 +131,16 @@ class _OnboardPageModelState extends ConsumerState<OnboardPageModel> {
                     curve: Curves.easeInOut,
                   );
                 } else {
-                  navigateToReplacement(
-                    context: context,
-                    screen: const SignUpMobile(),
+                  await SharedPreferenceHelper.storeDetails(
+                    key: "isOnboard",
+                    value: true,
                   );
+                  if (context.mounted) {
+                    navigateToReplacement(
+                      context: context,
+                      screen: const SignUpMobile(),
+                    );
+                  }
                 }
               },
             ),

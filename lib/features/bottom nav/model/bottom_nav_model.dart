@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/features/cart/view/cart_page_mobile.dart';
+import 'package:sadhana_cart/features/favorites/view/favorite_page_mobile.dart';
 import 'package:sadhana_cart/features/home%20screen/view/home_page_mobile.dart';
-import 'package:sadhana_cart/features/profile/view/profile_page_mobile.dart';
 import 'package:sadhana_cart/features/search%20product/view/search_product_mobile.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
@@ -20,22 +20,44 @@ List<BottomBarItem> bottomBarItems = [
     selectedIcon: const Icon(Icons.search),
   ),
   BottomBarItem(
+    icon: const Icon(Icons.favorite),
+    title: const Text("favorite"),
+    selectedColor: AppColors.primaryColor,
+    selectedIcon: const Icon(Icons.favorite),
+  ),
+  BottomBarItem(
     icon: const Icon(Icons.shopping_bag),
     title: const Text("Cart"),
     selectedColor: AppColors.primaryColor,
     selectedIcon: const Icon(Icons.shopping_bag),
   ),
-  BottomBarItem(
-    icon: const Icon(Icons.person),
-    title: const Text("Profile"),
-    selectedColor: AppColors.primaryColor,
-    selectedIcon: const Icon(Icons.person),
-  ),
 ];
 
-final List<Widget> bottomPages = const [
-  HomePageMobile(),
-  SearchProductMobile(),
-  CartPageMobile(),
-  ProfilePageMobile(),
+final List<Widget> bottomPages = [
+  HomePageMobile(
+    appBar: AppBar(
+      centerTitle: true,
+      title: const Text(
+        "Sadhana Cart",
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      actions: [
+        Badge.count(
+          count: 1,
+          child: const Padding(
+            padding: EdgeInsets.all(6.0),
+            child: Icon(Icons.notifications),
+          ),
+        ),
+        const SizedBox(width: 20),
+      ],
+    ),
+  ),
+  const SearchProductMobile(),
+  const FavoritePageMobile(),
+  const CartPageMobile(),
 ];

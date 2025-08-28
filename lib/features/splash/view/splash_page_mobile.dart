@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
-import 'package:sadhana_cart/features/onboard/view/onboard_page_mobile.dart';
+import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_bar_mobile.dart';
 
 class SplashPageMobile extends StatelessWidget {
   const SplashPageMobile({super.key});
@@ -10,7 +10,7 @@ class SplashPageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 2), () {
       if (context.mounted) {
-        navigateTo(context: context, screen: const OnboardPageMobile());
+        navigateTo(context: context, screen: const BottomNavBarMobile());
       }
     });
     final Size size = MediaQuery.of(context).size;

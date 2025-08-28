@@ -8,4 +8,7 @@ class AppImages {
   //vectors
   static const String googleSvg = "assets/vectors/google.svg";
   static const String appleSvg = "assets/vectors/apple.svg";
+
+  //icons
+  static const String drawerIcons = "assets/icons/drawer.png";
 }
