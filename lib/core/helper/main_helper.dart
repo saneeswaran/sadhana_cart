@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:sadhana_cart/core/common%20model/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/category_model.dart';
+import 'package:sadhana_cart/core/common%20model/search_field_model.dart';
 import 'package:sadhana_cart/firebase_options.dart';
 
 class MainHelper {
@@ -21,9 +22,11 @@ class MainHelper {
     //register adapters
     Hive.registerAdapter<BannerModel>(BannerModelAdapter());
     Hive.registerAdapter<CategoryModel>(CategoryModelAdapter());
+    Hive.registerAdapter<SearchFieldModel>(SearchFieldModelAdapter());
 
     //open boxes
     await Hive.openBox<BannerModel>('bannerBox');
     await Hive.openBox<CategoryModel>('categoryBox');
+    await Hive.openBox<SearchFieldModel>("searchBox");
   }
 }

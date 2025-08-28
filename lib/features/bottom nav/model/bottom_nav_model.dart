@@ -36,6 +36,7 @@ List<BottomBarItem> bottomBarItems = [
 final List<Widget> bottomPages = [
   HomePageMobile(
     appBar: AppBar(
+      backgroundColor: AppColors.pureWhite,
       centerTitle: true,
       title: const Text(
         "Sadhana Cart",
@@ -59,6 +60,7 @@ final List<Widget> bottomPages = [
   ),
   SearchProductMobile(
     appBar: AppBar(
+      backgroundColor: AppColors.pureWhite,
       centerTitle: true,
       title: const Text(
         "Discover Something New",

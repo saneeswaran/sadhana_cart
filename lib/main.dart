@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/app%20routes/app_routes.dart';
+import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/helper/main_helper.dart';
 import 'package:sadhana_cart/core/responsive/responsive_screen.dart';
-import 'package:sadhana_cart/core/themes/app_themes.dart';
 import 'package:sadhana_cart/features/splash/view/splash_page_mobile.dart';
 import 'package:sadhana_cart/features/splash/view/splash_page_tablet.dart';
 
@@ -20,7 +20,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Sadhana Cart",
       debugShowCheckedModeBanner: false,
-      theme: AppThemes.lightTheme,
+      theme: ThemeData(
+        scaffoldBackgroundColor: AppColors.pureWhite,
+        appBarTheme: const AppBarTheme(backgroundColor: AppColors.pureWhite),
+      ),
+      themeMode: ThemeMode.light,
       routes: AppRoutes.routes,
       home: const ResponsiveScreen(
         mobileScreen: SplashPageMobile(),
