@@ -45,7 +45,6 @@ class _SearchProductMobileState extends State<SearchProductMobile> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white,
-                    boxShadow: const [],
                   ),
                   child: IconButton(
                     onPressed: () {},
