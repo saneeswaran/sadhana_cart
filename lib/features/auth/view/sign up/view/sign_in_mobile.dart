@@ -7,6 +7,7 @@ import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
 import 'package:sadhana_cart/core/widgets/rounded_signin_button.dart';
 import 'package:sadhana_cart/features/auth/view/forgot%20password/view/forgot_password_mobile.dart';
+import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_bar_mobile.dart';
 
 class SignInMobile extends ConsumerStatefulWidget {
   const SignInMobile({super.key});
@@ -72,7 +73,12 @@ class _SignInMobileState extends ConsumerState<SignInMobile> {
                   "Sign In",
                   style: customElevatedButtonTextStyle,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  navigateTo(
+                    context: context,
+                    screen: const BottomNavBarMobile(),
+                  );
+                },
               ),
             ),
             const Center(
@@ -91,7 +97,12 @@ class _SignInMobileState extends ConsumerState<SignInMobile> {
                 const SizedBox(width: 30),
                 RoundedSigninButton(
                   imagePath: AppImages.appleSvg,
-                  onTap: () {},
+                  onTap: () {
+                    navigateTo(
+                      context: context,
+                      screen: const BottomNavBarMobile(),
+                    );
+                  },
                 ),
               ],
             ),

@@ -4,13 +4,13 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final String labelText;
-  final Widget? suffixIcon;
+  final Widget? prefixIcon;
   const CustomTextFormField({
     super.key,
     required this.controller,
     this.validator,
     required this.labelText,
-    this.suffixIcon,
+    this.prefixIcon,
   });
 
   @override
@@ -19,7 +19,7 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       validator: validator,
       decoration: InputDecoration(
-        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
         labelText: labelText,
         labelStyle: const TextStyle(
           color: Colors.black,

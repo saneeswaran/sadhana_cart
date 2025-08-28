@@ -7,6 +7,7 @@ import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
 import 'package:sadhana_cart/core/widgets/rounded_signin_button.dart';
 import 'package:sadhana_cart/features/auth/view/sign%20up/view/sign_in_mobile.dart';
+import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_bar_mobile.dart';
 
 class SignUpMobile extends ConsumerStatefulWidget {
   const SignUpMobile({super.key});
@@ -72,7 +73,12 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                   "Sign Up",
                   style: customElevatedButtonTextStyle,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  navigateTo(
+                    context: context,
+                    screen: const BottomNavBarMobile(),
+                  );
+                },
               ),
             ),
             const Center(
