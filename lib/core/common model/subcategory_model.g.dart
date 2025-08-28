@@ -1,32 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search_field_model.dart';
+part of 'subcategory_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SearchFieldModelAdapter extends TypeAdapter<SearchFieldModel> {
+class SubcategoryModelAdapter extends TypeAdapter<SubcategoryModel> {
   @override
-  final int typeId = 2;
+  final int typeId = 3;
 
   @override
-  SearchFieldModel read(BinaryReader reader) {
+  SubcategoryModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SearchFieldModel(
-      searchField: fields[0] as String?,
+    return SubcategoryModel(
+      id: fields[0] as String,
+      name: fields[1] as String,
+      categoryId: fields[2] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, SearchFieldModel obj) {
+  void write(BinaryWriter writer, SubcategoryModel obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.searchField);
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.categoryId);
   }
 
   @override
@@ -35,7 +41,7 @@ class SearchFieldModelAdapter extends TypeAdapter<SearchFieldModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SearchFieldModelAdapter &&
+      other is SubcategoryModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

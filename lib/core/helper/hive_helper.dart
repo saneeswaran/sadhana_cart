@@ -2,11 +2,13 @@ import 'package:hive/hive.dart';
 import 'package:sadhana_cart/core/common%20model/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/category_model.dart';
 import 'package:sadhana_cart/core/common%20model/search_field_model.dart';
+import 'package:sadhana_cart/core/common%20model/subcategory_model.dart';
 
 class HiveHelper {
   static const String bannerBox = 'bannerBox';
   static const String categoryBox = 'categoryBox';
   static const String searchBox = 'searchBox';
+  static const String subcategoryBox = 'subcategoryBox';
 
   //banners
   static Future<void> addBanners({required BannerModel banner}) async {
@@ -34,5 +36,18 @@ class HiveHelper {
   static Future<void> addSearchField({required SearchFieldModel search}) async {
     final box = Hive.box<SearchFieldModel>(searchBox);
     await box.put(search.searchField, search);
+  }
+
+  //subcategory
+  static Future<void> addSubcategory({
+    required SubcategoryModel subcategory,
+  }) async {
+    final box = Hive.box<SubcategoryModel>(subcategoryBox);
+    await box.put(subcategory.id, subcategory);
+  }
+
+  static Future<List<SubcategoryModel>> getSubcategory() async {
+    final box = Hive.box<SubcategoryModel>(subcategoryBox);
+    return box.values.toList();
   }
 }
