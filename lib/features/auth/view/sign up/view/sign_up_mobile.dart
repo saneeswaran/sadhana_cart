@@ -9,6 +9,7 @@ import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
 import 'package:sadhana_cart/core/widgets/rounded_signin_button.dart';
 import 'package:sadhana_cart/features/auth/view/sign%20up/view/sign_in_mobile.dart';
+import 'package:sadhana_cart/features/profile/service/user_service.dart';
 
 class SignUpMobile extends ConsumerStatefulWidget {
   const SignUpMobile({super.key});
@@ -90,6 +91,10 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                       await AuthService.createAccount(
                         email: emailController.text,
                         password: passwordController.text,
+                      );
+                      await UserService.createUserProfile(
+                        email: emailController.text,
+                        name: nameController.text,
                       );
                     }
                   },
