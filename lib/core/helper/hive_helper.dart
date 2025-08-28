@@ -9,6 +9,21 @@ class HiveHelper {
   static const String categoryBox = 'categoryBox';
   static const String searchBox = 'searchBox';
   static const String subcategoryBox = 'subcategoryBox';
+  static const String localData = 'localData';
+
+  //store local things
+  Future<void> storeLocalData<E>({
+    required String key,
+    required E value,
+  }) async {
+    final box = Hive.box<E>(localData);
+    await box.put(key, value);
+  }
+
+  Future<E?> getLocalData<E>({required String key}) async {
+    final box = Hive.box<E>(localData);
+    return box.get(key);
+  }
 
   //banners
   static Future<void> addBanners({required BannerModel banner}) async {

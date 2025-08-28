@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/auth%20service/auth_service.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/helper/validation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
@@ -19,6 +21,7 @@ class SignInMobile extends ConsumerStatefulWidget {
 class _SignInMobileState extends ConsumerState<SignInMobile> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -32,93 +35,102 @@ class _SignInMobileState extends ConsumerState<SignInMobile> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 20,
-          children: [
-            const SizedBox(height: 100),
-            const Text(
-              "log into\nyour account ",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 32,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-            const SizedBox(height: 10),
-            CustomTextFormField(
-              controller: emailController,
-              labelText: "Email address",
-            ),
-            CustomTextFormField(
-              controller: passwordController,
-              labelText: "Password",
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: CustomTextButton(
-                text: "Forgot Password?",
-                onPressed: () {
-                  navigateTo(
-                    context: context,
-                    screen: const ForgotPasswordMobile(),
-                  );
-                },
-              ),
-            ),
-            const SizedBox(height: 20),
-            Center(
-              child: CustomElevatedButton(
-                child: const Text(
-                  "Sign In",
-                  style: customElevatedButtonTextStyle,
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 20,
+            children: [
+              const SizedBox(height: 100),
+              const Text(
+                "log into\nyour account ",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w400,
                 ),
-                onPressed: () {
-                  navigateTo(
-                    context: context,
-                    screen: const BottomNavBarMobile(),
-                  );
-                },
               ),
-            ),
-            const Center(
-              child: Text(
-                "or continue with",
-                style: TextStyle(color: Colors.grey),
+              const SizedBox(height: 10),
+              CustomTextFormField(
+                controller: emailController,
+                labelText: "Email address",
+                validator: ValidationHelper.emailValidate(),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                RoundedSigninButton(
-                  imagePath: AppImages.googleSvg,
-                  onTap: () {},
+              CustomTextFormField(
+                controller: passwordController,
+                labelText: "Password",
+                validator: ValidationHelper.passwordValidate(
+                  number: passwordController.text.length,
                 ),
-                const SizedBox(width: 30),
-                RoundedSigninButton(
-                  imagePath: AppImages.appleSvg,
-                  onTap: () {
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: CustomTextButton(
+                  text: "Forgot Password?",
+                  onPressed: () {
                     navigateTo(
                       context: context,
-                      screen: const BottomNavBarMobile(),
+                      screen: const ForgotPasswordMobile(),
                     );
                   },
                 ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Don't have an account? "),
-                CustomTextButton(
-                  text: "Sign Up",
-                  onPressed: () {
-                    navigateBack(context: context);
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: CustomElevatedButton(
+                  child: const Text(
+                    "Sign In",
+                    style: customElevatedButtonTextStyle,
+                  ),
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      await AuthService.signIn(
+                        email: emailController.text,
+                        password: passwordController.text,
+                      );
+                    }
                   },
                 ),
-              ],
-            ),
-          ],
+              ),
+              const Center(
+                child: Text(
+                  "or continue with",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RoundedSigninButton(
+                    imagePath: AppImages.googleSvg,
+                    onTap: () {},
+                  ),
+                  const SizedBox(width: 30),
+                  RoundedSigninButton(
+                    imagePath: AppImages.appleSvg,
+                    onTap: () {
+                      navigateTo(
+                        context: context,
+                        screen: const BottomNavBarMobile(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Don't have an account? "),
+                  CustomTextButton(
+                    text: "Sign Up",
+                    onPressed: () async {
+                      navigateBack(context: context);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
