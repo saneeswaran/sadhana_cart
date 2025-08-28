@@ -6,6 +6,7 @@ import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
 import 'package:sadhana_cart/core/widgets/rounded_signin_button.dart';
+import 'package:sadhana_cart/features/auth/view/forgot%20password/view/forgot_password_mobile.dart';
 
 class SignInMobile extends ConsumerStatefulWidget {
   const SignInMobile({super.key});
@@ -56,7 +57,12 @@ class _SignInMobileState extends ConsumerState<SignInMobile> {
               alignment: Alignment.centerRight,
               child: CustomTextButton(
                 text: "Forgot Password?",
-                onPressed: () {},
+                onPressed: () {
+                  navigateTo(
+                    context: context,
+                    screen: const ForgotPasswordMobile(),
+                  );
+                },
               ),
             ),
             const SizedBox(height: 20),
