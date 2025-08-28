@@ -10,7 +10,10 @@ class SplashPageMobile extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 2), () {
       if (context.mounted) {
-        navigateTo(context: context, screen: const BottomNavBarMobile());
+        navigateToReplacement(
+          context: context,
+          screen: const BottomNavBarMobile(),
+        );
       }
     });
     final Size size = MediaQuery.of(context).size;

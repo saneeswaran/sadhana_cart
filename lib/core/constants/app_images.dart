@@ -1,3 +1,5 @@
+import 'package:sadhana_cart/core/common%20model/banner_model.dart';
+
 class AppImages {
   //images
   static const String onboard = "assets/images/onboard.png";
@@ -11,4 +13,28 @@ class AppImages {
 
   //icons
   static const String drawerIcons = "assets/icons/drawer.png";
+
+  //testing purpose only
+  static const String carousel = "assets/images/carousel.png";
+
+  static List<BannerModel> bannerImages = [
+    BannerModel(
+      bannerId: "1",
+      bannerName: "banner1",
+      bannerImage: carousel,
+      productId: "1",
+    ),
+    BannerModel(
+      bannerId: "2",
+      bannerName: "banner1",
+      bannerImage: carousel,
+      productId: "2",
+    ),
+    BannerModel(
+      bannerId: "2",
+      bannerName: "banner1",
+      bannerImage: carousel,
+      productId: "2",
+    ),
+  ];
 }

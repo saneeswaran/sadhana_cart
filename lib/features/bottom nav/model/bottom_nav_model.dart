@@ -57,7 +57,19 @@ final List<Widget> bottomPages = [
       ],
     ),
   ),
-  const SearchProductMobile(),
+  SearchProductMobile(
+    appBar: AppBar(
+      centerTitle: true,
+      title: const Text(
+        "Discover Something New",
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  ),
   const FavoritePageMobile(),
   const CartPageMobile(),
 ];

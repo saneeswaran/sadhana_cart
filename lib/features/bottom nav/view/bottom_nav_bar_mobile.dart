@@ -12,7 +12,7 @@ class BottomNavBarMobile extends ConsumerWidget {
     final currentIndex = ref.watch(bottomNavigationBarIndex);
     return Scaffold(
       bottomNavigationBar: StylishBottomBar(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(20),
         backgroundColor: const Color(0xffFFFFFF),
         currentIndex: currentIndex,
         items: bottomBarItems,

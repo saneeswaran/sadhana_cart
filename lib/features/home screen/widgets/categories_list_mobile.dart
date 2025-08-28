@@ -15,7 +15,7 @@ class CategoriesListMobile extends ConsumerWidget {
     final loader = ref.watch(loadingProvider);
     final Size size = MediaQuery.of(context).size;
     return SizedBox(
-      height: size.height * 0.12,
+      height: size.height * 0.1,
       width: size.width * 1,
       child: ListView.builder(
         itemCount: category.length,
@@ -31,6 +31,7 @@ class CategoriesListMobile extends ConsumerWidget {
                     width: size.width * 0.14,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
+                      color: Colors.grey.shade300,
                     ),
                   ),
                 )
@@ -47,20 +48,14 @@ class CategoriesListMobile extends ConsumerWidget {
                           width: 0.9,
                         ),
                       ),
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.transparent,
-                        ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           height: size.height * 0.06,
                           width: size.width * 0.12,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.primaryColor,
                             image: DecorationImage(
                               image: CachedNetworkImageProvider(
                                 cat.image,
@@ -72,9 +67,9 @@ class CategoriesListMobile extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 5),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
                         cat.name,
                         maxLines: 1,
