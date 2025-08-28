@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/features/home%20screen/model/custom_home_page_drawer.dart';
+import 'package:sadhana_cart/features/home%20screen/widgets/categories_list_mobile.dart';
 
 class HomePageMobile extends StatelessWidget {
   final PreferredSizeWidget? appBar;
@@ -10,10 +11,7 @@ class HomePageMobile extends StatelessWidget {
     return Scaffold(
       drawer: const CustomHomePageDrawer(),
       appBar: appBar,
-      body: Column(children: [
-          
-        ],
-      ),
+      body: const Column(children: [CategoriesListMobile()]),
     );
   }
 }
