@@ -27,8 +27,8 @@ class CategoriesListMobile extends ConsumerWidget {
           return loader
               ? Skeletonizer(
                   child: Container(
-                    height: size.height * 0.1,
-                    width: size.width * 0.2,
+                    height: size.height * 0.06,
+                    width: size.width * 0.14,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -37,9 +37,9 @@ class CategoriesListMobile extends ConsumerWidget {
               : Column(
                   children: [
                     Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      margin: const EdgeInsets.symmetric(horizontal: 10),
                       height: size.height * 0.06,
-                      width: size.width * 0.14,
+                      width: size.width * 0.13,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(50),
                         border: Border.all(
@@ -57,7 +57,7 @@ class CategoriesListMobile extends ConsumerWidget {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           height: size.height * 0.06,
-                          width: size.width * 0.14,
+                          width: size.width * 0.12,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.primaryColor,
@@ -73,12 +73,17 @@ class CategoriesListMobile extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      cat.name,
-                      style: const TextStyle(
-                        color: AppColors.onboardButtonColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        cat.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: AppColors.onboardButtonColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w300,
+                        ),
                       ),
                     ),
                   ],
