@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:sadhana_cart/core/common%20model/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/category_model.dart';
+import 'package:sadhana_cart/core/common%20model/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/search_field_model.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory_model.dart';
 
@@ -9,6 +10,7 @@ class HiveHelper {
   static const String categoryBox = 'categoryBox';
   static const String searchBox = 'searchBox';
   static const String subcategoryBox = 'subcategoryBox';
+  static const String productBox = 'productBox';
   static const String localData = 'localData';
 
   //store local things
@@ -63,6 +65,17 @@ class HiveHelper {
 
   static Future<List<SubcategoryModel>> getSubcategory() async {
     final box = Hive.box<SubcategoryModel>(subcategoryBox);
+    return box.values.toList();
+  }
+
+  //products
+  static Future<void> addProducts({required ProductModel product}) async {
+    final box = Hive.box<ProductModel>(productBox);
+    await box.put(product.id, product);
+  }
+
+  static Future<List<ProductModel>> getProducts() async {
+    final box = Hive.box<ProductModel>(productBox);
     return box.values.toList();
   }
 }

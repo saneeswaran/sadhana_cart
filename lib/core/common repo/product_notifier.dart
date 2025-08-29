@@ -1,0 +1,59 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/product_model.dart';
+import 'package:sadhana_cart/core/common%20services/product_service.dart';
+
+final productProvider =
+    StateNotifierProvider<ProductNotifier, List<ProductModel>>(
+      (ref) => ProductNotifier(ref)..initializeProducts(),
+    );
+
+class ProductNotifier extends StateNotifier<List<ProductModel>> {
+  final Ref ref;
+  ProductNotifier(this.ref) : super([]);
+
+  DocumentSnapshot? _lastDocument;
+  bool _hasMore = true;
+  bool _isLoading = false;
+  final int _limit = 10;
+
+  void initializeProducts() async {
+    state = [];
+    _lastDocument = null;
+    _hasMore = true;
+    await fetchNextProducts();
+  }
+
+  Future<void> fetchNextProducts() async {
+    if (_isLoading || !_hasMore) return;
+
+    _isLoading = true;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection(ProductService.products)
+        .orderBy("timestamp", descending: true)
+        .limit(_limit)
+        .startAfterDocument(_lastDocument!)
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final products = snapshot.docs
+          .map((e) => ProductModel.fromMap(e.data()))
+          .toList();
+
+      state = [...state, ...products];
+      _lastDocument = snapshot.docs.last;
+
+      if (products.length < _limit) {
+        _hasMore = false;
+      }
+    } else {
+      _hasMore = false;
+    }
+
+    _isLoading = false;
+  }
+
+  bool get hasMore => _hasMore;
+  bool get isLoading => _isLoading;
+}
