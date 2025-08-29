@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
-import 'package:sadhana_cart/core/common%20repo/category_notifier.dart';
+import 'package:sadhana_cart/core/common%20repo/category/category_notifier.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

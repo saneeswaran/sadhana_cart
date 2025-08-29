@@ -32,12 +32,12 @@ class CartService {
   }
 
   //get
-  static Future<List<CartModel>> fetchCart() async {
+  static Future<Set<CartModel>> fetchCart() async {
     try {
       final QuerySnapshot querySnapshot = await cartRef.get();
       final data = querySnapshot.docs
           .map((e) => CartModel.fromMap(e.data() as Map<String, dynamic>))
-          .toList();
+          .toSet();
       //store in local
       for (final cart in data) {
         await HiveHelper.addCart(cart: cart);
@@ -45,12 +45,12 @@ class CartService {
       return data;
     } catch (e) {
       log("cart service error $e");
-      return [];
+      return {};
     }
   }
 
   //delete
-  Future<bool> deleteCart({required CartModel cart}) async {
+  static Future<bool> deleteCart({required CartModel cart}) async {
     try {
       final DocumentSnapshot documentSnapshot = await cartRef
           .doc(cart.cartId)

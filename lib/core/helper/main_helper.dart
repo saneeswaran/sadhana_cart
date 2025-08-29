@@ -4,7 +4,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
-import 'package:sadhana_cart/core/common%20model/favorite/favorute_model.dart';
+import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/search%20field/search_field_model.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
@@ -37,7 +37,7 @@ class MainHelper {
     Hive.registerAdapter<SubcategoryModel>(SubcategoryModelAdapter());
     Hive.registerAdapter<ProductModel>(ProductModelAdapter());
     Hive.registerAdapter<CartModel>(CartModelAdapter());
-    Hive.registerAdapter<FavoruteModel>(FavoruteModelAdapter());
+    Hive.registerAdapter<FavoriteModel>(FavoriteModelAdapter());
 
     //open boxes
     await Hive.openBox<BannerModel>(bannerBox);
@@ -45,6 +45,6 @@ class MainHelper {
     await Hive.openBox<SearchFieldModel>(searchBox);
     await Hive.openBox<SubcategoryModel>(subcategoryBox);
     await Hive.openBox<ProductModel>(productBox);
-    await Hive.openBox<FavoruteModel>(favoriteBox);
+    await Hive.openBox<FavoriteModel>(favoriteBox);
   }
 }

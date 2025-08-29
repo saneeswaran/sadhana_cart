@@ -90,9 +90,9 @@ class HiveHelper {
     box.put(cart.productId, cart);
   }
 
-  static Future<List<CartModel>> getCart() async {
+  static Future<Set<CartModel>> getCart() async {
     final box = Hive.box<CartModel>(cartBox);
-    return box.values.toList();
+    return box.values.toSet();
   }
 
   static Future<void> deleteCart({required String key}) async {
@@ -101,18 +101,18 @@ class HiveHelper {
   }
 
   //favorite
-  static Future<void> addFavorites({required FavoruteModel favorite}) async {
-    final box = Hive.box<FavoruteModel>(favoriteBox);
+  static Future<void> addFavorites({required FavoriteModel favorite}) async {
+    final box = Hive.box<FavoriteModel>(favoriteBox);
     await box.put(favorite.productId, favorite);
   }
 
-  static Future<List<FavoruteModel>> getFavorite() async {
-    final box = Hive.box<FavoruteModel>(favoriteBox);
-    return box.values.toList();
+  static Future<Set<FavoriteModel>> getFavorite() async {
+    final box = Hive.box<FavoriteModel>(favoriteBox);
+    return box.values.toSet();
   }
 
   static Future<void> deleteFavorite({required String key}) async {
-    final box = Hive.box<FavoruteModel>(favoriteBox);
+    final box = Hive.box<FavoriteModel>(favoriteBox);
     await box.delete(key);
   }
 }

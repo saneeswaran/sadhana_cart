@@ -13,10 +13,10 @@ class FavoriteService {
       .collection(favorites);
 
   //add
-  Future<bool> addToFavorite({required ProductModel product}) async {
+  static Future<bool> addToFavorite({required ProductModel product}) async {
     try {
       final docRef = favoriteRef.doc();
-      final FavoruteModel favoruteModel = FavoruteModel(
+      final FavoriteModel favoruteModel = FavoriteModel(
         favoriteId: docRef.id,
         productId: product.productId,
         customerId: currentUserId,
@@ -32,12 +32,13 @@ class FavoriteService {
   }
 
   //get
-  Future<List<FavoruteModel>> fetchFavorites() async {
+
+  static Future<Set<FavoriteModel>> fetchFavorites() async {
     try {
       final QuerySnapshot querySnapshot = await favoriteRef.get();
       final data = querySnapshot.docs
-          .map((e) => FavoruteModel.fromMap(e.data() as Map<String, dynamic>))
-          .toList();
+          .map((e) => FavoriteModel.fromMap(e.data() as Map<String, dynamic>))
+          .toSet();
       //store in local
 
       for (final favorite in data) {
@@ -46,11 +47,11 @@ class FavoriteService {
       return data;
     } catch (e) {
       log("favorite service error $e");
-      return [];
+      return {};
     }
   }
 
-  Future<bool> deleteFavorite({required FavoruteModel favorite}) async {
+  static Future<bool> deleteFavorite({required FavoriteModel favorite}) async {
     try {
       final DocumentSnapshot documentSnapshot = await favoriteRef
           .doc(favorite.favoriteId)

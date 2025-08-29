@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/common%20services/product_service.dart';
+import 'package:sadhana_cart/core/common%20services/product/product_service.dart';
 
 final productProvider =
     StateNotifierProvider<ProductNotifier, List<ProductModel>>(

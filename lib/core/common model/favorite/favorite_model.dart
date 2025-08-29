@@ -6,14 +6,14 @@ import 'package:hive/hive.dart';
 part 'favorite_model.g.dart';
 
 @HiveType(typeId: 6)
-class FavoruteModel extends HiveObject {
+class FavoriteModel extends HiveObject {
   @HiveField(0)
   final String favoriteId;
   @HiveField(1)
   final String productId;
   @HiveField(2)
   final String customerId;
-  FavoruteModel({
+  FavoriteModel({
     required this.favoriteId,
     required this.productId,
     required this.customerId,
@@ -27,8 +27,8 @@ class FavoruteModel extends HiveObject {
     };
   }
 
-  factory FavoruteModel.fromMap(Map<String, dynamic> map) {
-    return FavoruteModel(
+  factory FavoriteModel.fromMap(Map<String, dynamic> map) {
+    return FavoriteModel(
       favoriteId: map['favoriteId'] as String,
       productId: map['productId'] as String,
       customerId: map['customerId'] as String,
@@ -37,6 +37,6 @@ class FavoruteModel extends HiveObject {
 
   String toJson() => json.encode(toMap());
 
-  factory FavoruteModel.fromJson(String source) =>
-      FavoruteModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory FavoriteModel.fromJson(String source) =>
+      FavoriteModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
