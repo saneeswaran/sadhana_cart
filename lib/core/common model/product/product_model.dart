@@ -1,3 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
@@ -30,6 +33,8 @@ class ProductModel extends HiveObject {
   @HiveField(11)
   final List<String> images;
   @HiveField(12)
+  final String? sellerId;
+  @HiveField(13)
   final List<Map<String, dynamic>> attributes;
 
   ProductModel({
@@ -46,32 +51,11 @@ class ProductModel extends HiveObject {
     required this.timestamp,
     required this.images,
     required this.attributes,
+    this.sellerId,
   });
 
-  factory ProductModel.fromMap(Map<String, dynamic> map) {
-    return ProductModel(
-      productId: map['productId'] ?? '',
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      category: map['category'] ?? '',
-      subCategory: map['subCategory'] ?? '',
-      sku: map['sku'] ?? '',
-      brand: map['brand'] ?? '',
-      price: (map['price'] as num?)?.toDouble() ?? 0.0,
-      stock: map['stock'] ?? 0,
-      rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
-      timestamp: map['timestamp'] is Timestamp
-          ? map['timestamp']
-          : Timestamp.fromMillisecondsSinceEpoch(map['timestamp'] ?? 0),
-      images: List<String>.from(map['images'] ?? []),
-      attributes: List<Map<String, dynamic>>.from(
-        (map['attributes'] ?? []).map((e) => Map<String, dynamic>.from(e)),
-      ),
-    );
-  }
-
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'productId': productId,
       'name': name,
       'description': description,
@@ -84,7 +68,34 @@ class ProductModel extends HiveObject {
       'rating': rating,
       'timestamp': timestamp,
       'images': images,
+      'sellerId': sellerId,
       'attributes': attributes,
     };
   }
+
+  factory ProductModel.fromMap(Map<String, dynamic> map) {
+    return ProductModel(
+      productId: map['productId'] as String,
+      name: map['name'] as String,
+      description: map['description'] as String,
+      category: map['category'] as String,
+      subCategory: map['subCategory'] as String,
+      sku: map['sku'] as String,
+      brand: map['brand'] as String,
+      price: map['price'] as double,
+      stock: map['stock'] as int,
+      rating: map['rating'] as double,
+      timestamp: map['timestamp'] as Timestamp,
+      images: List<String>.from((map['images'] as List<String>)),
+      sellerId: map['sellerId'] != null ? map['sellerId'] as String : null,
+      attributes: List<Map<String, dynamic>>.from(
+        (map['attributes'] as List<Map<String, dynamic>>),
+      ),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory ProductModel.fromJson(String source) =>
+      ProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

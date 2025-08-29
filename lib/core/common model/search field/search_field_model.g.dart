@@ -16,7 +16,9 @@ class SearchFieldModelAdapter extends TypeAdapter<SearchFieldModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SearchFieldModel(searchField: fields[0] as String?);
+    return SearchFieldModel(
+      searchField: fields[0] as String?,
+    );
   }
 
   @override

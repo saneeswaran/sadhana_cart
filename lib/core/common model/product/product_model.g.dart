@@ -29,16 +29,17 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       rating: fields[9] as double,
       timestamp: fields[10] as Timestamp,
       images: (fields[11] as List).cast<String>(),
-      attributes: (fields[12] as List)
+      attributes: (fields[13] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
+      sellerId: fields[12] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ProductModel obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.productId)
       ..writeByte(1)
@@ -64,6 +65,8 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       ..writeByte(11)
       ..write(obj.images)
       ..writeByte(12)
+      ..write(obj.sellerId)
+      ..writeByte(13)
       ..write(obj.attributes);
   }
 

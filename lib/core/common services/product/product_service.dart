@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_fetch_result.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
@@ -11,7 +12,7 @@ class ProductService {
   static final CollectionReference productRef = FirebaseFirestore.instance
       .collection(products);
 
-  static Future<List<ProductModel>> fetchProducts({
+  static Future<ProductFetchResult> fetchProducts({
     required Ref ref,
     int limit = 10,
     DocumentSnapshot? startAfter,
@@ -22,7 +23,6 @@ class ProductService {
       Query query = productRef
           .orderBy("timestamp", descending: true)
           .limit(limit);
-
       if (startAfter != null) {
         query = query.startAfterDocument(startAfter);
       }
@@ -33,18 +33,22 @@ class ProductService {
           .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
           .toList();
 
-      // Store in Hive
       for (final product in data) {
         await HiveHelper.addProducts(product: product);
       }
 
       ref.read(loadingProvider.notifier).state = false;
 
-      return data;
+      return ProductFetchResult(
+        products: data,
+        lastDocument: querySnapshot.docs.isNotEmpty
+            ? querySnapshot.docs.last
+            : null,
+      );
     } catch (e) {
       log("ProductService fetch error: $e");
       ref.read(loadingProvider.notifier).state = false;
-      return [];
+      return ProductFetchResult(products: [], lastDocument: null);
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
@@ -29,19 +31,24 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
 
     _isLoading = true;
 
-    final snapshot = await FirebaseFirestore.instance
+    Query query = FirebaseFirestore.instance
         .collection(ProductService.products)
         .orderBy("timestamp", descending: true)
-        .limit(_limit)
-        .startAfterDocument(_lastDocument!)
-        .get();
+        .limit(_limit);
+
+    if (_lastDocument != null) {
+      query = query.startAfterDocument(_lastDocument!);
+    }
+
+    final snapshot = await query.get();
 
     if (snapshot.docs.isNotEmpty) {
       final products = snapshot.docs
-          .map((e) => ProductModel.fromMap(e.data()))
+          .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
           .toList();
 
       state = [...state, ...products];
+      log(state.toString());
       _lastDocument = snapshot.docs.last;
 
       if (products.length < _limit) {
