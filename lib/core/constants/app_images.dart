@@ -1,4 +1,4 @@
-import 'package:sadhana_cart/core/common%20model/banner_model.dart';
+import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
 
 class AppImages {
   //images

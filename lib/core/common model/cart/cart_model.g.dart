@@ -1,32 +1,35 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search_field_model.dart';
+part of 'cart_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SearchFieldModelAdapter extends TypeAdapter<SearchFieldModel> {
+class CartModelAdapter extends TypeAdapter<CartModel> {
   @override
-  final int typeId = 2;
+  final int typeId = 5;
 
   @override
-  SearchFieldModel read(BinaryReader reader) {
+  CartModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SearchFieldModel(
-      searchField: fields[0] as String?,
+    return CartModel(
+      customerId: fields[0] as String,
+      productId: fields[1] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, SearchFieldModel obj) {
+  void write(BinaryWriter writer, CartModel obj) {
     writer
-      ..writeByte(1)
+      ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.searchField);
+      ..write(obj.customerId)
+      ..writeByte(1)
+      ..write(obj.productId);
   }
 
   @override
@@ -35,7 +38,7 @@ class SearchFieldModelAdapter extends TypeAdapter<SearchFieldModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SearchFieldModelAdapter &&
+      other is CartModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

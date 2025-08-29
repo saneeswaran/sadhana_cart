@@ -1,9 +1,11 @@
 import 'package:hive/hive.dart';
-import 'package:sadhana_cart/core/common%20model/banner_model.dart';
-import 'package:sadhana_cart/core/common%20model/category_model.dart';
-import 'package:sadhana_cart/core/common%20model/product_model.dart';
-import 'package:sadhana_cart/core/common%20model/search_field_model.dart';
-import 'package:sadhana_cart/core/common%20model/subcategory_model.dart';
+import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
+import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
+import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
+import 'package:sadhana_cart/core/common%20model/favorite/favorute_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/search%20field/search_field_model.dart';
+import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
 
 class HiveHelper {
   static const String bannerBox = 'bannerBox';
@@ -11,6 +13,8 @@ class HiveHelper {
   static const String searchBox = 'searchBox';
   static const String subcategoryBox = 'subcategoryBox';
   static const String productBox = 'productBox';
+  static const String favoriteBox = 'favoriteBox';
+  static const String cartBox = 'cartBox';
   static const String localData = 'localData';
 
   //store local things
@@ -71,11 +75,34 @@ class HiveHelper {
   //products
   static Future<void> addProducts({required ProductModel product}) async {
     final box = Hive.box<ProductModel>(productBox);
-    await box.put(product.id, product);
+    await box.put(product.productId, product);
   }
 
   static Future<List<ProductModel>> getProducts() async {
     final box = Hive.box<ProductModel>(productBox);
+    return box.values.toList();
+  }
+
+  //cart
+
+  static Future<void> addCart({required CartModel cart}) async {
+    final box = Hive.box<CartModel>(cartBox);
+    box.put(cart.productId, cart);
+  }
+
+  static Future<List<CartModel>> getCart() async {
+    final box = Hive.box<CartModel>(cartBox);
+    return box.values.toList();
+  }
+
+  //favorite
+  static Future<void> addFavorites({required FavoruteModel favorite}) async {
+    final box = Hive.box<FavoruteModel>(favoriteBox);
+    await box.put(favorite.productId, favorite);
+  }
+
+  static Future<List<FavoruteModel>> getFavorite() async {
+    final box = Hive.box<FavoruteModel>(favoriteBox);
     return box.values.toList();
   }
 }

@@ -1,15 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
 part 'product_model.g.dart';
 
 @HiveType(typeId: 4)
-class ProductModel {
+class ProductModel extends HiveObject {
   @HiveField(0)
-  final String id;
+  final String productId;
   @HiveField(1)
   final String name;
   @HiveField(2)
@@ -34,7 +32,7 @@ class ProductModel {
   final List<String> images;
 
   ProductModel({
-    required this.id,
+    required this.productId,
     required this.name,
     required this.description,
     required this.category,
@@ -45,12 +43,12 @@ class ProductModel {
     required this.stock,
     required this.rating,
     required this.images,
-    required this.timestamp, // No default FieldValue.serverTimestamp() here
+    required this.timestamp,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'id': productId,
       'name': name,
       'description': description,
       'category': category,
@@ -67,7 +65,7 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      id: map['id'] ?? '',
+      productId: map['productId'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       category: map['category'] ?? '',
@@ -89,11 +87,11 @@ class ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(id: $id, name: $name, description: $description, category: $category, subCategory: $subCategory, sku: $sku, brand: $brand, price: $price, stock: $stock, rating: $rating, timestamp: $timestamp, images: $images)';
+    return 'ProductModel(id: $productId, name: $name, description: $description, category: $category, subCategory: $subCategory, sku: $sku, brand: $brand, price: $price, stock: $stock, rating: $rating, timestamp: $timestamp, images: $images)';
   }
 
   ProductModel copyWith({
-    String? id,
+    String? productId,
     String? name,
     String? description,
     String? category,
@@ -107,7 +105,7 @@ class ProductModel {
     List<String>? images,
   }) {
     return ProductModel(
-      id: id ?? this.id,
+      productId: productId ?? this.productId,
       name: name ?? this.name,
       description: description ?? this.description,
       category: category ?? this.category,

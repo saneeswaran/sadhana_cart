@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/common%20model/subcategory_model.dart';
+import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
 import 'package:sadhana_cart/core/common%20services/subcategory_service.dart';
 import 'package:sadhana_cart/core/helper/connection_helper.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
