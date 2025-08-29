@@ -1,6 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
@@ -17,7 +15,7 @@ class ProductModel extends HiveObject {
   @HiveField(3)
   final String category;
   @HiveField(4)
-  final String subCategory;
+  final String subcategory;
   @HiveField(5)
   final String sku;
   @HiveField(6)
@@ -35,14 +33,14 @@ class ProductModel extends HiveObject {
   @HiveField(12)
   final String? sellerId;
   @HiveField(13)
-  final List<Map<String, dynamic>> attributes;
+  final Map<String, dynamic> attributes;
 
   ProductModel({
     required this.productId,
     required this.name,
     required this.description,
     required this.category,
-    required this.subCategory,
+    required this.subcategory,
     required this.sku,
     required this.brand,
     required this.price,
@@ -60,7 +58,7 @@ class ProductModel extends HiveObject {
       'name': name,
       'description': description,
       'category': category,
-      'subCategory': subCategory,
+      'subCategory': subcategory,
       'sku': sku,
       'brand': brand,
       'price': price,
@@ -79,7 +77,7 @@ class ProductModel extends HiveObject {
       name: map['name'] as String,
       description: map['description'] as String,
       category: map['category'] as String,
-      subCategory: map['subCategory'] as String,
+      subcategory: map['subcategory'] as String,
       sku: map['sku'] as String,
       brand: map['brand'] as String,
       price: map['price'] as double,
@@ -88,8 +86,8 @@ class ProductModel extends HiveObject {
       timestamp: map['timestamp'] as Timestamp,
       images: List<String>.from((map['images'] as List<String>)),
       sellerId: map['sellerId'] != null ? map['sellerId'] as String : null,
-      attributes: List<Map<String, dynamic>>.from(
-        (map['attributes'] as List<Map<String, dynamic>>),
+      attributes: Map<String, dynamic>.from(
+        (map['attributes'] as Map<String, dynamic>),
       ),
     );
   }

@@ -21,7 +21,7 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       name: fields[1] as String,
       description: fields[2] as String,
       category: fields[3] as String,
-      subCategory: fields[4] as String,
+      subcategory: fields[4] as String,
       sku: fields[5] as String,
       brand: fields[6] as String,
       price: fields[7] as double,
@@ -29,9 +29,7 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       rating: fields[9] as double,
       timestamp: fields[10] as Timestamp,
       images: (fields[11] as List).cast<String>(),
-      attributes: (fields[13] as List)
-          .map((dynamic e) => (e as Map).cast<String, dynamic>())
-          .toList(),
+      attributes: (fields[13] as Map).cast<String, dynamic>(),
       sellerId: fields[12] as String?,
     );
   }
@@ -49,7 +47,7 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       ..writeByte(3)
       ..write(obj.category)
       ..writeByte(4)
-      ..write(obj.subCategory)
+      ..write(obj.subcategory)
       ..writeByte(5)
       ..write(obj.sku)
       ..writeByte(6)

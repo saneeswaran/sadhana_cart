@@ -73,5 +73,18 @@ final List<Widget> bottomPages = [
     ),
   ),
   const FavoritePageMobile(),
-  const CartPageMobile(),
+  CartPageMobile(
+    appBar: AppBar(
+      backgroundColor: AppColors.pureWhite,
+      centerTitle: true,
+      title: const Text(
+        "Your Cart",
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  ),
 ];
