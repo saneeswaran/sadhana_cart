@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
-import 'package:sadhana_cart/core/common%20model/favorite/favorute_model.dart';
+import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/search%20field/search_field_model.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
@@ -95,6 +95,11 @@ class HiveHelper {
     return box.values.toList();
   }
 
+  static Future<void> deleteCart({required String key}) async {
+    final box = Hive.box<CartModel>(cartBox);
+    await box.delete(key);
+  }
+
   //favorite
   static Future<void> addFavorites({required FavoruteModel favorite}) async {
     final box = Hive.box<FavoruteModel>(favoriteBox);
@@ -104,5 +109,10 @@ class HiveHelper {
   static Future<List<FavoruteModel>> getFavorite() async {
     final box = Hive.box<FavoruteModel>(favoriteBox);
     return box.values.toList();
+  }
+
+  static Future<void> deleteFavorite({required String key}) async {
+    final box = Hive.box<FavoruteModel>(favoriteBox);
+    await box.delete(key);
   }
 }

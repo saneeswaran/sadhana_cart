@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'favorute_model.dart';
+part of 'favorite_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
@@ -17,18 +17,21 @@ class FavoruteModelAdapter extends TypeAdapter<FavoruteModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return FavoruteModel(
-      productId: fields[0] as String,
-      customerId: fields[1] as String,
+      favoriteId: fields[0] as String,
+      productId: fields[1] as String,
+      customerId: fields[2] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, FavoruteModel obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.productId)
+      ..write(obj.favoriteId)
       ..writeByte(1)
+      ..write(obj.productId)
+      ..writeByte(2)
       ..write(obj.customerId);
   }
 

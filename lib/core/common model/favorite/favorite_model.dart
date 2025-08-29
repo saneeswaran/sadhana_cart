@@ -1,23 +1,35 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
 
-part 'favorute_model.g.dart';
+part 'favorite_model.g.dart';
 
 @HiveType(typeId: 6)
 class FavoruteModel extends HiveObject {
   @HiveField(0)
-  final String productId;
+  final String favoriteId;
   @HiveField(1)
+  final String productId;
+  @HiveField(2)
   final String customerId;
-  FavoruteModel({required this.productId, required this.customerId});
+  FavoruteModel({
+    required this.favoriteId,
+    required this.productId,
+    required this.customerId,
+  });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'productId': productId, 'customerId': customerId};
+    return <String, dynamic>{
+      'favoriteId': favoriteId,
+      'productId': productId,
+      'customerId': customerId,
+    };
   }
 
   factory FavoruteModel.fromMap(Map<String, dynamic> map) {
     return FavoruteModel(
+      favoriteId: map['favoriteId'] as String,
       productId: map['productId'] as String,
       customerId: map['customerId'] as String,
     );
