@@ -14,14 +14,15 @@ class CheckOutDetails extends StatelessWidget {
         padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: 2),
             _customRowText(
               title: "Product Price",
               value: "${Constants.indianCurrency} 1000",
               valueColor: Colors.black,
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 10),
             Divider(height: 1, color: Colors.grey.shade300),
+            const SizedBox(height: 5),
             _customRowText(
               title: "Shipping",
               value: "Freeship",
@@ -29,7 +30,7 @@ class CheckOutDetails extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Divider(height: 1, color: Colors.grey.shade300),
-            const SizedBox(height: 5),
+            const SizedBox(height: 8),
             _customRowText(
               title: "subtotal",
               value: "${Constants.indianCurrency} 1000",
