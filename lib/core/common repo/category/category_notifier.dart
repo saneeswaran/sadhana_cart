@@ -19,7 +19,7 @@ class CategoryNotifier extends StateNotifier<List<CategoryModel>> {
     if (isInternet) {
       state = await CategoryServices.getAllCategory(ref: ref);
     } else {
-      state = await HiveHelper.getCategoryModel();
+      state = HiveHelper.getCategoryModel();
       ref.read(loadingProvider.notifier).state = false;
     }
   }

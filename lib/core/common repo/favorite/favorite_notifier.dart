@@ -20,7 +20,7 @@ class FavoriteNotifier extends StateNotifier<Set<FavoriteModel>> {
     if (isInternet) {
       state = await FavoriteService.fetchFavorites();
     } else {
-      state = await HiveHelper.getFavorite();
+      state = HiveHelper.getFavorite();
     }
   }
 

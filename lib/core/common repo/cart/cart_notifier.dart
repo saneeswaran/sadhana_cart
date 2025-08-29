@@ -19,7 +19,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     if (isInternet) {
       state = await CartService.fetchCart();
     } else {
-      state = await HiveHelper.getCart();
+      state = HiveHelper.getCart();
     }
   }
 

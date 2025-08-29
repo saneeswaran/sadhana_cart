@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
+import 'package:sadhana_cart/core/common%20model/brand/brand_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
 import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
@@ -18,6 +19,7 @@ class MainHelper {
   static const String productBox = 'productBox';
   static const String favoriteBox = 'favoriteBox';
   static const String cartBox = 'cartBox';
+  static const String brandBox = 'brandBox';
   //inits
   static Future<void> inits() async {
     //bindings
@@ -38,7 +40,7 @@ class MainHelper {
     Hive.registerAdapter<ProductModel>(ProductModelAdapter());
     Hive.registerAdapter<CartModel>(CartModelAdapter());
     Hive.registerAdapter<FavoriteModel>(FavoriteModelAdapter());
-
+    Hive.registerAdapter<BrandModel>(BrandModelAdapter());
     //open boxes
     await Hive.openBox<BannerModel>(bannerBox);
     await Hive.openBox<CategoryModel>(cateogoryBox);
@@ -46,5 +48,6 @@ class MainHelper {
     await Hive.openBox<SubcategoryModel>(subcategoryBox);
     await Hive.openBox<ProductModel>(productBox);
     await Hive.openBox<FavoriteModel>(favoriteBox);
+    await Hive.openBox<BrandModel>(brandBox);
   }
 }

@@ -17,7 +17,7 @@ class SubcategoryNotifier extends StateNotifier<List<SubcategoryModel>> {
     if (isInternet) {
       state = await SubcategoryService.fetchSubcategory();
     } else {
-      state = await HiveHelper.getSubcategory();
+      state = HiveHelper.getSubcategory();
     }
   }
 }

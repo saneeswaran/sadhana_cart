@@ -19,7 +19,7 @@ class BannerNotifier extends StateNotifier<List<BannerModel>> {
     if (isInternet) {
       state = await BannerService.fetchBanners(ref: ref);
     } else {
-      state = await HiveHelper.getBannerModel();
+      state = HiveHelper.getBannerModel();
     }
     ref.read(loadingProvider.notifier).state = false;
   }

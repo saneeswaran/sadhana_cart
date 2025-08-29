@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
+import 'package:sadhana_cart/core/common%20model/brand/brand_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
 import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
@@ -15,6 +16,7 @@ class HiveHelper {
   static const String productBox = 'productBox';
   static const String favoriteBox = 'favoriteBox';
   static const String cartBox = 'cartBox';
+  static const String brandBox = 'brandBox';
   static const String localData = 'localData';
 
   //store local things
@@ -26,7 +28,7 @@ class HiveHelper {
     await box.put(key, value);
   }
 
-  Future<E?> getLocalData<E>({required String key}) async {
+  E? getLocalData<E>({required String key}) {
     final box = Hive.box<E>(localData);
     return box.get(key);
   }
@@ -37,7 +39,7 @@ class HiveHelper {
     await box.put(banner.bannerId, banner);
   }
 
-  static Future<List<BannerModel>> getBannerModel() async {
+  static List<BannerModel> getBannerModel() {
     final box = Hive.box<BannerModel>(bannerBox);
     return box.values.toList();
   }
@@ -48,7 +50,7 @@ class HiveHelper {
     await box.put(category.id, category);
   }
 
-  static Future<List<CategoryModel>> getCategoryModel() async {
+  static List<CategoryModel> getCategoryModel() {
     final box = Hive.box<CategoryModel>(categoryBox);
     return box.values.toList();
   }
@@ -67,7 +69,7 @@ class HiveHelper {
     await box.put(subcategory.id, subcategory);
   }
 
-  static Future<List<SubcategoryModel>> getSubcategory() async {
+  static List<SubcategoryModel> getSubcategory() {
     final box = Hive.box<SubcategoryModel>(subcategoryBox);
     return box.values.toList();
   }
@@ -78,7 +80,7 @@ class HiveHelper {
     await box.put(product.productId, product);
   }
 
-  static Future<List<ProductModel>> getProducts() async {
+  static List<ProductModel> getProducts() {
     final box = Hive.box<ProductModel>(productBox);
     return box.values.toList();
   }
@@ -90,7 +92,7 @@ class HiveHelper {
     box.put(cart.productId, cart);
   }
 
-  static Future<Set<CartModel>> getCart() async {
+  static Set<CartModel> getCart() {
     final box = Hive.box<CartModel>(cartBox);
     return box.values.toSet();
   }
@@ -106,7 +108,7 @@ class HiveHelper {
     await box.put(favorite.productId, favorite);
   }
 
-  static Future<Set<FavoriteModel>> getFavorite() async {
+  static Set<FavoriteModel> getFavorite() {
     final box = Hive.box<FavoriteModel>(favoriteBox);
     return box.values.toSet();
   }
@@ -114,5 +116,17 @@ class HiveHelper {
   static Future<void> deleteFavorite({required String key}) async {
     final box = Hive.box<FavoriteModel>(favoriteBox);
     await box.delete(key);
+  }
+
+  //brand
+
+  static Future<void> addBrand({required BrandModel brand}) async {
+    final box = Hive.box<BrandModel>(brandBox);
+    await box.put(brand.id, brand);
+  }
+
+  static List<BrandModel> getBrands() {
+    final box = Hive.box<BrandModel>(brandBox);
+    return box.values.toList();
   }
 }
