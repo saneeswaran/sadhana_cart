@@ -23,7 +23,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     }
   }
 
-  Future<Set<ProductModel>> getCartProducts() async {
+  Set<ProductModel> getCartProducts() {
     final products = ref.watch(productProvider);
     for (final cart in state) {
       return products.where((e) => e.productId == cart.productId).toSet();

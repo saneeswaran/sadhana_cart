@@ -35,7 +35,7 @@ class FavoriteNotifier extends StateNotifier<Set<FavoriteModel>> {
     }
   }
 
-  Future<Set<ProductModel>> getFavoriteProducts() async {
+  Set<ProductModel> getFavoriteProducts() {
     final product = ref.watch(productProvider);
     for (final favorite in state) {
       return product.where((e) => e.productId == favorite.productId).toSet();
