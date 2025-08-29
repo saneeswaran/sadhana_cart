@@ -25,10 +25,11 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
 
   Set<ProductModel> getCartProducts() {
     final products = ref.watch(productProvider);
-    for (final cart in state) {
-      return products.where((e) => e.productId == cart.productId).toSet();
-    }
-    return {};
+    final productIdsInCart = state.map((cart) => cart.productId).toSet();
+
+    return products
+        .where((product) => productIdsInCart.contains(product.productId))
+        .toSet();
   }
 
   Future<void> addToCart({required ProductModel product}) async {
@@ -50,5 +51,18 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     } else {
       state = await CartService.fetchCart();
     }
+  }
+
+  double getCartTotalAmount() {
+    final products = ref.watch(productProvider);
+    double total = 0.0;
+
+    for (final cart in state) {
+      final product = products.firstWhere((p) => p.productId == cart.productId);
+
+      total += product.price * cart.quantity;
+    }
+
+    return total;
   }
 }

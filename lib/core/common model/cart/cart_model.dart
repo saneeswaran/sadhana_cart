@@ -14,10 +14,13 @@ class CartModel extends HiveObject {
 
   @HiveField(2)
   final String productId;
+  @HiveField(3)
+  int quantity = 1;
   CartModel({
     required this.cartId,
     required this.customerId,
     required this.productId,
+    required this.quantity,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,6 +28,7 @@ class CartModel extends HiveObject {
       'cartId': cartId,
       'customerId': customerId,
       'productId': productId,
+      'quantity': quantity,
     };
   }
 
@@ -33,6 +37,7 @@ class CartModel extends HiveObject {
       cartId: map['cartId'] as String,
       customerId: map['customerId'] as String,
       productId: map['productId'] as String,
+      quantity: map['quantity'] as int,
     );
   }
 

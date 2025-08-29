@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
@@ -30,6 +29,8 @@ class ProductModel extends HiveObject {
   final Timestamp timestamp;
   @HiveField(11)
   final List<String> images;
+  @HiveField(12)
+  final List<Map<String, dynamic>> attributes;
 
   ProductModel({
     required this.productId,
@@ -42,13 +43,36 @@ class ProductModel extends HiveObject {
     required this.price,
     required this.stock,
     required this.rating,
-    required this.images,
     required this.timestamp,
+    required this.images,
+    required this.attributes,
   });
+
+  factory ProductModel.fromMap(Map<String, dynamic> map) {
+    return ProductModel(
+      productId: map['productId'] ?? '',
+      name: map['name'] ?? '',
+      description: map['description'] ?? '',
+      category: map['category'] ?? '',
+      subCategory: map['subCategory'] ?? '',
+      sku: map['sku'] ?? '',
+      brand: map['brand'] ?? '',
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
+      stock: map['stock'] ?? 0,
+      rating: (map['rating'] as num?)?.toDouble() ?? 0.0,
+      timestamp: map['timestamp'] is Timestamp
+          ? map['timestamp']
+          : Timestamp.fromMillisecondsSinceEpoch(map['timestamp'] ?? 0),
+      images: List<String>.from(map['images'] ?? []),
+      attributes: List<Map<String, dynamic>>.from(
+        (map['attributes'] ?? []).map((e) => Map<String, dynamic>.from(e)),
+      ),
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
-      'id': productId,
+      'productId': productId,
       'name': name,
       'description': description,
       'category': category,
@@ -60,63 +84,7 @@ class ProductModel extends HiveObject {
       'rating': rating,
       'timestamp': timestamp,
       'images': images,
+      'attributes': attributes,
     };
-  }
-
-  factory ProductModel.fromMap(Map<String, dynamic> map) {
-    return ProductModel(
-      productId: map['productId'] ?? '',
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      category: map['category'] ?? '',
-      subCategory: map['subCategory'] ?? '',
-      sku: map['sku'] ?? '',
-      brand: map['brand'] ?? '',
-      price: (map['price'] as num).toDouble(),
-      stock: map['stock'] ?? 0,
-      rating: (map['rating'] as num).toDouble(),
-      timestamp: map['timestamp'] ?? Timestamp.now(),
-      images: List<String>.from(map['images'] ?? []),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory ProductModel.fromJson(String source) =>
-      ProductModel.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'ProductModel(id: $productId, name: $name, description: $description, category: $category, subCategory: $subCategory, sku: $sku, brand: $brand, price: $price, stock: $stock, rating: $rating, timestamp: $timestamp, images: $images)';
-  }
-
-  ProductModel copyWith({
-    String? productId,
-    String? name,
-    String? description,
-    String? category,
-    String? subCategory,
-    String? sku,
-    String? brand,
-    double? price,
-    int? stock,
-    double? rating,
-    Timestamp? timestamp,
-    List<String>? images,
-  }) {
-    return ProductModel(
-      productId: productId ?? this.productId,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      subCategory: subCategory ?? this.subCategory,
-      sku: sku ?? this.sku,
-      brand: brand ?? this.brand,
-      price: price ?? this.price,
-      stock: stock ?? this.stock,
-      rating: rating ?? this.rating,
-      timestamp: timestamp ?? this.timestamp,
-      images: images ?? this.images,
-    );
   }
 }
