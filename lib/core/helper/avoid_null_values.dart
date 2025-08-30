@@ -1,11 +1,11 @@
 class AvoidNullValues {
-  static Map<String, dynamic> removeNullValues() {
-    final Map<String, dynamic> data = {};
+  static Map<String, dynamic> removeNullValues(Map<String, dynamic> data) {
+    final Map<String, dynamic> newMap = {};
     data.forEach((key, value) {
       if (value != null) {
-        data[key] = value;
+        newMap[key] = value;
       }
     });
-    return data;
+    return newMap;
   }
 }

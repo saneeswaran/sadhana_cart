@@ -46,7 +46,7 @@ void informationSnackBar({
 void failedSnackbar({
   required BuildContext context,
   required String text,
-  required Text? action,
+  Text? action,
   bool displayIcon = false,
 }) {
   CherryToast.error(

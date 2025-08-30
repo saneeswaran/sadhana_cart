@@ -1,10 +1,15 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/customer/customer_model.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
+import 'package:sadhana_cart/core/helper/firebase_storage_helper.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/profile/model/user_model.dart';
 
 class CustomerService {
@@ -13,7 +18,7 @@ class CustomerService {
       .collection(customer);
   static final String customerId = FirebaseAuth.instance.currentUser!.uid;
 
-  Future<UserModel?> fetCurrentUserDetails({required Ref ref}) async {
+  static Future<UserModel?> fetCurrentUserDetails({required Ref ref}) async {
     try {
       ref.read(loadingProvider.notifier).state = true;
       final DocumentSnapshot documentSnapshot = await customerRef
@@ -33,18 +38,19 @@ class CustomerService {
     return null;
   }
 
-  Future<bool> createUserProfile({
+  static Future<bool> createUserProfile({
     required String name,
     email,
     required int contactNo,
   }) async {
     try {
-      final String referralCode = name.substring(1, 6).toUpperCase();
+      final String referralCode =
+          "${name.substring(0, 6).toUpperCase()} ${contactNo.toString().substring(0, 4)}";
       final CustomerModel customerModel = CustomerModel(
         customerId: customerId,
         name: name,
         email: email,
-        contectNo: contactNo,
+        contactNo: contactNo,
         referralCode: referralCode,
         referredBy: null,
       );
@@ -56,7 +62,7 @@ class CustomerService {
     }
   }
 
-  Future<bool> referCustomer({required String referralCode}) async {
+  static Future<bool> referCustomer({required String referralCode}) async {
     try {
       final QuerySnapshot querySnapshot = await customerRef
           .where('referralCode', isEqualTo: referralCode)
@@ -78,5 +84,49 @@ class CustomerService {
       return false;
     }
     return false;
+  }
+
+  static Future<bool> updateCustomerProfile({
+    required WidgetRef ref,
+    required BuildContext context,
+    required String name,
+    required File profileImage,
+    required int contactNo,
+  }) async {
+    try {
+      ref.read(loadingProvider.notifier).state = true;
+
+      final DocumentSnapshot documentSnapshot = await customerRef
+          .doc(customerId)
+          .get();
+      if (documentSnapshot.exists) {
+        final image = await FirebaseStorageHelper.uploadImageToFirebaseStorage(
+          file: profileImage,
+        );
+        final CustomerModel customerModel = CustomerModel(
+          customerId: customerId,
+          name: name,
+          profileImage: image,
+          contactNo: contactNo,
+        );
+        final newUpdatedData = AvoidNullValues.removeNullValues(
+          customerModel.toMap(),
+        );
+        await documentSnapshot.reference.update(newUpdatedData);
+        if (context.mounted) {
+          successSnackBar(
+            message: "Profile updated successfully",
+            context: context,
+          );
+        }
+        return true;
+      } else {
+        log("failed to update customer profile");
+        return false;
+      }
+    } catch (e) {
+      log("customer profile service $e");
+      return false;
+    }
   }
 }
