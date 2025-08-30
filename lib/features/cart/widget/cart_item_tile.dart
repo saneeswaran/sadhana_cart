@@ -60,6 +60,8 @@ class CartItemTile extends StatelessWidget {
                       ),
                       const Text(
                         "${Constants.indianCurrency} 445",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 18,

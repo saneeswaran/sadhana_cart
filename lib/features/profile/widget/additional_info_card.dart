@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/features/favorites/view/favorite_page_mobile.dart';
 
 class AdditionalInfoCard extends StatelessWidget {
   const AdditionalInfoCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Container(
-      height: size.height * 6,
-      width: size.height * 1,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
-        border: Border.all(color: Colors.grey, width: 1.4),
+        border: Border.all(color: Colors.grey.shade300, width: 1.4),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade300,
@@ -28,25 +27,27 @@ class AdditionalInfoCard extends StatelessWidget {
             text: "Address",
             onTap: () {},
           ),
-          const Divider(color: Colors.grey),
+          Divider(color: Colors.grey.shade300),
           _customTile(
             icon: const Icon(Icons.wallet),
             text: "Payment Method",
             onTap: () {},
           ),
-          const Divider(color: Colors.grey),
+          Divider(color: Colors.grey.shade300),
           _customTile(
             icon: const Icon(Icons.favorite),
             text: "Wishlist",
-            onTap: () {},
+            onTap: () {
+              navigateTo(context: context, screen: const FavoritePageMobile());
+            },
           ),
-          const Divider(color: Colors.grey),
+          Divider(color: Colors.grey.shade300),
           _customTile(
             icon: const Icon(Icons.star),
             text: "Rate this app",
             onTap: () {},
           ),
-          const Divider(color: Colors.grey),
+          Divider(color: Colors.grey.shade300),
           _customTile(
             icon: const Icon(Icons.logout),
             text: "Logout",
@@ -65,11 +66,12 @@ class AdditionalInfoCard extends StatelessWidget {
   }) {
     return ListTile(
       leading: icon,
+      onTap: onTap,
       title: Text(
         text,
         style: const TextStyle(
           color: Colors.black38,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w400,
         ),
       ),
       trailing: trailing,
