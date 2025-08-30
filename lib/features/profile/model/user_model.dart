@@ -1,11 +1,13 @@
 import 'dart:convert';
 
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class UserModel {
   final String? id;
   final String? name;
   final String? image;
   final String? email;
+  final String? profileImage;
+  final String? gender;
+  final int? contactNo;
   final String? fcmToken;
   final String? referralCode;
   final String? referredBy;
@@ -14,6 +16,9 @@ class UserModel {
     this.name,
     this.image,
     this.email,
+    this.profileImage,
+    this.gender,
+    this.contactNo,
     this.fcmToken,
     this.referralCode,
     this.referredBy,
@@ -25,6 +30,9 @@ class UserModel {
       'name': name,
       'image': image,
       'email': email,
+      'profileImage': profileImage,
+      'gender': gender,
+      'contactNo': contactNo,
       'fcmToken': fcmToken,
       'referralCode': referralCode,
       'referredBy': referredBy,
@@ -37,6 +45,11 @@ class UserModel {
       name: map['name'] != null ? map['name'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
+      profileImage: map['profileImage'] != null
+          ? map['profileImage'] as String
+          : null,
+      gender: map['gender'] != null ? map['gender'] as String : null,
+      contactNo: map['contactNo'] != null ? map['contactNo'] as int : null,
       fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,
       referralCode: map['referralCode'] != null
           ? map['referralCode'] as String

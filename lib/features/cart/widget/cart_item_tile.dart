@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
 class CartItemTile extends StatelessWidget {
@@ -38,7 +39,10 @@ class CartItemTile extends StatelessWidget {
                   height: size.height * 0.17,
                   width: size.width * 0.3,
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    image: const DecorationImage(
+                      image: AssetImage(AppImages.onboard2),
+                      fit: BoxFit.cover,
+                    ),
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),

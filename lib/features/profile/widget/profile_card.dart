@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/profile/widget/edit_profile_settings.dart';
 
@@ -29,7 +31,12 @@ class ProfileCard extends StatelessWidget {
             width: size.width * 0.3,
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.red,
+              image: DecorationImage(
+                image: CachedNetworkImageProvider(
+                  AppImages.noProfile,
+                  cacheKey: AppImages.noProfile,
+                ),
+              ),
             ),
           ),
           Expanded(

@@ -25,6 +25,15 @@ class CustomTextFormField extends StatelessWidget {
           color: Colors.black,
           fontWeight: FontWeight.w400,
         ),
+        border: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
       ),
     );
   }
