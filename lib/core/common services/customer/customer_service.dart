@@ -121,6 +121,9 @@ class CustomerService {
         }
         return true;
       } else {
+        if (context.mounted) {
+          failedSnackbar(text: "Failed to update profile", context: context);
+        }
         log("failed to update customer profile");
         return false;
       }

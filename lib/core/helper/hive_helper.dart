@@ -4,6 +4,7 @@ import 'package:sadhana_cart/core/common%20model/brand/brand_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
 import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
+import 'package:sadhana_cart/core/common%20model/notification/notification_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/search%20field/search_field_model.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
@@ -17,6 +18,7 @@ class HiveHelper {
   static const String favoriteBox = 'favoriteBox';
   static const String cartBox = 'cartBox';
   static const String brandBox = 'brandBox';
+  static const String notificationBox = 'notificationBox';
   static const String localData = 'localData';
 
   //store local things
@@ -127,6 +129,19 @@ class HiveHelper {
 
   static List<BrandModel> getBrands() {
     final box = Hive.box<BrandModel>(brandBox);
+    return box.values.toList();
+  }
+
+  //notification
+  static Future<void> addNotification({
+    required NotificationModel notification,
+  }) async {
+    final box = Hive.box<NotificationModel>(notificationBox);
+    await box.put(notification.title, notification);
+  }
+
+  static List<NotificationModel> getNotification() {
+    final box = Hive.box<NotificationModel>(notificationBox);
     return box.values.toList();
   }
 }

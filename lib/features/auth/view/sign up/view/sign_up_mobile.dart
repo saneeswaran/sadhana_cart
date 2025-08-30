@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/auth%20service/auth_service.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/helper/validation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
@@ -23,6 +24,7 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final phoneNumberController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -36,106 +38,137 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
 
   @override
   Widget build(BuildContext context) {
+    final confirmEye = ref.watch(confirmPassEyeProvider);
+    final passEye = ref.watch(passEyeProvider);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Form(
           key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 20,
-            children: [
-              const SizedBox(height: 30),
-              const Text(
-                "Create\nyour account ",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 32,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const SizedBox(height: 10),
-              CustomTextFormField(
-                controller: nameController,
-                labelText: "Enter your name",
-                validator: ValidationHelper.validateTextField(text: "Name"),
-              ),
-              CustomTextFormField(
-                controller: emailController,
-                labelText: "Email address",
-                validator: ValidationHelper.emailValidate(),
-              ),
-              CustomTextFormField(
-                controller: passwordController,
-                labelText: "Password",
-                validator: ValidationHelper.passwordValidate(
-                  number: passwordController.text.length,
-                ),
-              ),
-              CustomTextFormField(
-                controller: confirmPasswordController,
-                labelText: "Confirm password",
-                validator: ValidationHelper.passwordValidate(
-                  number: confirmPasswordController.text.length,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Center(
-                child: CustomElevatedButton(
-                  child: const Text(
-                    "Sign Up",
-                    style: customElevatedButtonTextStyle,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 20,
+              children: [
+                const SizedBox(height: 30),
+                const Text(
+                  "Create\nyour account ",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 32,
+                    fontWeight: FontWeight.w400,
                   ),
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      await AuthService.createAccount(
-                        email: emailController.text,
-                        password: passwordController.text,
-                      );
-                      await UserService.createUserProfile(
-                        email: emailController.text,
-                        name: nameController.text,
-                      );
-                    }
-                  },
                 ),
-              ),
-              const Center(
-                child: Text(
-                  "or continue with",
-                  style: TextStyle(color: Colors.grey),
+                const SizedBox(height: 10),
+                CustomTextFormField(
+                  controller: nameController,
+                  labelText: "Enter your name",
+                  validator: ValidationHelper.validateTextField(text: "Name"),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  RoundedSigninButton(
-                    imagePath: AppImages.googleSvg,
-                    onTap: () {},
+                CustomTextFormField(
+                  controller: emailController,
+                  labelText: "Email address",
+                  validator: ValidationHelper.emailValidate(),
+                ),
+                CustomTextFormField(
+                  controller: phoneNumberController,
+                  labelText: "Phone number",
+                  keyboardType: TextInputType.number,
+                  maxLength: 10,
+                  validator: ValidationHelper.validateMobileNumber(
+                    number: phoneNumberController.text.length,
                   ),
-                  const SizedBox(width: 30),
-                  RoundedSigninButton(
-                    imagePath: AppImages.appleSvg,
-                    onTap: () {},
+                ),
+                CustomTextFormField(
+                  controller: passwordController,
+                  labelText: "Password",
+                  obscureText: passEye,
+                  suffixIcon: IconButton(
+                    onPressed: () =>
+                        ref.read(passEyeProvider.notifier).state = !passEye,
+                    icon: Icon(
+                      passEye ? Icons.visibility : Icons.visibility_off,
+                    ),
                   ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Already have an account? "),
-                  CustomTextButton(
-                    text: "Sign In",
-                    onPressed: () {
-                      navigateTo(
-                        context: context,
-                        screen: const SignInMobile(),
-                      );
+                  validator: ValidationHelper.passwordValidate(
+                    number: passwordController.text.length,
+                  ),
+                ),
+                CustomTextFormField(
+                  controller: confirmPasswordController,
+                  obscureText: confirmEye,
+                  suffixIcon: IconButton(
+                    onPressed: () =>
+                        ref.read(confirmPassEyeProvider.notifier).state =
+                            !confirmEye,
+                    icon: Icon(
+                      confirmEye ? Icons.visibility : Icons.visibility_off,
+                    ),
+                  ),
+                  labelText: "Confirm password",
+                  validator: ValidationHelper.passwordValidate(
+                    number: confirmPasswordController.text.length,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Center(
+                  child: CustomElevatedButton(
+                    child: const Text(
+                      "Sign Up",
+                      style: customElevatedButtonTextStyle,
+                    ),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        await AuthService.createAccount(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+                        await UserService.createUserProfile(
+                          email: emailController.text,
+                          name: nameController.text,
+                          number: passwordController.text.length,
+                        );
+                      }
                     },
                   ),
-                ],
-              ),
-            ],
+                ),
+                const Center(
+                  child: Text(
+                    "or continue with",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RoundedSigninButton(
+                      imagePath: AppImages.googleSvg,
+                      onTap: () {},
+                    ),
+                    const SizedBox(width: 30),
+                    RoundedSigninButton(
+                      imagePath: AppImages.appleSvg,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Already have an account? "),
+                    CustomTextButton(
+                      text: "Sign In",
+                      onPressed: () {
+                        navigateTo(
+                          context: context,
+                          screen: const SignInMobile(),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

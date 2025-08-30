@@ -5,12 +5,20 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final String labelText;
   final Widget? prefixIcon;
+  final TextInputType keyboardType;
+  final int? maxLength;
+  final Widget? suffixIcon;
+  final bool obscureText;
   const CustomTextFormField({
     super.key,
     required this.controller,
     this.validator,
     required this.labelText,
     this.prefixIcon,
+    this.keyboardType = TextInputType.text,
+    this.maxLength,
+    this.suffixIcon,
+    this.obscureText = false,
   });
 
   @override
@@ -18,9 +26,14 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: validator,
+      keyboardType: keyboardType,
+      maxLength: maxLength,
+      obscureText: obscureText,
       decoration: InputDecoration(
+        counterText: "",
         prefixIcon: prefixIcon,
         labelText: labelText,
+        suffixIcon: suffixIcon,
         labelStyle: const TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.w400,

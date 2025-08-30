@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
-import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_bar_mobile.dart';
+import 'package:sadhana_cart/features/onboard/view/onboard_page_mobile.dart';
 
 class SplashPageMobile extends StatelessWidget {
   const SplashPageMobile({super.key});
@@ -12,7 +12,7 @@ class SplashPageMobile extends StatelessWidget {
       if (context.mounted) {
         navigateToReplacement(
           context: context,
-          screen: const BottomNavBarMobile(),
+          screen: const OnboardPageMobile(),
         );
       }
     });

@@ -32,6 +32,7 @@ class UserService {
   static Future<void> createUserProfile({
     required String email,
     required String name,
+    required int number,
   }) async {
     final docRef = customerRef.doc();
     final fcmToken = await FirebaseMessageHelper.createFcmToken();
@@ -41,6 +42,7 @@ class UserService {
       email: email,
       name: name,
       image: null,
+      contactNo: number,
       fcmToken: fcmToken,
       referralCode: referralCode,
       referredBy: null,

@@ -25,3 +25,6 @@ final productDataProvider = FutureProvider.family
 final genderProvider = StateProvider.autoDispose<GenderEnum?>((ref) => null);
 
 final profileImageProvider = StateProvider.autoDispose<File?>((ref) => null);
+
+final passEyeProvider = StateProvider.autoDispose<bool>((ref) => false);
+final confirmPassEyeProvider = StateProvider.autoDispose<bool>((ref) => false);

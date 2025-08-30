@@ -32,4 +32,20 @@ class ValidationHelper {
     }
     return null;
   }
+
+  static String? Function(String?)? validateMobileNumber({
+    required int number,
+  }) {
+    if (number < 10) {
+      return (value) {
+        if (value == null || value.trim().isEmpty) {
+          return 'Please enter a mobile number';
+        } else if (value.length != 10) {
+          return 'Please enter a valid mobile number';
+        }
+        return null;
+      };
+    }
+    return null;
+  }
 }

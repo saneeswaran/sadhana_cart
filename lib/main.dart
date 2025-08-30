@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/app%20routes/app_routes.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/helper/main_helper.dart';
-import 'package:sadhana_cart/core/responsive/responsive_screen.dart';
 import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_option.dart';
+import 'package:sadhana_cart/features/onboard/view/onboard_page_mobile.dart';
 import 'package:sadhana_cart/features/splash/view/splash_page_mobile.dart';
-import 'package:sadhana_cart/features/splash/view/splash_page_tablet.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await MainHelper.inits();
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -28,19 +28,16 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.light,
       routes: AppRoutes.routes,
-      home: StreamBuilder(
+      home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapShot) {
-          if (snapShot.connectionState == ConnectionState.waiting) {
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return const SplashPageMobile();
-          } else if (snapShot.hasData) {
-            return const ResponsiveScreen(
-              mobileScreen: SplashPageMobile(),
-              tabletScreen: SplashPageTablet(),
-            );
-          } else {
+          }
+          if (snapshot.hasData) {
             return const BottomNavOption();
           }
+          return const OnboardPageMobile();
         },
       ),
     );
