@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/features/profile/widget/edit_profile_settings.dart';
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({super.key});
@@ -35,7 +37,12 @@ class ProfileCard extends StatelessWidget {
               title: const Text("Name"),
               subtitle: const Text("Email"),
               trailing: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  navigateTo(
+                    context: context,
+                    screen: const EditProfileSettings(),
+                  );
+                },
                 icon: const Icon(Icons.settings),
               ),
             ),
