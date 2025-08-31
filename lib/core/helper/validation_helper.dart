@@ -20,17 +20,14 @@ class ValidationHelper {
   }
 
   static String? Function(String?)? passwordValidate({required int number}) {
-    if (number >= 8) {
-      return (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'Please enter a password';
-        } else if (value.length != 8) {
-          return 'Please enter a valid password';
-        }
-        return null;
-      };
-    }
-    return null;
+    return (value) {
+      if (value == null || value.trim().isEmpty) {
+        return 'Please enter a password';
+      } else if (value.length < 8) {
+        return 'Please enter a valid password';
+      }
+      return null;
+    };
   }
 
   static String? Function(String?)? validateMobileNumber({
