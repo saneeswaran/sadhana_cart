@@ -34,30 +34,7 @@ List<BottomBarItem> bottomBarItems = [
 ];
 
 final List<Widget> bottomPages = [
-  HomePageMobile(
-    appBar: AppBar(
-      backgroundColor: AppColors.pureWhite,
-      centerTitle: true,
-      title: const Text(
-        "Sadhana Cart",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      actions: [
-        Badge.count(
-          count: 1,
-          child: const Padding(
-            padding: EdgeInsets.all(6.0),
-            child: Icon(Icons.notifications),
-          ),
-        ),
-        const SizedBox(width: 20),
-      ],
-    ),
-  ),
+  const HomePageMobile(),
   SearchProductMobile(
     appBar: AppBar(
       backgroundColor: AppColors.pureWhite,
