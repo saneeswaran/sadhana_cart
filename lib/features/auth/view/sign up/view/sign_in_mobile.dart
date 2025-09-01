@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/auth%20service/auth_service.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/helper/validation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
+import 'package:sadhana_cart/core/widgets/loader.dart';
 import 'package:sadhana_cart/core/widgets/rounded_signin_button.dart';
 import 'package:sadhana_cart/features/auth/view/forgot%20password/view/forgot_password_mobile.dart';
 import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_bar_mobile.dart';
@@ -32,6 +34,7 @@ class _SignInMobileState extends ConsumerState<SignInMobile> {
 
   @override
   Widget build(BuildContext context) {
+    final loader = ref.watch(loadingProvider);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -79,16 +82,25 @@ class _SignInMobileState extends ConsumerState<SignInMobile> {
                 const SizedBox(height: 20),
                 Center(
                   child: CustomElevatedButton(
-                    child: const Text(
-                      "Sign In",
-                      style: customElevatedButtonTextStyle,
-                    ),
+                    child: loader
+                        ? const Loader()
+                        : const Text(
+                            "Sign In",
+                            style: customElevatedButtonTextStyle,
+                          ),
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        await AuthService.signIn(
-                          email: emailController.text,
-                          password: passwordController.text,
+                        final user = await AuthService.signIn(
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim(),
+                          ref: ref,
                         );
+                        if (user != null && context.mounted) {
+                          navigateTo(
+                            context: context,
+                            screen: const BottomNavBarMobile(),
+                          );
+                        }
                       }
                     },
                   ),

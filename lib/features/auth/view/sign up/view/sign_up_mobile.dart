@@ -131,9 +131,11 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                         );
                         final bool profile =
                             await UserService.createUserProfile(
-                              email: emailController.text,
-                              name: nameController.text,
-                              number: passwordController.text.length,
+                              email: emailController.text.trim(),
+                              name: nameController.text.trim(),
+                              number: int.parse(
+                                phoneNumberController.text.trim(),
+                              ),
                             );
                         if (isSuccess && profile && context.mounted) {
                           navigateToReplacement(

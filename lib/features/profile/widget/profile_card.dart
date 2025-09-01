@@ -77,7 +77,7 @@ class ProfileCard extends ConsumerWidget {
                 data: (data) {
                   final name = data?.name ?? "Unknown";
                   final email = data?.email ?? "Not available";
-
+                  final contact = data?.contactNo;
                   return ListTile(
                     title: Text(name),
                     subtitle: Text(email),
@@ -86,7 +86,10 @@ class ProfileCard extends ConsumerWidget {
                       onPressed: () {
                         navigateTo(
                           context: context,
-                          screen: const EditProfileSettings(),
+                          screen: EditProfileSettings(
+                            name: name,
+                            contactNo: contact!,
+                          ),
                         );
                       },
                     ),

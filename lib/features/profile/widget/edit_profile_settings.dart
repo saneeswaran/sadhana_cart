@@ -11,7 +11,13 @@ import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
 import 'package:sadhana_cart/core/widgets/loader.dart';
 
 class EditProfileSettings extends ConsumerStatefulWidget {
-  const EditProfileSettings({super.key});
+  final String name;
+  final int contactNo;
+  const EditProfileSettings({
+    super.key,
+    required this.name,
+    required this.contactNo,
+  });
 
   @override
   ConsumerState<EditProfileSettings> createState() =>
@@ -21,6 +27,13 @@ class EditProfileSettings extends ConsumerStatefulWidget {
 class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
   final userNameController = TextEditingController();
   final phoneNumberController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    userNameController.text = widget.name;
+    phoneNumberController.text = widget.contactNo.toString();
+  }
 
   @override
   void dispose() {
@@ -50,7 +63,7 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
               ref: ref,
               contactNo: int.parse(phoneNumberController.text),
               name: userNameController.text,
-              profileImage: image!,
+              profileImage: image,
             );
             if (isSuccess && context.mounted) {
               Navigator.pop(context);
@@ -108,6 +121,8 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: CustomTextFormField(
                 controller: phoneNumberController,
+                keyboardType: TextInputType.number,
+                maxLength: 10,
                 labelText: "Phone number",
               ),
             ),

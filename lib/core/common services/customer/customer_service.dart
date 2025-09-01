@@ -13,7 +13,7 @@ import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/profile/model/user_model.dart';
 
 class CustomerService {
-  static const String customer = 'customer';
+  static const String customer = 'users';
   static final CollectionReference customerRef = FirebaseFirestore.instance
       .collection(customer);
   static final String customerId = FirebaseAuth.instance.currentUser!.uid;
@@ -90,7 +90,7 @@ class CustomerService {
     required WidgetRef ref,
     required BuildContext context,
     required String name,
-    required File profileImage,
+    required File? profileImage,
     required int contactNo,
   }) async {
     try {
@@ -101,7 +101,7 @@ class CustomerService {
           .get();
       if (documentSnapshot.exists) {
         final image = await FirebaseStorageHelper.uploadImageToFirebaseStorage(
-          file: profileImage,
+          file: profileImage!,
         );
         final CustomerModel customerModel = CustomerModel(
           customerId: customerId,
@@ -109,6 +109,7 @@ class CustomerService {
           profileImage: image,
           contactNo: contactNo,
         );
+        log(customerModel.toString());
         final newUpdatedData = AvoidNullValues.removeNullValues(
           customerModel.toMap(),
         );

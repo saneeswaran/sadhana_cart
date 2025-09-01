@@ -89,7 +89,7 @@ class CategoriesListMobile extends ConsumerWidget {
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0),
                   child: CircleAvatar(
-                    backgroundImage: AssetImage(AppImages.googleSvg),
+                    backgroundImage: AssetImage(AppImages.onboard),
                     radius: 30,
                   ),
                 ),

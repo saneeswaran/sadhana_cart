@@ -41,12 +41,15 @@ class AuthService {
   static Future<User?> signIn({
     required String email,
     required String password,
+    required WidgetRef ref,
   }) async {
     try {
+      ref.read(loadingProvider.notifier).state = true;
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      ref.read(loadingProvider.notifier).state = false;
       return credential.user;
     } catch (e) {
       throw FirebaseAuthException(
