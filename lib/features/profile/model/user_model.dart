@@ -1,11 +1,19 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class UserModel {
+import 'package:hive/hive.dart';
+
+part 'user_model.g.dart';
+
+@HiveType(typeId: 9)
+class UserModel extends HiveObject {
   final String? id;
+  @HiveField(0)
   final String? name;
+  @HiveField(1)
   final String? image;
+  @HiveField(2)
   final String? email;
-  final String? profileImage;
   final String? gender;
   final int? contactNo;
   final String? fcmToken;
@@ -16,7 +24,6 @@ class UserModel {
     this.name,
     this.image,
     this.email,
-    this.profileImage,
     this.gender,
     this.contactNo,
     this.fcmToken,
@@ -30,7 +37,6 @@ class UserModel {
       'name': name,
       'image': image,
       'email': email,
-      'profileImage': profileImage,
       'gender': gender,
       'contactNo': contactNo,
       'fcmToken': fcmToken,
@@ -45,9 +51,6 @@ class UserModel {
       name: map['name'] != null ? map['name'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
-      profileImage: map['profileImage'] != null
-          ? map['profileImage'] as String
-          : null,
       gender: map['gender'] != null ? map['gender'] as String : null,
       contactNo: map['contactNo'] != null ? map['contactNo'] as int : null,
       fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,
@@ -64,4 +67,9 @@ class UserModel {
 
   factory UserModel.fromJson(String source) =>
       UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'UserModel(id: $id, name: $name, image: $image, email: $email, gender: $gender, contactNo: $contactNo, fcmToken: $fcmToken, referralCode: $referralCode, referredBy: $referredBy)';
+  }
 }

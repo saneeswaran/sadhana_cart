@@ -13,16 +13,18 @@ class UserService {
 
   static Future<UserModel> getCurrentUserProfile() async {
     try {
-      final DocumentSnapshot documentSnapshot = await customerRef
-          .doc(userUid)
+      final QuerySnapshot querySnapshot = await customerRef
+          .where("id", isEqualTo: userUid)
           .get();
-      if (documentSnapshot.exists) {
-        return UserModel.fromMap(
-          documentSnapshot.data() as Map<String, dynamic>,
-        );
-      } else {
-        return UserModel();
+      if (querySnapshot.docs.isNotEmpty) {
+        final data = querySnapshot.docs
+            .map((e) => UserModel.fromMap(e.data() as Map<String, dynamic>))
+            .toList()
+            .first;
+        log(data.toString());
+        return data;
       }
+      return UserModel();
     } catch (e) {
       log(e.toString());
       return UserModel();

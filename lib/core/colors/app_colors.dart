@@ -7,4 +7,5 @@ class AppColors {
   static const Color onboardButtonColor = Color(0xff747375);
   static const Color lightGrey = Color(0xfff6f6f6);
   static const Color pureWhite = Color(0xffFFFFFF);
+  static const Color tileColor = Color(0xff777E90);
 }
