@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20services/customer/customer_service.dart';
@@ -69,7 +68,7 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
                 radius: 60,
                 backgroundImage: image != null && image.path.isNotEmpty
                     ? FileImage(image)
-                    : const CachedNetworkImageProvider(AppImages.noProfile),
+                    : const AssetImage(AppImages.noProfile),
                 child: Align(
                   alignment: Alignment.bottomRight,
                   child: IconButton(

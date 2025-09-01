@@ -18,9 +18,7 @@ class AppImages {
   //testing purpose only
   static const String carousel = "assets/images/carousel.png";
 
-  //network image
-  static const String noProfile =
-      "https://i.pinimg.com/736x/2c/47/d5/2c47d5dd5b532f83bb55c4cd6f5bd1ef.jpg";
+  static const String noProfile = "assets/images/noprofile.jpg";
 
   static List<BannerModel> bannerImages = [
     BannerModel(

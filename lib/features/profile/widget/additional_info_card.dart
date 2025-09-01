@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/auth%20service/auth_service.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/favorites/view/favorite_page_mobile.dart';
+import 'package:sadhana_cart/features/profile/widget/address/view/user_address_page.dart';
 
 class AdditionalInfoCard extends StatelessWidget {
   const AdditionalInfoCard({super.key});
@@ -26,7 +27,8 @@ class AdditionalInfoCard extends StatelessWidget {
           _customTile(
             icon: const Icon(Icons.location_on),
             text: "Address",
-            onTap: () {},
+            onTap: () =>
+                navigateTo(context: context, screen: const UserAddressPage()),
           ),
           Divider(color: Colors.grey.shade300),
           _customTile(

@@ -42,7 +42,7 @@ class ProfileCard extends ConsumerWidget {
               decoration: const BoxDecoration(shape: BoxShape.circle),
               clipBehavior: Clip.antiAlias,
               child: userAsync.when(
-                loading: () => const SizedBox(), // Handled by Skeletonizer
+                loading: () => const SizedBox(),
                 error: (e, _) =>
                     Image.asset(AppImages.noProfile, fit: BoxFit.cover),
                 data: (data) {

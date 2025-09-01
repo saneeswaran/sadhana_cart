@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
 import 'package:sadhana_cart/core/common%20services/category/category_services.dart';
-import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/connection_helper.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
@@ -9,6 +8,9 @@ final categoryProvider =
     StateNotifierProvider<CategoryNotifier, List<CategoryModel>>(
       (ref) => CategoryNotifier(ref)..initializeCategory(),
     );
+final categoryAsync = FutureProvider<List<CategoryModel>>((ref) async {
+  return await CategoryServices.getAllCategory();
+});
 
 class CategoryNotifier extends StateNotifier<List<CategoryModel>> {
   final Ref ref;
@@ -16,11 +18,8 @@ class CategoryNotifier extends StateNotifier<List<CategoryModel>> {
 
   void initializeCategory() async {
     final isInternet = await ConnectionHelper.checkInternetConnection();
-    if (isInternet) {
-      state = await CategoryServices.getAllCategory(ref: ref);
-    } else {
+    if (!isInternet) {
       state = HiveHelper.getCategoryModel();
-      ref.read(loadingProvider.notifier).state = false;
     }
   }
 }
