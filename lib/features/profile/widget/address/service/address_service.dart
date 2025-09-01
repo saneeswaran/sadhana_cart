@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/helper/hive_helper.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 
 class AddressService {
@@ -16,6 +18,7 @@ class AddressService {
       .collection(addressCollection);
 
   static Future<bool> addAddress({
+    required BuildContext context,
     required String name,
     required String streetName,
     required String city,
@@ -24,8 +27,10 @@ class AddressService {
     required int pinCode,
     required int phoneNumber,
     required IconData icon,
+    required WidgetRef ref,
   }) async {
     try {
+      ref.read(loadingProvider.notifier).state = true;
       final docRef = addressRef.doc();
       final iconCode = icon.codePoint;
       final AddressModel addressModel = AddressModel(
@@ -41,8 +46,19 @@ class AddressService {
         timestamp: Timestamp.now(),
       );
       await docRef.set(addressModel.toMap());
+      if (context.mounted) {
+        successSnackBar(
+          message: "Address added successfully",
+          context: context,
+        );
+      }
+      ref.read(loadingProvider.notifier).state = false;
       return true;
     } catch (e) {
+      ref.read(loadingProvider.notifier).state = false;
+      if (context.mounted) {
+        failedSnackbar(context: context, text: "Failed to add address");
+      }
       log("address service error $e");
       return false;
     }
@@ -50,17 +66,13 @@ class AddressService {
 
   static Future<List<AddressModel>> fetchAllAddress() async {
     try {
-      final QuerySnapshot querySnapshot = await addressRef
-          .doc(currentUserId)
-          .collection(addressCollection)
-          .get();
+      final QuerySnapshot querySnapshot = await addressRef.get();
       if (querySnapshot.docs.isNotEmpty) {
         final data = querySnapshot.docs
             .map((e) => AddressModel.fromMap(e.data() as Map<String, dynamic>))
             .toList();
-        for (final address in data) {
-          await HiveHelper.addAddress(address: address);
-        }
+
+        log("data $data");
         return data;
       }
     } catch (e) {

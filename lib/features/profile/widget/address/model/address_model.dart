@@ -2,29 +2,17 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
-part 'address_model.g.dart';
-
 @HiveType(typeId: 10)
-class AddressModel extends HiveObject {
-  @HiveField(0)
+class AddressModel {
   final String id;
-  @HiveField(1)
   final String name;
-  @HiveField(2)
   final String streetName;
-  @HiveField(3)
   final String city;
-  @HiveField(4)
   final String state;
-  @HiveField(5)
   final int pinCode;
-  @HiveField(6)
   final int phoneNumber;
-  @HiveField(7)
   final Timestamp timestamp;
-  @HiveField(8)
   final String title;
-  @HiveField(9)
   final int icon;
   AddressModel({
     required this.id,
@@ -73,4 +61,9 @@ class AddressModel extends HiveObject {
 
   factory AddressModel.fromJson(String source) =>
       AddressModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'AddressModel(id: $id, name: $name, streetName: $streetName, city: $city, state: $state, pinCode: $pinCode, phoneNumber: $phoneNumber, timestamp: $timestamp, title: $title, icon: $icon)';
+  }
 }

@@ -8,7 +8,6 @@ import 'package:sadhana_cart/core/common%20model/notification/notification_model
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/search%20field/search_field_model.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
-import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 
 class HiveHelper {
   static const String bannerBox = 'bannerBox';
@@ -20,7 +19,6 @@ class HiveHelper {
   static const String cartBox = 'cartBox';
   static const String brandBox = 'brandBox';
   static const String notificationBox = 'notificationBox';
-  static const String addressBox = 'addressbox';
   static const String localData = 'localData';
 
   //store local things
@@ -144,18 +142,6 @@ class HiveHelper {
 
   static List<NotificationModel> getNotification() {
     final box = Hive.box<NotificationModel>(notificationBox);
-    return box.values.toList();
-  }
-
-  //address
-
-  static Future<void> addAddress({required AddressModel address}) async {
-    final box = Hive.box<AddressModel>(addressBox);
-    await box.put(address.id, address);
-  }
-
-  static List<AddressModel> getAllAddress() {
-    final box = Hive.box<AddressModel>(addressBox);
     return box.values.toList();
   }
 }

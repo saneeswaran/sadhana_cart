@@ -9,6 +9,7 @@ void successSnackBar({
 }) {
   CherryToast.success(
     animationType: AnimationType.fromTop,
+    animationDuration: const Duration(milliseconds: 500),
     displayIcon: displayIcon,
     title: Text(
       message,
@@ -30,6 +31,7 @@ void informationSnackBar({
 }) {
   CherryToast.info(
     animationType: AnimationType.fromTop,
+    animationDuration: const Duration(milliseconds: 500),
     action: action,
     displayIcon: displayIcon,
     title: Text(
@@ -51,6 +53,7 @@ void failedSnackbar({
 }) {
   CherryToast.error(
     animationType: AnimationType.fromTop,
+    animationDuration: const Duration(milliseconds: 500),
     action: action,
     displayIcon: displayIcon,
     title: Text(

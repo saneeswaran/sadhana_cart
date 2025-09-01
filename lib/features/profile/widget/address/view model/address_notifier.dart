@@ -6,6 +6,11 @@ final addressAsync = FutureProvider<List<AddressModel>>((ref) async {
   return await AddressService.fetchAllAddress();
 });
 
+final addressprovider =
+    StateNotifierProvider<AddressNotifier, List<AddressModel>>(
+      (ref) => AddressNotifier(),
+    );
+
 class AddressNotifier extends StateNotifier<List<AddressModel>> {
   AddressNotifier() : super([]);
 
