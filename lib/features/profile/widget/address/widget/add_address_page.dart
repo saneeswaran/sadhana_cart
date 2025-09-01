@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/widgets/custom_drop_down.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
+import 'package:sadhana_cart/features/profile/widget/address/model/address_helper.dart';
+import 'package:sadhana_cart/features/profile/widget/address/service/address_service.dart';
 
 class AddAddressPage extends StatefulWidget {
   const AddAddressPage({super.key});
@@ -52,6 +58,57 @@ class _AddAddressPageState extends State<AddAddressPage> {
               spacing: 20,
               children: [
                 const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final title = ref.watch(userAddressTitleProvider);
+                          final items = AddressHelper.addressPlaces
+                              .map(
+                                (e) => DropdownMenuItem<String>(
+                                  value: e,
+                                  child: Text(e),
+                                ),
+                              )
+                              .toList();
+                          return CustomDropDown<String>(
+                            items: items,
+                            onChanged: (value) =>
+                                ref
+                                        .read(userAddressTitleProvider.notifier)
+                                        .state =
+                                    value ?? "Home",
+                            value: title,
+                            labelText: "Select Address Type",
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 40),
+                    Expanded(
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final icon = ref.watch(userAdderssIconProvider);
+                          final items = AddressHelper.icons
+                              .map(
+                                (e) => DropdownMenuItem<IconData>(
+                                  value: e,
+                                  child: Icon(e),
+                                ),
+                              )
+                              .toList();
+                          return CustomDropDown<IconData>(
+                            items: items,
+                            onChanged: (value) {},
+                            value: icon,
+                            labelText: "Select Address Icon",
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
                 CustomTextFormField(
                   controller: nameController,
                   labelText: "Name",
@@ -85,12 +142,34 @@ class _AddAddressPageState extends State<AddAddressPage> {
                   ),
                   onPressed: () {},
                 ),
-                CustomElevatedButton(
-                  child: const Text(
-                    "Save",
-                    style: customElevatedButtonTextStyle,
-                  ),
-                  onPressed: () {},
+                Consumer(
+                  builder: (context, ref, child) {
+                    final icon = ref.watch(userAdderssIconProvider);
+                    final title = ref.watch(userAddressTitleProvider);
+                    return CustomElevatedButton(
+                      child: const Text(
+                        "Save",
+                        style: customElevatedButtonTextStyle,
+                      ),
+                      onPressed: () async {
+                        final bool isSuccess = await AddressService.addAddress(
+                          name: nameController.text.trim(),
+                          streetName: streetNameController.text.trim(),
+                          city: cityController.text.trim(),
+                          state: stateController.text.trim(),
+                          title: title,
+                          pinCode: int.parse(zipCodeController.text.trim()),
+                          phoneNumber: int.parse(
+                            phoneNumberController.text.trim(),
+                          ),
+                          icon: icon,
+                        );
+                        if (isSuccess && context.mounted) {
+                          navigateBack(context: context);
+                        }
+                      },
+                    );
+                  },
                 ),
               ],
             ),

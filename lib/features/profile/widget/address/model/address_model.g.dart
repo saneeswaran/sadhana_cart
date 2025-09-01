@@ -22,16 +22,18 @@ class AddressModelAdapter extends TypeAdapter<AddressModel> {
       streetName: fields[2] as String,
       city: fields[3] as String,
       state: fields[4] as String,
-      pinCode: fields[5] as String,
-      phoneNumber: fields[6] as String,
+      pinCode: fields[5] as int,
+      phoneNumber: fields[6] as int,
       timestamp: fields[7] as Timestamp,
+      title: fields[8] as String,
+      icon: fields[9] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, AddressModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +49,11 @@ class AddressModelAdapter extends TypeAdapter<AddressModel> {
       ..writeByte(6)
       ..write(obj.phoneNumber)
       ..writeByte(7)
-      ..write(obj.timestamp);
+      ..write(obj.timestamp)
+      ..writeByte(8)
+      ..write(obj.title)
+      ..writeByte(9)
+      ..write(obj.icon);
   }
 
   @override

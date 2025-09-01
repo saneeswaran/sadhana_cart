@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 
@@ -14,22 +15,36 @@ class AddressService {
       .doc(currentUserId)
       .collection(addressCollection);
 
-  static Future<void> addAddress({required AddressModel address}) async {
+  static Future<bool> addAddress({
+    required String name,
+    required String streetName,
+    required String city,
+    required String state,
+    required String title,
+    required int pinCode,
+    required int phoneNumber,
+    required IconData icon,
+  }) async {
     try {
       final docRef = addressRef.doc();
+      final iconCode = icon.codePoint;
       final AddressModel addressModel = AddressModel(
+        title: title,
+        icon: iconCode,
         id: docRef.id,
-        name: address.name,
-        streetName: address.streetName,
-        city: address.city,
-        state: address.state,
-        pinCode: address.pinCode,
-        phoneNumber: address.phoneNumber,
+        name: name,
+        streetName: streetName,
+        city: city,
+        state: state,
+        pinCode: pinCode,
+        phoneNumber: phoneNumber,
         timestamp: Timestamp.now(),
       );
       await docRef.set(addressModel.toMap());
+      return true;
     } catch (e) {
       log("address service error $e");
+      return false;
     }
   }
 

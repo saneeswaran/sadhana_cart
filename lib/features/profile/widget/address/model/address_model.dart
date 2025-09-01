@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
@@ -18,11 +17,15 @@ class AddressModel extends HiveObject {
   @HiveField(4)
   final String state;
   @HiveField(5)
-  final String pinCode;
+  final int pinCode;
   @HiveField(6)
-  final String phoneNumber;
+  final int phoneNumber;
   @HiveField(7)
   final Timestamp timestamp;
+  @HiveField(8)
+  final String title;
+  @HiveField(9)
+  final int icon;
   AddressModel({
     required this.id,
     required this.name,
@@ -32,6 +35,8 @@ class AddressModel extends HiveObject {
     required this.pinCode,
     required this.phoneNumber,
     required this.timestamp,
+    required this.title,
+    required this.icon,
   });
 
   Map<String, dynamic> toMap() {
@@ -44,6 +49,8 @@ class AddressModel extends HiveObject {
       'pinCode': pinCode,
       'phoneNumber': phoneNumber,
       'timestamp': timestamp,
+      'title': title,
+      'icon': icon,
     };
   }
 
@@ -54,9 +61,11 @@ class AddressModel extends HiveObject {
       streetName: map['streetName'] as String,
       city: map['city'] as String,
       state: map['state'] as String,
-      pinCode: map['pinCode'] as String,
-      phoneNumber: map['phoneNumber'] as String,
+      pinCode: map['pinCode'] as int,
+      phoneNumber: map['phoneNumber'] as int,
       timestamp: map['timestamp'] as Timestamp,
+      title: map['title'] as String,
+      icon: map['icon'] as int,
     );
   }
 
