@@ -8,8 +8,10 @@ import 'package:sadhana_cart/core/helper/validation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
+import 'package:sadhana_cart/core/widgets/loader.dart';
 import 'package:sadhana_cart/core/widgets/rounded_signin_button.dart';
 import 'package:sadhana_cart/features/auth/view/sign%20up/view/sign_in_mobile.dart';
+import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_option.dart';
 import 'package:sadhana_cart/features/profile/service/user_service.dart';
 
 class SignUpMobile extends ConsumerStatefulWidget {
@@ -40,6 +42,7 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
   Widget build(BuildContext context) {
     final confirmEye = ref.watch(confirmPassEyeProvider);
     final passEye = ref.watch(passEyeProvider);
+    final loader = ref.watch(loadingProvider);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -113,21 +116,31 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                 const SizedBox(height: 20),
                 Center(
                   child: CustomElevatedButton(
-                    child: const Text(
-                      "Sign Up",
-                      style: customElevatedButtonTextStyle,
-                    ),
+                    child: loader
+                        ? const Loader()
+                        : const Text(
+                            "Sign Up",
+                            style: customElevatedButtonTextStyle,
+                          ),
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
-                        await AuthService.createAccount(
+                        final bool isSuccess = await AuthService.createAccount(
                           email: emailController.text,
                           password: passwordController.text,
+                          ref: ref,
                         );
-                        await UserService.createUserProfile(
-                          email: emailController.text,
-                          name: nameController.text,
-                          number: passwordController.text.length,
-                        );
+                        final bool profile =
+                            await UserService.createUserProfile(
+                              email: emailController.text,
+                              name: nameController.text,
+                              number: passwordController.text.length,
+                            );
+                        if (isSuccess && profile && context.mounted) {
+                          navigateToReplacement(
+                            context: context,
+                            screen: const BottomNavOption(),
+                          );
+                        }
                       }
                     },
                   ),

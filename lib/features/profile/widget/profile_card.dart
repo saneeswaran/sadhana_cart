@@ -1,14 +1,13 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
-import 'package:sadhana_cart/features/profile/service/user_service.dart';
+import 'package:sadhana_cart/core/widgets/loader.dart';
 import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
 import 'package:sadhana_cart/features/profile/widget/edit_profile_settings.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileCard extends ConsumerWidget {
   const ProfileCard({super.key});
@@ -16,7 +15,8 @@ class ProfileCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
-    final user = ref.watch(userProvider);
+    final user = ref.watch(getCurrentUserProfile);
+    final loader = ref.watch(loadingProvider);
     return Container(
       height: size.height * 0.15,
       width: size.width * 1,
@@ -47,24 +47,27 @@ class ProfileCard extends ConsumerWidget {
             ),
           ),
           Expanded(
-            child: ListTile(
-              onTap: () async {
-                final userid = FirebaseAuth.instance.currentUser!.uid;
-                final data = await UserService.getCurrentUserProfile();
-                log(userid.toString());
-                log(data.toString());
-              },
-              title: Text(user?.name ?? ""),
-              subtitle: Text(user?.email ?? ""),
-              trailing: IconButton(
-                onPressed: () {
-                  navigateTo(
-                    context: context,
-                    screen: const EditProfileSettings(),
-                  );
-                },
-                icon: const Icon(Icons.settings),
+            child: user.when(
+              data: (data) => ListTile(
+                onTap: () async {},
+                title: loader
+                    ? const Skeletonizer(child: Text("         "))
+                    : Text(data?.name ?? ""),
+                subtitle: loader
+                    ? const Skeletonizer(child: Text("         "))
+                    : Text(data?.email ?? ""),
+                trailing: IconButton(
+                  onPressed: () {
+                    navigateTo(
+                      context: context,
+                      screen: const EditProfileSettings(),
+                    );
+                  },
+                  icon: const Icon(Icons.settings),
+                ),
               ),
+              error: (error, stackTrace) => Text(error.toString()),
+              loading: () => const Loader(),
             ),
           ),
         ],

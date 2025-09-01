@@ -21,7 +21,6 @@ final productDataProvider = FutureProvider.family
       ref.read(loadingProvider.notifier).state = false;
       return data;
     });
-
 final genderProvider = StateProvider.autoDispose<GenderEnum?>((ref) => null);
 
 final profileImageProvider = StateProvider.autoDispose<File?>((ref) => null);

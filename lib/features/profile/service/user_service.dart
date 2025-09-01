@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/firebase_message_helper.dart';
 import 'package:sadhana_cart/features/profile/model/user_model.dart';
 
@@ -11,8 +13,9 @@ class UserService {
   static final CollectionReference customerRef = FirebaseFirestore.instance
       .collection(userCollection);
 
-  static Future<UserModel> getCurrentUserProfile() async {
+  static Future<UserModel> getCurrentUserProfile({required Ref ref}) async {
     try {
+      ref.read(loadingProvider.notifier).state = true;
       final QuerySnapshot querySnapshot = await customerRef
           .where("id", isEqualTo: userUid)
           .get();
@@ -22,25 +25,27 @@ class UserService {
             .toList()
             .first;
         log(data.toString());
+        ref.read(loadingProvider.notifier).state = false;
         return data;
       }
       return UserModel();
     } catch (e) {
+      ref.read(loadingProvider.notifier).state = false;
       log(e.toString());
       return UserModel();
     }
   }
 
-  static Future<void> createUserProfile({
+  static Future<bool> createUserProfile({
     required String email,
     required String name,
     required int number,
   }) async {
-    final docRef = customerRef.doc();
     final fcmToken = await FirebaseMessageHelper.createFcmToken();
-    final String referralCode = name.substring(0, 6).toUpperCase();
+    final String referralCode =
+        "${name.substring(0, 3).toUpperCase()} ${number.toString().substring(0, 4)}";
     final UserModel userModel = UserModel(
-      id: docRef.id,
+      id: userUid,
       email: email,
       name: name,
       image: null,
@@ -49,6 +54,7 @@ class UserService {
       referralCode: referralCode,
       referredBy: null,
     );
-    await docRef.set(userModel.toMap());
+    await customerRef.doc(userUid).set(userModel.toMap());
+    return true;
   }
 }
