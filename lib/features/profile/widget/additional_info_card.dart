@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sadhana_cart/core/auth%20service/auth_service.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/favorites/view/favorite_page_mobile.dart';
 
@@ -51,7 +52,9 @@ class AdditionalInfoCard extends StatelessWidget {
           _customTile(
             icon: const Icon(Icons.logout),
             text: "Logout",
-            onTap: () {},
+            onTap: () async {
+              await AuthService.signOut();
+            },
           ),
         ],
       ),

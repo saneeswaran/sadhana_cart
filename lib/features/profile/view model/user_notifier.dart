@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/features/profile/model/user_model.dart';
 import 'package:sadhana_cart/features/profile/service/user_service.dart';
 
@@ -8,10 +7,7 @@ final userProvider = StateNotifierProvider<UserNotifier, UserModel?>(
 );
 
 final getCurrentUserProfile = FutureProvider<UserModel?>((ref) async {
-  ref.read(loadingProvider.notifier).state = true;
-  final data = await UserService.getCurrentUserProfile(ref: ref);
-  ref.read(loadingProvider.notifier).state = false;
-  return data;
+  return await UserService.getCurrentUserProfile();
 });
 
 class UserNotifier extends StateNotifier<UserModel?> {
@@ -19,6 +15,6 @@ class UserNotifier extends StateNotifier<UserModel?> {
   UserNotifier(this.ref) : super(null);
 
   void fetchCurrentUserProfile() async {
-    state = await UserService.getCurrentUserProfile(ref: ref);
+    state = await UserService.getCurrentUserProfile();
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
@@ -14,21 +16,24 @@ class AuthService {
     required String password,
     required WidgetRef ref,
   }) async {
+    ref.read(loadingProvider.notifier).state = true;
+
     try {
-      ref.read(loadingProvider.notifier).state = true;
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       await credential.user?.sendEmailVerification();
-      ref.read(loadingProvider.notifier).state = false;
+
       return true;
+    } on FirebaseAuthException catch (e) {
+      log(e.toString());
+      rethrow;
     } catch (e) {
+      throw Exception('Account creation failed: ${e.toString()}');
+    } finally {
       ref.read(loadingProvider.notifier).state = false;
-      throw FirebaseAuthException(
-        code: 'create-account-failed',
-        message: e.toString(),
-      );
     }
   }
 
