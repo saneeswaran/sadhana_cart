@@ -8,4 +8,5 @@ class AppColors {
   static const Color lightGrey = Color(0xfff6f6f6);
   static const Color pureWhite = Color(0xffFFFFFF);
   static const Color tileColor = Color(0xff777E90);
+  static const Color switchTileColor = Color(0xff508A7B);
 }

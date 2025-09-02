@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
@@ -95,6 +96,59 @@ class AddressService {
       }
     } catch (e) {
       log("address service error $e");
+      return false;
+    }
+    return false;
+  }
+
+  static Future<bool> updateAddress({
+    required BuildContext context,
+    required String id,
+    required String name,
+    required String streetName,
+    required String city,
+    required String state,
+    required String title,
+    required int pinCode,
+    required int phoneNumber,
+    required IconData icon,
+    required WidgetRef ref,
+  }) async {
+    try {
+      ref.read(loadingProvider.notifier).state = true;
+      final DocumentSnapshot documentSnapshot = await addressRef.doc(id).get();
+      if (documentSnapshot.exists) {
+        final iconCode = icon.codePoint;
+        final AddressModel addressModel = AddressModel(
+          id: id,
+          name: name,
+          streetName: streetName,
+          city: city,
+          state: state,
+          pinCode: pinCode,
+          phoneNumber: phoneNumber,
+          timestamp: Timestamp.now(),
+          title: title,
+          icon: iconCode,
+        );
+        final newData = AvoidNullValues.removeNullValues(addressModel.toMap());
+        await documentSnapshot.reference.update(newData);
+        ref.read(addressprovider.notifier).updateAddress();
+        ref.read(loadingProvider.notifier).state = false;
+        if (context.mounted) {
+          successSnackBar(
+            message: "Address Updated Successfully",
+            context: context,
+          );
+        }
+        return true;
+      }
+    } catch (e) {
+      ref.read(loadingProvider.notifier).state = false;
+      log("address service error $e");
+      if (context.mounted) {
+        failedSnackbar(context: context, text: "Failed to update address");
+      }
       return false;
     }
     return false;

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
+import 'package:sadhana_cart/features/profile/widget/address/widget/edit_address_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class UserAddressData extends ConsumerWidget {
@@ -69,6 +71,12 @@ class UserAddressData extends ConsumerWidget {
       );
     }
 
+    Future.delayed(const Duration(seconds: 5), () {
+      if (addressList.isEmpty) {
+        return const Center(child: Text("Address is empty"));
+      }
+    });
+
     return ListView.builder(
       itemCount: addressList.length,
       shrinkWrap: true,
@@ -103,7 +111,10 @@ class UserAddressData extends ConsumerWidget {
                   text: "Edit",
                   textDecoration: TextDecoration.underline,
                   color: Colors.red,
-                  onPressed: () {},
+                  onPressed: () => navigateTo(
+                    context: context,
+                    screen: EditAddressPage(address: address),
+                  ),
                 ),
               ),
               Padding(
