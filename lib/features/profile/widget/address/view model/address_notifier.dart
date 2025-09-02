@@ -21,4 +21,8 @@ class AddressNotifier extends StateNotifier<List<AddressModel>> {
   void deleteAddress({required String id}) {
     state = state.where((e) => e.id != id).toList();
   }
+
+  void addAddress({required AddressModel address}) {
+    state = [...state, address];
+  }
 }

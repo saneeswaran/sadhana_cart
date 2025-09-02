@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
+import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
 
 class AddressService {
   static const String addressCollection = "address";
@@ -46,6 +47,9 @@ class AddressService {
         timestamp: Timestamp.now(),
       );
       await docRef.set(addressModel.toMap());
+      //store in local state
+      ref.read(addressprovider.notifier).addAddress(address: addressModel);
+      //store in local storage
       if (context.mounted) {
         successSnackBar(
           message: "Address added successfully",

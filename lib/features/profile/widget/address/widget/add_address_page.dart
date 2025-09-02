@@ -100,7 +100,13 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                     ),
                                   )
                                   .toList(),
-                              onChanged: (value) {},
+                              onChanged: (value) =>
+                                  ref
+                                          .read(
+                                            userAdderssIconProvider.notifier,
+                                          )
+                                          .state =
+                                      value ?? Icons.home,
                               value: icon,
                               labelText: "Select Address Icon",
                             ),
