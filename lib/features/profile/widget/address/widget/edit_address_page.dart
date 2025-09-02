@@ -10,15 +10,15 @@ import 'package:sadhana_cart/features/profile/widget/address/model/address_helpe
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/service/address_service.dart';
 
-class EditAddressPage extends StatefulWidget {
+class EditAddressPage extends ConsumerStatefulWidget {
   final AddressModel address;
   const EditAddressPage({super.key, required this.address});
 
   @override
-  State<EditAddressPage> createState() => _EditAddressPageState();
+  ConsumerState<EditAddressPage> createState() => _EditAddressPageState();
 }
 
-class _EditAddressPageState extends State<EditAddressPage> {
+class _EditAddressPageState extends ConsumerState<EditAddressPage> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final streetNameController = TextEditingController();
@@ -73,6 +73,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
                 final icon = ref.watch(userAdderssIconProvider);
                 final title = ref.watch(userAddressTitleProvider);
                 final loader = ref.watch(loadingProvider);
+                final deletingLoadder = ref.watch(addressDeleteLoader);
                 return AbsorbPointer(
                   absorbing: loader,
                   child: Column(
@@ -162,6 +163,25 @@ class _EditAddressPageState extends State<EditAddressPage> {
                           style: customElevatedButtonTextStyle,
                         ),
                         onPressed: () {},
+                      ),
+                      CustomElevatedButton(
+                        child: deletingLoadder
+                            ? const Loader()
+                            : const Text(
+                                "Delete Address",
+                                style: customElevatedButtonTextStyle,
+                              ),
+                        onPressed: () async {
+                          final bool isSuccess =
+                              await AddressService.deleteAddress(
+                                context: context,
+                                id: widget.address.id,
+                                ref: ref,
+                              );
+                          if (isSuccess && context.mounted) {
+                            navigateBack(context: context);
+                          }
+                        },
                       ),
                       CustomElevatedButton(
                         child: loader

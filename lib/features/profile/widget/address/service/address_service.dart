@@ -86,16 +86,30 @@ class AddressService {
     return [];
   }
 
-  static Future<bool> deleteAddress({required String id}) async {
+  static Future<bool> deleteAddress({
+    required String id,
+    required WidgetRef ref,
+    required BuildContext context,
+  }) async {
     try {
+      ref.read(addressDeleteLoader.notifier).state = true;
       final DocumentSnapshot documentSnapshot = await addressRef.doc(id).get();
 
       if (documentSnapshot.exists) {
         await documentSnapshot.reference.delete();
+        final document = documentSnapshot.data() as AddressModel;
+        ref.read(addressprovider.notifier).deleteAddress(address: document);
+        ref.read(addressDeleteLoader.notifier).state = false;
+        if (context.mounted) {
+          successSnackBar(message: "Address deleted", context: context);
+        }
         return true;
       }
     } catch (e) {
       log("address service error $e");
+      if (context.mounted) {
+        failedSnackbar(context: context, text: "Failed to delete address");
+      }
       return false;
     }
     return false;

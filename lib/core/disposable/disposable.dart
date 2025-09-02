@@ -35,3 +35,5 @@ final userAdderssIconProvider = StateProvider.autoDispose<IconData>(
 final userAddressTitleProvider = StateProvider.autoDispose<String>(
   (ref) => "Home",
 );
+
+final addressDeleteLoader = StateProvider.autoDispose<bool>((ref) => false);
