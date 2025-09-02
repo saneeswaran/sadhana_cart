@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20services/customer/customer_service.dart';
@@ -13,10 +14,12 @@ import 'package:sadhana_cart/core/widgets/loader.dart';
 class EditProfileSettings extends ConsumerStatefulWidget {
   final String name;
   final int contactNo;
+  final String profileImage;
   const EditProfileSettings({
     super.key,
     required this.name,
     required this.contactNo,
+    required this.profileImage,
   });
 
   @override
@@ -48,7 +51,9 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
     final image = ref.watch(profileImageProvider);
     final gender = ref.watch(genderProvider);
     final items = GenderEnum.values
-        .map((e) => DropdownMenuItem(value: e, child: Text(e.label)))
+        .map(
+          (e) => DropdownMenuItem<String>(value: e.label, child: Text(e.label)),
+        )
         .toList();
     return Scaffold(
       bottomNavigationBar: Padding(
@@ -64,6 +69,7 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
               contactNo: int.parse(phoneNumberController.text),
               name: userNameController.text,
               profileImage: image,
+              gender: gender ?? GenderEnum.none.label,
             );
             if (isSuccess && context.mounted) {
               Navigator.pop(context);
@@ -81,6 +87,8 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
                 radius: 60,
                 backgroundImage: image != null && image.path.isNotEmpty
                     ? FileImage(image)
+                    : widget.profileImage.isNotEmpty
+                    ? CachedNetworkImageProvider(widget.profileImage)
                     : const AssetImage(AppImages.noProfile),
                 child: Align(
                   alignment: Alignment.bottomRight,
@@ -99,7 +107,8 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
                       }
                     },
                     icon: Icon(
-                      image != null && image.path.isNotEmpty
+                      image != null && image.path.isNotEmpty ||
+                              widget.profileImage.isNotEmpty
                           ? Icons.edit
                           : Icons.add,
                       color: Colors.black,
@@ -129,9 +138,9 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
             const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: CustomDropDown(
+              child: CustomDropDown<String>(
                 labelText: "Select gender",
-                value: gender,
+                value: gender ?? GenderEnum.male.label,
                 items: items,
                 onChanged: (gender) {
                   ref.read(genderProvider.notifier).state = gender;

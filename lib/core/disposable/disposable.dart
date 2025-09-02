@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/enums/gender_enum.dart';
 
 final loadingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
@@ -22,7 +21,7 @@ final productDataProvider = FutureProvider.family
       ref.read(loadingProvider.notifier).state = false;
       return data;
     });
-final genderProvider = StateProvider.autoDispose<GenderEnum?>((ref) => null);
+final genderProvider = StateProvider.autoDispose<String?>((ref) => null);
 
 final profileImageProvider = StateProvider.autoDispose<File?>((ref) => null);
 

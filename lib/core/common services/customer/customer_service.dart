@@ -10,7 +10,6 @@ import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
 import 'package:sadhana_cart/core/helper/firebase_storage_helper.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
-import 'package:sadhana_cart/features/profile/model/user_model.dart';
 
 class CustomerService {
   static const String customer = 'users';
@@ -18,14 +17,16 @@ class CustomerService {
       .collection(customer);
   static final String customerId = FirebaseAuth.instance.currentUser!.uid;
 
-  static Future<UserModel?> fetCurrentUserDetails({required Ref ref}) async {
+  static Future<CustomerModel?> fetCurrentUserDetails({
+    required Ref ref,
+  }) async {
     try {
       ref.read(loadingProvider.notifier).state = true;
       final DocumentSnapshot documentSnapshot = await customerRef
           .doc(customerId)
           .get();
       if (documentSnapshot.exists) {
-        return UserModel.fromMap(
+        return CustomerModel.fromMap(
           documentSnapshot.data() as Map<String, dynamic>,
         );
       } else {
@@ -92,6 +93,7 @@ class CustomerService {
     required String name,
     required File? profileImage,
     required int contactNo,
+    required String gender,
   }) async {
     try {
       ref.read(loadingProvider.notifier).state = true;
@@ -108,6 +110,7 @@ class CustomerService {
           name: name,
           profileImage: image,
           contactNo: contactNo,
+          gender: gender,
         );
         log(customerModel.toString());
         final newUpdatedData = AvoidNullValues.removeNullValues(

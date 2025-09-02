@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,7 +48,8 @@ class ProfileCard extends ConsumerWidget {
                 error: (e, _) =>
                     Image.asset(AppImages.noProfile, fit: BoxFit.cover),
                 data: (data) {
-                  final imageUrl = data?.image;
+                  log(data.toString());
+                  final imageUrl = data?.profileImage;
                   if (imageUrl != null && imageUrl.isNotEmpty) {
                     return CachedNetworkImage(
                       imageUrl: imageUrl,
@@ -78,6 +81,7 @@ class ProfileCard extends ConsumerWidget {
                   final name = data?.name ?? "Unknown";
                   final email = data?.email ?? "Not available";
                   final contact = data?.contactNo;
+                  final profileImage = data?.profileImage;
                   return ListTile(
                     title: Text(name),
                     subtitle: Text(email),
@@ -89,6 +93,7 @@ class ProfileCard extends ConsumerWidget {
                           screen: EditProfileSettings(
                             name: name,
                             contactNo: contact!,
+                            profileImage: profileImage!,
                           ),
                         );
                       },

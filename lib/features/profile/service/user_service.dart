@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:sadhana_cart/core/common%20model/customer/customer_model.dart';
 import 'package:sadhana_cart/core/helper/firebase_message_helper.dart';
-import 'package:sadhana_cart/features/profile/model/user_model.dart';
 
 class UserService {
   static final String userCollection = "users";
@@ -11,7 +11,7 @@ class UserService {
   static final CollectionReference customerRef = FirebaseFirestore.instance
       .collection(userCollection);
 
-  static Future<UserModel?> getCurrentUserProfile() async {
+  static Future<CustomerModel?> getCurrentUserProfile() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) throw Exception("User not logged in");
@@ -22,7 +22,7 @@ class UserService {
 
       if (querySnapshot.docs.isNotEmpty) {
         final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
-        return UserModel.fromMap(data);
+        return CustomerModel.fromMap(data);
       }
 
       return null;
@@ -41,11 +41,11 @@ class UserService {
     final safeName = name.padRight(6, 'X').substring(0, 6).toUpperCase();
     final numberStr = number.toString().padLeft(4, '0').substring(0, 4);
     final String referralCode = "$safeName$numberStr";
-    final UserModel userModel = UserModel(
-      id: userUid,
+    final CustomerModel userModel = CustomerModel(
+      customerId: userUid,
       email: email,
       name: name,
-      image: null,
+      profileImage: null,
       contactNo: number,
       fcmToken: fcmToken,
       referralCode: referralCode,

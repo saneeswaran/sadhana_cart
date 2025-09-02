@@ -6,6 +6,8 @@ class CustomerModel {
   final String? name;
   final String? email;
   final int? contactNo;
+  final String? gender;
+  final String? fcmToken;
   final String? profileImage;
   final String? referralCode;
   final String? referredBy;
@@ -14,7 +16,9 @@ class CustomerModel {
     this.name,
     this.email,
     this.contactNo,
+    this.gender,
     this.profileImage,
+    this.fcmToken,
     this.referralCode,
     this.referredBy,
   });
@@ -25,6 +29,8 @@ class CustomerModel {
       'name': name,
       'email': email,
       'contactNo': contactNo,
+      'gender': gender,
+      'fcmToken': fcmToken,
       'profileImage': profileImage,
       'referralCode': referralCode,
       'referredBy': referredBy,
@@ -39,6 +45,8 @@ class CustomerModel {
       name: map['name'] != null ? map['name'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
       contactNo: map['contactNo'] != null ? map['contactNo'] as int : null,
+      gender: map['gender'] != null ? map['gender'] as String : null,
+      fcmToken: map['fcmToken'] != null ? map['fcmToken'] as String : null,
       profileImage: map['profileImage'] != null
           ? map['profileImage'] as String
           : null,
@@ -55,4 +63,9 @@ class CustomerModel {
 
   factory CustomerModel.fromJson(String source) =>
       CustomerModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'CustomerModel(customerId: $customerId, name: $name, email: $email, contactNo: $contactNo, gender: $gender, fcmToken: $fcmToken, profileImage: $profileImage, referralCode: $referralCode, referredBy: $referredBy)';
+  }
 }

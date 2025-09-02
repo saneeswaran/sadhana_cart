@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/common%20model/customer/customer_model.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/settings/view/settings_page.dart';
-import 'package:sadhana_cart/features/profile/model/user_model.dart';
 
 class DrawerContent extends StatelessWidget {
-  final UserModel? user;
+  final CustomerModel? user;
   const DrawerContent({super.key, this.user});
 
   @override
@@ -22,7 +22,7 @@ class DrawerContent extends StatelessWidget {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.grey.shade300,
-                backgroundImage: _getImageProvider(user?.image),
+                backgroundImage: _getImageProvider(user?.profileImage),
               ),
               const SizedBox(width: 16),
               Expanded(

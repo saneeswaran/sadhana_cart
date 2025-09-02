@@ -1,4 +1,4 @@
-enum GenderEnum { male, female, others }
+enum GenderEnum { male, female, others, none }
 
 extension GenderEnumExtension on GenderEnum {
   String get label {
@@ -9,6 +9,8 @@ extension GenderEnumExtension on GenderEnum {
         return "Female";
       case GenderEnum.others:
         return "Others";
+      case GenderEnum.none:
+        return "None";
     }
   }
 }
