@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/features/home%20screen/widgets/settings/view/settings_page.dart';
 import 'package:sadhana_cart/features/profile/model/user_model.dart';
 
 class DrawerContent extends StatelessWidget {
@@ -33,7 +35,8 @@ class DrawerContent extends StatelessWidget {
           ),
         ),
         ListTile(
-          onTap: () {},
+          onTap: () =>
+              navigateTo(context: context, screen: const SettingsPage()),
           leading: const Icon(Icons.settings, color: AppColors.tileColor),
           title: const Text(
             "Settings",

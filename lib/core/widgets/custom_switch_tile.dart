@@ -18,7 +18,8 @@ class CustomSwitchTile extends StatelessWidget {
       value: value,
       onChanged: onChanged,
       activeColor: AppColors.switchTileColor,
-      activeThumbColor: Colors.white,
+      thumbColor: WidgetStateProperty.all<Color>(Colors.white),
+      inactiveTrackColor: const Color(0xffCBCDD8),
       title: Text(
         title,
         style: const TextStyle(color: AppColors.dartPrimaryColor),

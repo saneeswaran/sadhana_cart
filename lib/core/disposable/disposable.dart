@@ -37,3 +37,9 @@ final userAddressTitleProvider = StateProvider.autoDispose<String>(
 );
 
 final addressDeleteLoader = StateProvider.autoDispose<bool>((ref) => false);
+
+final showNotificationProvider = StateProvider<bool>((ref) => false);
+
+final showLockedScreennotificationProvider = StateProvider<bool>(
+  (ref) => false,
+);

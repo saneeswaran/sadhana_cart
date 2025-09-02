@@ -14,22 +14,20 @@ class SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ListTile(
-          onTap: onTap,
-          title: Text(
-            text,
-            style: const TextStyle(
-              color: AppColors.primaryColor,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: ListTile(
+        onTap: onTap,
+        title: Text(
+          text,
+          style: const TextStyle(
+            color: AppColors.settingTitleColor,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
-          leading: Icon(icon, size: 40, color: AppColors.onboardButtonColor),
         ),
-        const Divider(color: AppColors.primaryColor),
-      ],
+        leading: Icon(icon, size: 40, color: AppColors.tileColor),
+      ),
     );
   }
 }
