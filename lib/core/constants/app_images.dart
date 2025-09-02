@@ -6,7 +6,14 @@ class AppImages {
   static const String onboard1 = "assets/images/onboard1.png";
   static const String onboard2 = "assets/images/onboard2.png";
   static const String onboard3 = "assets/images/onboard3.png";
-  static const String orderCompleted = "assets/images/order_completed.png";
+
+  //order status
+  static const String orderCompleted = "assets/order/order_completed.png";
+  static const String orderPending = "assets/order/order_pending.png";
+  static const String orderProcessing = "assets/order/order_processing.png";
+  static const String orderShipped = "assets/order/order_shipped.png";
+  static const String orderDelivered = "assets/order/order-delivered.png";
+  static const String orderCanceled = "assets/order/order_canceled.png";
 
   //vectors
   static const String googleSvg = "assets/vectors/google.svg";
