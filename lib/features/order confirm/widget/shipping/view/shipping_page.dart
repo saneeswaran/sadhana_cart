@@ -5,6 +5,8 @@ import 'package:sadhana_cart/core/helper/validation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
 import 'package:sadhana_cart/core/widgets/loader.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/shipping/widget/saved_address_page.dart';
+import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 
 class ShippingPage extends ConsumerStatefulWidget {
   const ShippingPage({super.key});
@@ -50,17 +52,21 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Step 1 of 3",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+            const Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: Text(
+                "Step 1 of 3",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 10),
+              padding: EdgeInsets.only(left: 25),
               child: Text(
                 "Shipping",
                 style: TextStyle(
@@ -75,67 +81,97 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
               key: formKey,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  children: [
-                    CustomTextFormField(
-                      controller: nameController,
-                      labelText: "Name",
-                      validator: ValidationHelper.validateTextField(
-                        text: "Name",
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    spacing: 20,
+                    children: [
+                      CustomTextFormField(
+                        controller: nameController,
+                        labelText: "Name",
+                        validator: ValidationHelper.validateTextField(
+                          text: "Name",
+                        ),
                       ),
-                    ),
-                    CustomTextFormField(
-                      controller: streetController,
-                      labelText: "Street",
-                      validator: ValidationHelper.validateTextField(
-                        text: "Street",
+                      CustomTextFormField(
+                        controller: streetController,
+                        labelText: "Street",
+                        validator: ValidationHelper.validateTextField(
+                          text: "Street",
+                        ),
                       ),
-                    ),
-                    CustomTextFormField(
-                      controller: cityController,
-                      labelText: "City",
-                      validator: ValidationHelper.validateTextField(
-                        text: "City",
+                      CustomTextFormField(
+                        controller: cityController,
+                        labelText: "City",
+                        validator: ValidationHelper.validateTextField(
+                          text: "City",
+                        ),
                       ),
-                    ),
 
-                    CustomTextFormField(
-                      controller: stateController,
-                      labelText: "State",
-                      validator: ValidationHelper.validateTextField(
-                        text: "State",
+                      CustomTextFormField(
+                        controller: stateController,
+                        labelText: "State",
+                        validator: ValidationHelper.validateTextField(
+                          text: "State",
+                        ),
                       ),
-                    ),
-                    CustomTextFormField(
-                      controller: zipCodeController,
-                      labelText: "Zip Code",
-                      maxLength: 6,
-                      keyboardType: TextInputType.number,
-                      validator: ValidationHelper.validateTextField(
-                        text: "Zip Code",
+                      CustomTextFormField(
+                        controller: zipCodeController,
+                        labelText: "Zip Code",
+                        maxLength: 6,
+                        keyboardType: TextInputType.number,
+                        validator: ValidationHelper.validateTextField(
+                          text: "Zip Code",
+                        ),
                       ),
-                    ),
 
-                    CustomTextFormField(
-                      controller: phoneNumberController,
-                      labelText: "Phone Number",
-                      keyboardType: TextInputType.number,
-                      maxLength: 10,
-                      validator: ValidationHelper.validateTextField(
-                        text: "Phone Number",
+                      CustomTextFormField(
+                        controller: phoneNumberController,
+                        labelText: "Phone Number",
+                        keyboardType: TextInputType.number,
+                        maxLength: 10,
+                        validator: ValidationHelper.validateTextField(
+                          text: "Phone Number",
+                        ),
                       ),
-                    ),
 
-                    CustomElevatedButton(
-                      child: loader
-                          ? const Loader()
-                          : const Text(
-                              "Use Saved Address",
-                              style: customElevatedButtonTextStyle,
+                      CustomElevatedButton(
+                        child: loader
+                            ? const Loader()
+                            : const Text(
+                                "Use Saved Address",
+                                style: customElevatedButtonTextStyle,
+                              ),
+                        onPressed: () async {
+                          final AddressModel? selected = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SavedAddressPage(),
                             ),
-                      onPressed: () {},
-                    ),
-                  ],
+                          );
+
+                          if (selected != null) {
+                            nameController.text = selected.name;
+                            stateController.text = selected.state;
+                            cityController.text = selected.city;
+                            streetController.text = selected.streetName;
+                            zipCodeController.text = selected.pinCode
+                                .toString();
+                            phoneNumberController.text = selected.phoneNumber
+                                .toString();
+                          }
+                        },
+                      ),
+
+                      CustomElevatedButton(
+                        child: const Text(
+                          "Continue",
+                          style: customElevatedButtonTextStyle,
+                        ),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
