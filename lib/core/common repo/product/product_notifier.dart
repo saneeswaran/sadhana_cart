@@ -10,6 +10,23 @@ final productProvider =
       (ref) => ProductNotifier(ref)..initializeProducts(),
     );
 
+final productByCategoryProvider = FutureProvider.autoDispose
+    .family<List<ProductModel>, String>((ref, category) async {
+      return await ProductService.getProductsByCategory(category: category);
+    });
+
+final productBySubcategoryProvider = FutureProvider.autoDispose
+    .family<List<ProductModel>, String>((ref, subcategory) async {
+      return await ProductService.getProductsBySubcategory(
+        subcategory: subcategory,
+      );
+    });
+
+final productByBrandProvider = FutureProvider.autoDispose
+    .family<List<ProductModel>, String>((ref, brand) async {
+      return await ProductService.getProductByBrands(brand: brand);
+    });
+
 class ProductNotifier extends StateNotifier<List<ProductModel>> {
   final Ref ref;
   ProductNotifier(this.ref) : super([]);
@@ -63,4 +80,15 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
 
   bool get hasMore => _hasMore;
   bool get isLoading => _isLoading;
+
+  void filterProducts({required String query}) {
+    state = state
+        .where(
+          (e) =>
+              e.category.toLowerCase().contains(query.toLowerCase()) ||
+              e.subcategory.toLowerCase().contains(query.toLowerCase()) ||
+              e.brand.toLowerCase().contains(query.toLowerCase()),
+        )
+        .toList();
+  }
 }
