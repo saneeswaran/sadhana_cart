@@ -76,8 +76,6 @@ class AddressService {
         final data = querySnapshot.docs
             .map((e) => AddressModel.fromMap(e.data() as Map<String, dynamic>))
             .toList();
-
-        log("data $data");
         return data;
       }
     } catch (e) {
@@ -93,11 +91,15 @@ class AddressService {
   }) async {
     try {
       ref.read(addressDeleteLoader.notifier).state = true;
-      final DocumentSnapshot documentSnapshot = await addressRef.doc(id).get();
+      final QuerySnapshot querySnapshot = await addressRef
+          .where("id", isEqualTo: id)
+          .get();
 
-      if (documentSnapshot.exists) {
-        await documentSnapshot.reference.delete();
-        final document = documentSnapshot.data() as AddressModel;
+      if (querySnapshot.docs.isNotEmpty) {
+        await querySnapshot.docs.first.reference.delete();
+        final document = querySnapshot.docs
+            .map((e) => AddressModel.fromMap(e.data() as Map<String, dynamic>))
+            .first;
         ref.read(addressprovider.notifier).deleteAddress(address: document);
         ref.read(addressDeleteLoader.notifier).state = false;
         if (context.mounted) {
@@ -107,6 +109,7 @@ class AddressService {
       }
     } catch (e) {
       log("address service error $e");
+      ref.read(addressDeleteLoader.notifier).state = false;
       if (context.mounted) {
         failedSnackbar(context: context, text: "Failed to delete address");
       }

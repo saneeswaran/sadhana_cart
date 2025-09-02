@@ -75,7 +75,7 @@ class _EditAddressPageState extends ConsumerState<EditAddressPage> {
                 final loader = ref.watch(loadingProvider);
                 final deletingLoadder = ref.watch(addressDeleteLoader);
                 return AbsorbPointer(
-                  absorbing: loader,
+                  absorbing: loader || deletingLoadder,
                   child: Column(
                     spacing: 20,
                     children: [
