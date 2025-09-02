@@ -85,6 +85,7 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
     state = state
         .where(
           (e) =>
+              e.name.toLowerCase().contains(query.toLowerCase()) ||
               e.category.toLowerCase().contains(query.toLowerCase()) ||
               e.subcategory.toLowerCase().contains(query.toLowerCase()) ||
               e.brand.toLowerCase().contains(query.toLowerCase()),
