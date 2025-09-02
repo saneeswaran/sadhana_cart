@@ -91,7 +91,7 @@ class CustomerService {
     required WidgetRef ref,
     required BuildContext context,
     required String name,
-    required File? profileImage,
+    File? profileImage,
     required int contactNo,
     required String gender,
   }) async {
@@ -101,38 +101,44 @@ class CustomerService {
       final DocumentSnapshot documentSnapshot = await customerRef
           .doc(customerId)
           .get();
-      if (documentSnapshot.exists) {
-        final image = await FirebaseStorageHelper.uploadImageToFirebaseStorage(
-          file: profileImage!,
+
+      if (!documentSnapshot.exists) throw Exception("Customer not found");
+
+      String? imageUrl;
+      if (profileImage != null) {
+        imageUrl = await FirebaseStorageHelper.uploadImageToFirebaseStorage(
+          file: profileImage,
         );
-        final CustomerModel customerModel = CustomerModel(
-          customerId: customerId,
-          name: name,
-          profileImage: image,
-          contactNo: contactNo,
-          gender: gender,
-        );
-        log(customerModel.toString());
-        final newUpdatedData = AvoidNullValues.removeNullValues(
-          customerModel.toMap(),
-        );
-        await documentSnapshot.reference.update(newUpdatedData);
-        if (context.mounted) {
-          successSnackBar(
-            message: "Profile updated successfully",
-            context: context,
-          );
-        }
-        return true;
-      } else {
-        if (context.mounted) {
-          failedSnackbar(text: "Failed to update profile", context: context);
-        }
-        log("failed to update customer profile");
-        return false;
       }
+
+      final customerModel = CustomerModel(
+        customerId: customerId,
+        name: name,
+        profileImage: imageUrl,
+        contactNo: contactNo,
+        gender: gender,
+      );
+
+      final cleanedData = AvoidNullValues.removeNullValuesDeep(
+        customerModel.toMap(),
+      );
+
+      await documentSnapshot.reference.update(cleanedData);
+
+      if (context.mounted) {
+        successSnackBar(
+          message: "Profile updated successfully",
+          context: context,
+        );
+      }
+
+      return true;
     } catch (e) {
-      log("customer profile service $e");
+      ref.read(loadingProvider.notifier).state = false;
+      if (context.mounted) {
+        failedSnackbar(text: "Failed to update profile", context: context);
+      }
+      log("customer profile service error: $e");
       return false;
     }
   }

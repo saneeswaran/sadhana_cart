@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,11 +17,13 @@ class EditProfileSettings extends ConsumerStatefulWidget {
   final String name;
   final int contactNo;
   final String profileImage;
+  final String gender;
   const EditProfileSettings({
     super.key,
     required this.name,
     required this.contactNo,
     required this.profileImage,
+    required this.gender,
   });
 
   @override
@@ -48,7 +52,7 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
   @override
   Widget build(BuildContext context) {
     final loader = ref.watch(loadingProvider);
-    final image = ref.watch(profileImageProvider);
+    final image = ref.watch(profileImageProvider.notifier).state = null;
     final gender = ref.watch(genderProvider);
     final items = GenderEnum.values
         .map(
@@ -63,13 +67,16 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
               ? const Loader()
               : const Text("Save", style: customElevatedButtonTextStyle),
           onPressed: () async {
+            log("gender $gender");
+            log("image $image");
+            log("contact no ${phoneNumberController.text}");
             final bool isSuccess = await CustomerService.updateCustomerProfile(
               context: context,
               ref: ref,
               contactNo: int.parse(phoneNumberController.text),
               name: userNameController.text,
               profileImage: image,
-              gender: gender ?? GenderEnum.none.label,
+              gender: gender!,
             );
             if (isSuccess && context.mounted) {
               Navigator.pop(context);
@@ -85,7 +92,7 @@ class _EditProfileSettingsState extends ConsumerState<EditProfileSettings> {
             Center(
               child: CircleAvatar(
                 radius: 60,
-                backgroundImage: image != null && image.path.isNotEmpty
+                backgroundImage: image != null
                     ? FileImage(image)
                     : widget.profileImage.isNotEmpty
                     ? CachedNetworkImageProvider(widget.profileImage)

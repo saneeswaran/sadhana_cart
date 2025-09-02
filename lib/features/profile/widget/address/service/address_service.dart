@@ -148,7 +148,9 @@ class AddressService {
           title: title,
           icon: iconCode,
         );
-        final newData = AvoidNullValues.removeNullValues(addressModel.toMap());
+        final newData = AvoidNullValues.removeNullValuesDeep(
+          addressModel.toMap(),
+        );
         await documentSnapshot.reference.update(newData);
         ref.read(addressprovider.notifier).updateAddress();
         ref.read(loadingProvider.notifier).state = false;

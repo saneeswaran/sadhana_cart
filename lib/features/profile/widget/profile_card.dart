@@ -82,6 +82,7 @@ class ProfileCard extends ConsumerWidget {
                   final email = data?.email ?? "Not available";
                   final contact = data?.contactNo;
                   final profileImage = data?.profileImage;
+                  final gender = data?.gender;
                   return ListTile(
                     title: Text(name),
                     subtitle: Text(email),
@@ -94,6 +95,7 @@ class ProfileCard extends ConsumerWidget {
                             name: name,
                             contactNo: contact!,
                             profileImage: profileImage!,
+                            gender: gender!,
                           ),
                         );
                       },
