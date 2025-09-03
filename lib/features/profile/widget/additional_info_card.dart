@@ -4,6 +4,7 @@ import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/favorites/view/favorite_page_mobile.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/shipping/model/order_page_view.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view/user_address_page.dart';
+import 'package:sadhana_cart/features/profile/widget/payment/view/payment_method.dart';
 
 class AdditionalInfoCard extends StatelessWidget {
   const AdditionalInfoCard({super.key});
@@ -35,7 +36,8 @@ class AdditionalInfoCard extends StatelessWidget {
           _customTile(
             icon: const Icon(Icons.wallet),
             text: "Payment Method",
-            onTap: () {},
+            onTap: () =>
+                navigateTo(context: context, screen: const PaymentMethod()),
           ),
           Divider(color: Colors.grey.shade300),
           _customTile(
