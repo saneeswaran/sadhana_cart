@@ -8,3 +8,5 @@ final List<Widget> orderPages = const [
   PaymentPage(),
   OrderStatusPage(),
 ];
+
+final steps = [Icons.location_on, Icons.inventory_2, Icons.check];

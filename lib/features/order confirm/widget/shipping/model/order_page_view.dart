@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
+import 'package:sadhana_cart/core/widgets/custom_stepper.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/shipping/model/order_page_controller.dart';
 
 class OrderPageView extends StatefulWidget {
@@ -15,10 +17,15 @@ class _OrderPageViewState extends State<OrderPageView> {
 
   @override
   void initState() {
-    pageController.addListener(() {
-      currentIndex = pageController.page!.toInt();
-    });
     super.initState();
+    pageController.addListener(() {
+      final newIndex = pageController.page!.round();
+      if (currentIndex != newIndex) {
+        setState(() {
+          currentIndex = newIndex;
+        });
+      }
+    });
   }
 
   @override
@@ -30,26 +37,45 @@ class _OrderPageViewState extends State<OrderPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        automaticallyImplyLeading: false,
+        title: CustomStepper(currentIndex: currentIndex),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: PageView.builder(
+        controller: pageController,
+        physics: const BouncingScrollPhysics(),
+        itemCount: orderPages.length,
+        itemBuilder: (context, index) => orderPages[index],
+      ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 30),
         child: CustomElevatedButton(
-          child: const Text("Continue", style: customElevatedButtonTextStyle),
           onPressed: () {
-            pageController.nextPage(
-              duration: const Duration(milliseconds: 400),
-              curve: Curves.easeInOut,
-            );
+            if (currentIndex < orderPages.length - 1) {
+              pageController.nextPage(
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeInOut,
+              );
+            } else {
+              successSnackBar(
+                message: "Order placed successfully",
+                context: context,
+              );
+            }
           },
+          child: Text(
+            currentIndex < orderPages.length - 1 ? "Continue" : "Finish",
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-      ),
-      body: PageView.builder(
-        itemCount: orderPages.length,
-        physics: const NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        controller: pageController,
-        itemBuilder: (context, index) {
-          return orderPages[index];
-        },
       ),
     );
   }

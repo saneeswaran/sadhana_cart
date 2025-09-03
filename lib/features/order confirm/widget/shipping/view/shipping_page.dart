@@ -39,23 +39,12 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
   Widget build(BuildContext context) {
     final loader = ref.watch(loadingProvider);
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          "Check out",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Padding(
-              padding: EdgeInsets.only(left: 20.0),
+              padding: EdgeInsets.only(left: 15.0),
               child: Text(
                 "Step 1 of 3",
                 style: TextStyle(

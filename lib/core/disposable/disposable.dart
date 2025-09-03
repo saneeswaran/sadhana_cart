@@ -66,3 +66,7 @@ final creditCardImageProvider = StateProvider<CardEnums>((ref) {
 final creditCardColorProvider = StateProvider.autoDispose<CardColorsEnum>(
   (ref) => CardColorsEnum.black,
 );
+
+//order page index
+
+final orderStepperPageProvider = StateProvider<int>((ref) => 0);

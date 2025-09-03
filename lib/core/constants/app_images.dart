@@ -47,6 +47,11 @@ class AppImages {
       productId: "2",
     ),
   ];
+
+  //credit card images
+  static const String creditCard = "credit_card.png";
+  static const String money = "money.png";
+  static const String more = "more.png";
 }
 
 class CreditCardImages {
