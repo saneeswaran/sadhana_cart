@@ -40,7 +40,7 @@ class _EditAddressPageState extends ConsumerState<EditAddressPage> {
 
   @override
   void initState() {
-    nameController.text = widget.address.name;
+    nameController.text = widget.address.name ?? "";
     streetNameController.text = widget.address.streetName;
     cityController.text = widget.address.city;
     zipCodeController.text = widget.address.pinCode.toString();
@@ -175,7 +175,7 @@ class _EditAddressPageState extends ConsumerState<EditAddressPage> {
                           final bool isSuccess =
                               await AddressService.deleteAddress(
                                 context: context,
-                                id: widget.address.id,
+                                id: widget.address.id ?? "",
                                 ref: ref,
                               );
                           if (isSuccess && context.mounted) {
@@ -194,7 +194,7 @@ class _EditAddressPageState extends ConsumerState<EditAddressPage> {
                           if (formKey.currentState!.validate()) {
                             final bool isSuccess =
                                 await AddressService.updateAddress(
-                                  id: widget.address.id,
+                                  id: widget.address.id ?? "",
                                   context: context,
                                   name: nameController.text.trim(),
                                   streetName: streetNameController.text.trim(),
@@ -209,6 +209,8 @@ class _EditAddressPageState extends ConsumerState<EditAddressPage> {
                                   ),
                                   icon: icon,
                                   ref: ref,
+                                  lattitude: widget.address.lattitude,
+                                  longitude: widget.address.longitude,
                                 );
                             if (isSuccess && context.mounted) {
                               navigateBack(context: context);

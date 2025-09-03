@@ -30,6 +30,8 @@ class AddressService {
     required int phoneNumber,
     required IconData icon,
     required WidgetRef ref,
+    required double lattitude,
+    required double longitude,
   }) async {
     try {
       ref.read(loadingProvider.notifier).state = true;
@@ -45,6 +47,8 @@ class AddressService {
         state: state,
         pinCode: pinCode,
         phoneNumber: phoneNumber,
+        lattitude: lattitude,
+        longitude: longitude,
         timestamp: Timestamp.now(),
       );
       await docRef.set(addressModel.toMap());
@@ -127,6 +131,8 @@ class AddressService {
     required String state,
     required String title,
     required int pinCode,
+    required double lattitude,
+    required double longitude,
     required int phoneNumber,
     required IconData icon,
     required WidgetRef ref,
@@ -144,6 +150,8 @@ class AddressService {
           state: state,
           pinCode: pinCode,
           phoneNumber: phoneNumber,
+          lattitude: lattitude,
+          longitude: longitude,
           timestamp: Timestamp.now(),
           title: title,
           icon: iconCode,

@@ -83,7 +83,7 @@ class UserAddressData extends ConsumerWidget {
       physics: const AlwaysScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final address = addressList[index];
-        final icons = IconData(address.icon, fontFamily: 'MaterialIcons');
+        final icons = IconData(address.icon ?? 0, fontFamily: 'MaterialIcons');
         return Container(
           margin: const EdgeInsets.all(12),
           padding: const EdgeInsets.all(12),
@@ -105,7 +105,7 @@ class UserAddressData extends ConsumerWidget {
             children: [
               ListTile(
                 leading: Icon(icons, size: 40),
-                title: Text(address.title),
+                title: Text(address.title ?? ""),
                 subtitle: Text(address.city),
                 trailing: CustomTextButton(
                   text: "Edit",

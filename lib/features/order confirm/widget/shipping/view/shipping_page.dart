@@ -151,7 +151,7 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
                           );
 
                           if (selected != null) {
-                            nameController.text = selected.name;
+                            nameController.text = selected.name ?? "";
                             stateController.text = selected.state;
                             cityController.text = selected.city;
                             streetController.text = selected.streetName;
