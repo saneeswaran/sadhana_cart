@@ -44,3 +44,5 @@ final showLockedScreennotificationProvider = StateProvider<bool>(
 );
 
 final addressRadioButtonProvider = StateProvider<int>((ref) => 0);
+
+final addressFillingProvider = StateProvider<bool>((ref) => false);

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,7 +46,6 @@ class ProfileCard extends ConsumerWidget {
                 error: (e, _) =>
                     Image.asset(AppImages.noProfile, fit: BoxFit.cover),
                 data: (data) {
-                  log(data.toString());
                   final imageUrl = data?.profileImage;
                   if (imageUrl != null && imageUrl.isNotEmpty) {
                     return CachedNetworkImage(

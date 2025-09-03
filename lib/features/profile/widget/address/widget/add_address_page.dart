@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/geolocation_helper.dart';
+import 'package:sadhana_cart/core/helper/validation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_drop_down.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
@@ -75,16 +76,16 @@ class _AddAddressPageState extends State<AddAddressPage> {
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Consumer(
-              builder: (context, ref, child) {
-                final icon = ref.watch(userAdderssIconProvider);
-                final title = ref.watch(userAddressTitleProvider);
-                final loader = ref.watch(loadingProvider);
+          child: Consumer(
+            builder: (context, ref, child) {
+              final icon = ref.watch(userAdderssIconProvider);
+              final title = ref.watch(userAddressTitleProvider);
+              final loader = ref.watch(loadingProvider);
 
-                return AbsorbPointer(
-                  absorbing: loader,
+              return AbsorbPointer(
+                absorbing: loader,
+                child: Form(
+                  key: formKey,
                   child: Column(
                     spacing: 20,
                     children: [
@@ -139,30 +140,48 @@ class _AddAddressPageState extends State<AddAddressPage> {
                       CustomTextFormField(
                         controller: nameController,
                         labelText: "Name",
+                        validator: ValidationHelper.validateTextField(
+                          text: "Name",
+                        ),
                       ),
                       CustomTextFormField(
                         controller: streetNameController,
                         labelText: "Street Name",
+                        validator: ValidationHelper.validateTextField(
+                          text: "Street Name",
+                        ),
                       ),
                       CustomTextFormField(
                         controller: cityController,
                         labelText: "City",
+                        validator: ValidationHelper.validateTextField(
+                          text: "City",
+                        ),
                       ),
                       CustomTextFormField(
                         controller: stateController,
                         labelText: "State",
+                        validator: ValidationHelper.validateTextField(
+                          text: "State",
+                        ),
                       ),
                       CustomTextFormField(
                         controller: zipCodeController,
                         keyboardType: TextInputType.number,
                         maxLength: 6,
                         labelText: "Zip Code",
+                        validator: ValidationHelper.validateTextField(
+                          text: "Zip Code",
+                        ),
                       ),
                       CustomTextFormField(
                         controller: phoneNumberController,
                         keyboardType: TextInputType.number,
                         maxLength: 10,
                         labelText: "Phone Number",
+                        validator: ValidationHelper.validateTextField(
+                          text: "Phone Number",
+                        ),
                       ),
 
                       const SizedBox(height: 30),
@@ -174,7 +193,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
                                 style: customElevatedButtonTextStyle,
                               ),
                         onPressed: () async {
-                          if (formKey.currentState!.validate()) {
+                          final valid = formKey.currentState?.validate();
+                          if (!valid!) return;
+                          if (valid) {
                             final isSuccess = await AddressService.addAddress(
                               context: context,
                               name: nameController.text.trim(),
@@ -199,9 +220,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
                       ),
                     ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       ),

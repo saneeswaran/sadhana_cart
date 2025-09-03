@@ -1,10 +1,13 @@
+import 'package:flutter/material.dart';
+
 class ValidationHelper {
-  static String? Function(String?)? validateTextField({required String text}) {
-    if (text.isEmpty) {
-      return (value) => 'Please enter $text';
-    } else {
+  static FormFieldValidator<String> validateTextField({required String text}) {
+    return (value) {
+      if (value == null || value.trim().isEmpty) {
+        return "$text is required";
+      }
       return null;
-    }
+    };
   }
 
   static String? Function(String?)? emailValidate() {

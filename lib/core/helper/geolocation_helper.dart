@@ -3,6 +3,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sadhana_cart/core/helper/permission_helper.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 
 class GeolocationHelper {
@@ -26,20 +27,9 @@ class GeolocationHelper {
 
   static Future<AddressModel?> getCurrentLocationAndFillAddressDetails() async {
     try {
-      final Permission locationPermission = Permission.location;
-
-      var status = await locationPermission.status;
-
-      if (status.isDenied || status.isRestricted) {
-        status = await locationPermission.request();
-
-        if (!status.isGranted) {
-          log("Location permission denied");
-          return null;
-        }
-      }
-
-      if (status.isGranted) {
+      final bool permissionGranted =
+          await PermissionHelper.checkLocationPermission();
+      if (permissionGranted) {
         final Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high,
           locationSettings: const LocationSettings(
@@ -55,7 +45,7 @@ class GeolocationHelper {
 
         final address = placeMark.first;
         final AddressModel addressModel = AddressModel(
-          streetName: "${address.street}",
+          streetName: "${address.street}, ${address.subLocality},",
           city: "${address.locality}",
           state: "${address.administrativeArea}",
           pinCode: address.postalCode != null

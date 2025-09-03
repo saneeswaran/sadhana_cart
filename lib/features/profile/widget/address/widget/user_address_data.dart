@@ -83,7 +83,7 @@ class _UserAddressDataState extends ConsumerState<UserAddressData> {
               Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Text(
-                  address.streetName,
+                  "${address.streetName} ${address.city}, ${address.state},",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
