@@ -1,88 +1,44 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_ratio_button.dart';
-import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:sadhana_cart/features/profile/widget/address/view model/address_notifier.dart';
+import 'package:sadhana_cart/features/profile/widget/address/widget/address_loader_page.dart';
 
-class SavedAddressPage extends ConsumerWidget {
+class SavedAddressPage extends ConsumerStatefulWidget {
   const SavedAddressPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final addressList = ref.watch(addressprovider);
-    final currentIndex = ref.watch(addressRadioButtonProvider);
+  ConsumerState<SavedAddressPage> createState() => _SavedAddressPageState();
+}
 
+class _SavedAddressPageState extends ConsumerState<SavedAddressPage> {
+  @override
+  void initState() {
+    super.initState();
     Future.microtask(() {
       ref.read(addressprovider.notifier).updateAddress();
     });
+  }
 
-    if (addressList.isEmpty) {
-      return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Text(
-            "Saved Address",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        body: Skeletonizer(
-          child: ListView.builder(
-            itemCount: 5,
-            shrinkWrap: true,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Container(
-                margin: const EdgeInsets.all(12),
-                padding: const EdgeInsets.all(12),
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade300,
-                      blurRadius: 5,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.home, size: 40),
-                      title: Text("This is for address"),
-                      subtitle: Text("This is for city"),
-                      trailing: Radio(value: 0, groupValue: 0, onChanged: null),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text(
-                        "address.streetName",
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      );
+  @override
+  Widget build(BuildContext context) {
+    final addressState = ref.watch(addressprovider);
+    final currentIndex = ref.watch(addressRadioButtonProvider);
+
+    if (addressState.isLoading) {
+      return const AddressLoaderPage();
+    }
+
+    if (addressState.error != null) {
+      return Center(child: Text('Error: ${addressState.error}'));
+    }
+
+    if (addressState.addresses.isEmpty) {
+      return const Scaffold(body: Center(child: Text("No address found.")));
     }
 
     return Scaffold(
@@ -105,7 +61,7 @@ class SavedAddressPage extends ConsumerWidget {
             style: customElevatedButtonTextStyle,
           ),
           onPressed: () {
-            final selected = addressList[currentIndex];
+            final selected = addressState.addresses[currentIndex];
             log("Using address: ${selected.title}");
             Navigator.pop(context, selected);
           },
@@ -114,11 +70,9 @@ class SavedAddressPage extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: ListView.builder(
-          itemCount: addressList.length,
-          shrinkWrap: true,
-          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: addressState.addresses.length,
           itemBuilder: (context, index) {
-            final address = addressList[index];
+            final address = addressState.addresses[index];
             final icons = IconData(
               address.icon ?? 0,
               fontFamily: 'MaterialIcons',

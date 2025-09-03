@@ -1,14 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
-import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/helper/geolocation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_drop_down.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
 import 'package:sadhana_cart/core/widgets/loader.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_helper.dart';
 import 'package:sadhana_cart/features/profile/widget/address/service/address_service.dart';
-import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
 
 class AddAddressPage extends StatefulWidget {
   const AddAddressPage({super.key});
@@ -25,6 +26,26 @@ class _AddAddressPageState extends State<AddAddressPage> {
   final stateController = TextEditingController();
   final zipCodeController = TextEditingController();
   final phoneNumberController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchAndFillAddress();
+  }
+
+  Future<void> _fetchAndFillAddress() async {
+    final addressModel =
+        await GeolocationHelper.getCurrentLocationAndFillAddressDetails();
+    log(addressModel.toString());
+    if (addressModel != null && mounted) {
+      setState(() {
+        streetNameController.text = addressModel.streetName;
+        cityController.text = addressModel.city;
+        stateController.text = addressModel.state;
+        zipCodeController.text = addressModel.pinCode.toString();
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -61,145 +82,122 @@ class _AddAddressPageState extends State<AddAddressPage> {
                 final icon = ref.watch(userAdderssIconProvider);
                 final title = ref.watch(userAddressTitleProvider);
                 final loader = ref.watch(loadingProvider);
-                final currentLocationAsync = ref.watch(
-                  getCurrentLocationProvider,
-                );
+
                 return AbsorbPointer(
                   absorbing: loader,
-                  child: currentLocationAsync.when(
-                    data: (data) {
-                      return Column(
-                        spacing: 20,
+                  child: Column(
+                    spacing: 20,
+                    children: [
+                      const SizedBox(height: 20),
+                      Row(
                         children: [
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: CustomDropDown<String>(
-                                  items: AddressHelper.addressPlaces
-                                      .map(
-                                        (e) => DropdownMenuItem<String>(
-                                          value: e,
-                                          child: Text(e),
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: (value) =>
-                                      ref
-                                              .read(
-                                                userAddressTitleProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          value ?? "Home",
-                                  value: title,
-                                  labelText: "Select Address Type",
-                                ),
-                              ),
-                              const SizedBox(width: 40),
-                              Expanded(
-                                child: CustomDropDown<IconData>(
-                                  items: AddressHelper.icons
-                                      .map(
-                                        (e) => DropdownMenuItem<IconData>(
-                                          value: e,
-                                          child: Icon(e),
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: (value) =>
-                                      ref
-                                              .read(
-                                                userAdderssIconProvider
-                                                    .notifier,
-                                              )
-                                              .state =
-                                          value ?? Icons.home,
-                                  value: icon,
-                                  labelText: "Select Address Icon",
-                                ),
-                              ),
-                            ],
-                          ),
-                          CustomTextFormField(
-                            controller: nameController,
-                            labelText: "Name",
-                          ),
-                          CustomTextFormField(
-                            controller: streetNameController,
-                            labelText: "Street Name",
-                          ),
-                          CustomTextFormField(
-                            controller: cityController,
-                            labelText: "City",
-                          ),
-                          CustomTextFormField(
-                            controller: stateController,
-                            labelText: "State",
-                          ),
-                          CustomTextFormField(
-                            controller: zipCodeController,
-                            keyboardType: TextInputType.number,
-                            maxLength: 6,
-                            labelText: "Zip Code",
-                          ),
-                          CustomTextFormField(
-                            controller: phoneNumberController,
-                            keyboardType: TextInputType.number,
-                            maxLength: 10,
-                            labelText: "Phone Number",
-                          ),
-
-                          const SizedBox(height: 30),
-                          CustomElevatedButton(
-                            child: const Text(
-                              "Get Current Location",
-                              style: customElevatedButtonTextStyle,
+                          Expanded(
+                            child: CustomDropDown<String>(
+                              items: AddressHelper.addressPlaces
+                                  .map(
+                                    (e) => DropdownMenuItem<String>(
+                                      value: e,
+                                      child: Text(e),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) =>
+                                  ref
+                                          .read(
+                                            userAddressTitleProvider.notifier,
+                                          )
+                                          .state =
+                                      value ?? "Home",
+                              value: title,
+                              labelText: "Select Address Type",
                             ),
-                            onPressed: () {},
                           ),
-                          CustomElevatedButton(
-                            child: loader
-                                ? const Loader()
-                                : const Text(
-                                    "Save",
-                                    style: customElevatedButtonTextStyle,
-                                  ),
-                            onPressed: () async {
-                              if (formKey.currentState!.validate()) {
-                                final bool isSuccess =
-                                    await AddressService.addAddress(
-                                      context: context,
-                                      name: nameController.text.trim(),
-                                      streetName: streetNameController.text
-                                          .trim(),
-                                      city: cityController.text.trim(),
-                                      state: stateController.text.trim(),
-                                      title: title,
-                                      pinCode: int.parse(
-                                        zipCodeController.text.trim(),
-                                      ),
-                                      phoneNumber: int.parse(
-                                        phoneNumberController.text.trim(),
-                                      ),
-                                      icon: icon,
-                                      ref: ref,
-                                      lattitude: data!.lattitude,
-                                      longitude: data.longitude,
-                                    );
-                                if (isSuccess && context.mounted) {
-                                  navigateBack(context: context);
-                                }
-                              }
-                            },
+                          const SizedBox(width: 40),
+                          Expanded(
+                            child: CustomDropDown<IconData>(
+                              items: AddressHelper.icons
+                                  .map(
+                                    (e) => DropdownMenuItem<IconData>(
+                                      value: e,
+                                      child: Icon(e),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) =>
+                                  ref
+                                          .read(
+                                            userAdderssIconProvider.notifier,
+                                          )
+                                          .state =
+                                      value ?? Icons.home,
+                              value: icon,
+                              labelText: "Select Address Icon",
+                            ),
                           ),
                         ],
-                      );
-                    },
-                    error: (error, stackTrace) {
-                      return Center(child: Text(error.toString()));
-                    },
-                    loading: () => const Loader(),
+                      ),
+                      CustomTextFormField(
+                        controller: nameController,
+                        labelText: "Name",
+                      ),
+                      CustomTextFormField(
+                        controller: streetNameController,
+                        labelText: "Street Name",
+                      ),
+                      CustomTextFormField(
+                        controller: cityController,
+                        labelText: "City",
+                      ),
+                      CustomTextFormField(
+                        controller: stateController,
+                        labelText: "State",
+                      ),
+                      CustomTextFormField(
+                        controller: zipCodeController,
+                        keyboardType: TextInputType.number,
+                        maxLength: 6,
+                        labelText: "Zip Code",
+                      ),
+                      CustomTextFormField(
+                        controller: phoneNumberController,
+                        keyboardType: TextInputType.number,
+                        maxLength: 10,
+                        labelText: "Phone Number",
+                      ),
+
+                      const SizedBox(height: 30),
+                      CustomElevatedButton(
+                        child: loader
+                            ? const Loader()
+                            : const Text(
+                                "Save",
+                                style: customElevatedButtonTextStyle,
+                              ),
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            final isSuccess = await AddressService.addAddress(
+                              context: context,
+                              name: nameController.text.trim(),
+                              streetName: streetNameController.text.trim(),
+                              city: cityController.text.trim(),
+                              state: stateController.text.trim(),
+                              title: title,
+                              pinCode: int.parse(zipCodeController.text.trim()),
+                              phoneNumber: int.parse(
+                                phoneNumberController.text.trim(),
+                              ),
+                              icon: icon,
+                              ref: ref,
+                              lattitude: 0.0,
+                              longitude: 0.0,
+                            );
+                            if (isSuccess && context.mounted) {
+                              Navigator.pop(context);
+                            }
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 );
               },

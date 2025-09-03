@@ -27,9 +27,19 @@ class GeolocationHelper {
   static Future<AddressModel?> getCurrentLocationAndFillAddressDetails() async {
     try {
       final Permission locationPermission = Permission.location;
-      if (await locationPermission.isDenied) {
-        await locationPermission.request().isGranted;
-      } else {
+
+      var status = await locationPermission.status;
+
+      if (status.isDenied || status.isRestricted) {
+        status = await locationPermission.request();
+
+        if (!status.isGranted) {
+          log("Location permission denied");
+          return null;
+        }
+      }
+
+      if (status.isGranted) {
         final Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high,
           locationSettings: const LocationSettings(
@@ -42,23 +52,28 @@ class GeolocationHelper {
           position.latitude,
           position.longitude,
         );
+
         final address = placeMark.first;
         final AddressModel addressModel = AddressModel(
           streetName: "${address.street}",
           city: "${address.locality}",
           state: "${address.administrativeArea}",
           pinCode: address.postalCode != null
-              ? int.parse(address.postalCode!)
+              ? int.tryParse(address.postalCode!) ?? 0
               : 0,
           lattitude: position.latitude,
           longitude: position.longitude,
         );
+
         return addressModel;
+      } else {
+        log("Location permission not granted");
+        return null;
       }
     } catch (e) {
       log("address service error $e");
+      return null;
     }
-    return null;
   }
 
   static Future<AddressModel?> initialize() async {

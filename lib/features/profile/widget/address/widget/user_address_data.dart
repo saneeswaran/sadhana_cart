@@ -2,93 +2,56 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
-import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
+import 'package:sadhana_cart/features/profile/widget/address/view model/address_notifier.dart';
+import 'package:sadhana_cart/features/profile/widget/address/widget/address_loader_page.dart';
 import 'package:sadhana_cart/features/profile/widget/address/widget/edit_address_page.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
-class UserAddressData extends ConsumerWidget {
+class UserAddressData extends ConsumerStatefulWidget {
   const UserAddressData({super.key});
 
   @override
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final addressList = ref.watch(addressprovider);
-    final Size size = MediaQuery.of(context).size;
+  ConsumerState<UserAddressData> createState() => _UserAddressDataState();
+}
 
+class _UserAddressDataState extends ConsumerState<UserAddressData> {
+  @override
+  void initState() {
+    super.initState();
     Future.microtask(() {
       ref.read(addressprovider.notifier).updateAddress();
     });
+  }
 
-    if (addressList.isEmpty) {
-      return Skeletonizer(
-        child: ListView.builder(
-          itemCount: 5,
-          shrinkWrap: true,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.all(12),
-              padding: const EdgeInsets.all(12),
-              height: size.height * 0.15,
-              width: size.width * 1,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade300,
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    leading: Icon(Icons.home, size: 40),
-                    title: Text("This is for address"),
-                    subtitle: Text("This is for city"),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child: Text(
-                      "address.streetName",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      );
+  @override
+  Widget build(BuildContext context) {
+    final addressState = ref.watch(addressprovider);
+    final Size size = MediaQuery.of(context).size;
+
+    if (addressState.isLoading) {
+      return const AddressLoaderPage();
     }
 
-    Future.delayed(const Duration(seconds: 5), () {
-      if (addressList.isEmpty) {
-        return const Center(child: Text("Address is empty"));
-      }
-    });
+    if (addressState.error != null) {
+      return Center(child: Text('Error: ${addressState.error}'));
+    }
+
+    if (addressState.addresses.isEmpty) {
+      return const Center(child: Text("No address found."));
+    }
 
     return ListView.builder(
-      itemCount: addressList.length,
+      itemCount: addressState.addresses.length,
       shrinkWrap: true,
       physics: const AlwaysScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        final address = addressList[index];
+        final address = addressState.addresses[index];
         final icons = IconData(address.icon ?? 0, fontFamily: 'MaterialIcons');
+
         return Container(
           margin: const EdgeInsets.all(12),
           padding: const EdgeInsets.all(12),
           height: size.height * 0.15,
-          width: size.width * 1,
+          width: size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
             color: Colors.white,
