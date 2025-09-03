@@ -8,7 +8,6 @@ enum CardColorsEnum {
   blue,
   green,
   red,
-  white,
   purple,
   titanium,
   roseGold,
@@ -39,8 +38,6 @@ extension CardColorExtension on CardColorsEnum {
         return const Color(0xFF4CAF50);
       case CardColorsEnum.red:
         return const Color(0xFFF44336);
-      case CardColorsEnum.white:
-        return const Color(0xFFFFFFFF);
       case CardColorsEnum.purple:
         return const Color(0xFF9C27B0);
       case CardColorsEnum.titanium:
@@ -84,8 +81,6 @@ extension CardColorsEnumExtension on CardColorsEnum {
         return "Green";
       case CardColorsEnum.red:
         return "Red";
-      case CardColorsEnum.white:
-        return "White";
       case CardColorsEnum.purple:
         return "Purple";
       case CardColorsEnum.titanium:

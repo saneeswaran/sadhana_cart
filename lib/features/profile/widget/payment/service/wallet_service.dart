@@ -23,7 +23,7 @@ class WalletService {
     required String expiryDate,
     required String cardHolderName,
     required String paymentToken,
-    required Color color,
+    required String color,
     required String cardBrand,
     required String last4Digits,
     required WidgetRef ref,
@@ -41,7 +41,7 @@ class WalletService {
         paymentToken: paymentToken,
         cardBrand: cardBrand,
         last4Digits: last4Digits,
-        color: color.toString(),
+        color: color,
       );
       await docRef.set(walletModel.toMap());
       if (context.mounted) {

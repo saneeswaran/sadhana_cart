@@ -54,14 +54,13 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
           builder: (context, ref, child) {
             final loader = ref.watch(walletLoader);
             final cardBrand = ref.watch(creditCardTypeProvider).name;
-            final color = ref.watch(creditCardColorProvider);
+            final color = ref.watch(creditCardColorProvider).label;
             return CustomElevatedButton(
               onPressed: () async {
-                log("card brand $cardBrand");
                 final isValid = formKey.currentState!.validate();
                 if (!isValid) return;
                 final bool isSuccess = await WalletService.addWallet(
-                  color: color.color,
+                  color: color,
                   context: context,
                   maskedNumber: cardNumber,
                   expiryDate: expiryDate,

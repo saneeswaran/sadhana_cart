@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/enums/card_colors_enum.dart';
 import 'package:sadhana_cart/core/helper/string_helper.dart';
 import 'package:sadhana_cart/features/profile/widget/payment/view%20model/wallet_loading_page.dart';
 import 'package:sadhana_cart/features/profile/widget/payment/view%20model/wallet_notifier.dart';
@@ -27,6 +27,7 @@ class _ListWalletPageState extends ConsumerState<ListWalletPage> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final walletData = ref.watch(walletStateProvider);
+
     if (walletData.isLoading) {
       return const WalletLoadingPage();
     }
@@ -41,9 +42,13 @@ class _ListWalletPageState extends ConsumerState<ListWalletPage> {
       final cardType = CardType.values.firstWhere(
         (card) => card.name == walletData.wallet.first.cardBrand,
       );
+      final cardColor = CardColorsEnum.values.firstWhere(
+        (e) => e.label == walletData.wallet.first.color,
+      );
+      final Color color = cardColor.color;
       final cardImage = StringHelper.getImageByCardBrand(card: cardType);
       return CreditCardWidget(
-        cardBgColor: AppColors.primaryColor,
+        cardBgColor: color,
         enableFloatingCard: false,
         bankName: '',
         cardNumber: cardNumber,
@@ -72,8 +77,12 @@ class _ListWalletPageState extends ConsumerState<ListWalletPage> {
           (card) => card.name == e.cardBrand,
         );
         final cardImage = StringHelper.getImageByCardBrand(card: cardType);
+        final cardColor = CardColorsEnum.values.firstWhere(
+          (co) => co.label == e.color,
+        );
+        final color = cardColor.color;
         return CreditCardWidget(
-          cardBgColor: AppColors.primaryColor,
+          cardBgColor: color,
           enableFloatingCard: false,
           bankName: '',
           cardNumber: cardNumber,
