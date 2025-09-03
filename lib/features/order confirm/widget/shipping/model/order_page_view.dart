@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/shipping/model/order_page_controller.dart';
 
 class OrderPageView extends StatefulWidget {
@@ -29,6 +30,18 @@ class _OrderPageViewState extends State<OrderPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 30),
+        child: CustomElevatedButton(
+          child: const Text("Continue", style: customElevatedButtonTextStyle),
+          onPressed: () {
+            pageController.nextPage(
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+            );
+          },
+        ),
+      ),
       body: PageView.builder(
         itemCount: orderPages.length,
         physics: const NeverScrollableScrollPhysics(),

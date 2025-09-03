@@ -106,7 +106,6 @@ class _ListWalletPageState extends ConsumerState<ListWalletPage> {
       }).toList(),
       options: CarouselOptions(
         height: size.height * 0.3,
-        autoPlay: true,
         autoPlayInterval: const Duration(seconds: 4),
         autoPlayAnimationDuration: const Duration(milliseconds: 800),
         enlargeCenterPage: true,

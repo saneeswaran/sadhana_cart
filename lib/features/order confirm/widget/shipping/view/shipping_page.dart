@@ -134,7 +134,6 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
                           text: "Phone Number",
                         ),
                       ),
-
                       CustomElevatedButton(
                         child: loader
                             ? const Loader()
@@ -161,14 +160,6 @@ class _ShippingPageState extends ConsumerState<ShippingPage> {
                                 .toString();
                           }
                         },
-                      ),
-
-                      CustomElevatedButton(
-                        child: const Text(
-                          "Continue",
-                          style: customElevatedButtonTextStyle,
-                        ),
-                        onPressed: () {},
                       ),
                     ],
                   ),
