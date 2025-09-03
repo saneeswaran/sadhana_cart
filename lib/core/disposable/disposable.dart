@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:sadhana_cart/core/enums/card_enums.dart';
 
 final loadingProvider = StateProvider.autoDispose<bool>((ref) => false);
 
@@ -57,8 +57,8 @@ final creditCardTypeProvider = StateProvider<CardType>((ref) {
   return CardType.mastercard;
 });
 
-final creditCardImageProvider = StateProvider<String>((ref) {
+final creditCardImageProvider = StateProvider<CardEnums>((ref) {
   final link = ref.keepAlive();
   Future.delayed(const Duration(minutes: 3), () => link.close());
-  return CreditCardImages.masterCard;
+  return CardEnums.masterCard;
 });

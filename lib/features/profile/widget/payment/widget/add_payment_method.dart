@@ -1,8 +1,16 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/enums/card_enums.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/widgets/custom_drop_down.dart';
+import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
+import 'package:sadhana_cart/core/widgets/loader.dart';
+import 'package:sadhana_cart/features/profile/widget/payment/service/wallet_service.dart';
+import 'package:sadhana_cart/features/profile/widget/payment/view%20model/wallet_notifier.dart';
 
 class AddPaymentMethod extends StatefulWidget {
   const AddPaymentMethod({super.key});
@@ -31,16 +39,48 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: AppColors.primaryColor,
         title: const Text(
           'Add Money to Wallet',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Consumer(
+          builder: (context, ref, child) {
+            final loader = ref.watch(walletLoader);
+            final cardBrand = ref.watch(creditCardTypeProvider).name;
+            return CustomElevatedButton(
+              onPressed: () async {
+                log("card brand $cardBrand");
+                final isValid = formKey.currentState!.validate();
+                if (!isValid) return;
+                final bool isSuccess = await WalletService.addWallet(
+                  context: context,
+                  maskedNumber: cardNumber,
+                  expiryDate: expiryDate,
+                  cardHolderName: cardHolderName,
+                  paymentToken: cvvCode,
+                  cardBrand: cardBrand,
+                  last4Digits: cvvCode.substring(cvvCode.length - 4),
+                  ref: ref,
+                );
+                if (isSuccess && context.mounted) {
+                  navigateBack(context: context);
+                }
+              },
+              child: loader
+                  ? const Loader()
+                  : const Text(
+                      "Add Your Card",
+                      style: customElevatedButtonTextStyle,
+                    ),
+            );
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -52,6 +92,7 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                 final cardType = ref.watch(creditCardTypeProvider);
                 final cardImage = ref.watch(creditCardImageProvider);
                 return CreditCardWidget(
+                  cardBgColor: AppColors.primaryColor,
                   enableFloatingCard: false,
                   cardNumber: cardNumber,
                   expiryDate: expiryDate,
@@ -68,7 +109,11 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                   customCardTypeIcons: <CustomCardTypeIcon>[
                     CustomCardTypeIcon(
                       cardType: cardType,
-                      cardImage: Image.asset(cardImage, height: 48, width: 48),
+                      cardImage: Image.asset(
+                        cardImage.image,
+                        height: 48,
+                        width: 48,
+                      ),
                     ),
                   ],
                 );
@@ -102,45 +147,31 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               ),
             ),
             const SizedBox(height: 10),
-            SizedBox(height: size.height * 0.2),
-            SizedBox(
-              height: size.height * 0.07,
-              width: size.width * 1,
-              child: null,
-              // child: Consumer(builder: (context, ref, child){
-              //   return CustomElevatedButton(
-              //       onPressed: () async {
-              //         final bool isSuccess = await provider.addCreditCard(
-              //           driverId: 'driver1',
-              //           cardid: '1',
-              //           maskedNumber: cardNumber,
-              //           expiryDate: expiryDate,
-              //           cardHolderName: cardHolderName,
-              //           paymentToken: 'token1',
-              //           cardBrand: uiController.selectedCardbrand.toString(),
-              //           last4Digits: cvvCode,
-              //           context: context,
-              //         );
-              //         if (isSuccess && context.mounted) {
-              //           successSnackBar(
-              //             message: 'Credit Card Added Successfully',
-              //             context: context,
-              //           );
-              //           Navigator.pop(context);
-              //         }
-              //       },
-              //       child: isLoading
-              //           ? const Loader()
-              //           : const Text(
-              //               "Add Your Credit Card",
-              //               style: TextStyle(
-              //                 color: Colors.white,
-              //                 fontSize: 18,
-              //                 fontWeight: FontWeight.bold,
-              //               ),
-              //             ),
-              //     );
-              // })
+            Consumer(
+              builder: (context, ref, child) {
+                final creditCardType = ref.watch(creditCardImageProvider);
+                final items = CardEnums.values
+                    .map(
+                      (e) => DropdownMenuItem(value: e, child: Text(e.label)),
+                    )
+                    .toList();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomDropDown<CardEnums>(
+                    labelText: "Card Type",
+                    items: items,
+                    value: creditCardType,
+                    onChanged: (CardEnums? value) {
+                      if (value == null) return;
+                      log("Card Type: $value");
+                      ref.read(creditCardImageProvider.notifier).state = value;
+                      final mappedCardType = mapCardEnumToCardType(value);
+                      ref.read(creditCardTypeProvider.notifier).state =
+                          mappedCardType;
+                    },
+                  ),
+                );
+              },
             ),
           ],
         ),

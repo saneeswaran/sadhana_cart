@@ -21,6 +21,7 @@ class MainHelper {
   static const String favoriteBox = 'favoriteBox';
   static const String cartBox = 'cartBox';
   static const String brandBox = 'brandBox';
+  static const String walletBox = 'walletBox';
   static const String notificationBox = 'notificationBox';
   //inits
   static Future<void> inits() async {
