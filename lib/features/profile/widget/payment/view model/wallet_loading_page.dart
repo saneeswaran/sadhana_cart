@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class WalletLoadingPage extends StatelessWidget {
   const WalletLoadingPage({super.key});
@@ -8,14 +9,21 @@ class WalletLoadingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: CarouselSlider(
+    return Skeletonizer(
+      child: CarouselSlider(
         items: AppImages.bannerImages
             .map(
-              (e) => SizedBox(
-                height: size.height * 0.3,
-                width: size.width,
-                child: Image.asset(e.bannerImage, fit: BoxFit.cover),
+              (e) => ClipRect(
+                clipBehavior: Clip.hardEdge,
+                child: Container(
+                  margin: const EdgeInsets.all(20),
+                  height: size.height * 0.3,
+                  width: size.width * 9,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Image.asset(e.bannerImage, fit: BoxFit.cover),
+                ),
               ),
             )
             .toList(),

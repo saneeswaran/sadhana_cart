@@ -2,8 +2,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/enums/card_colors_enum.dart';
 import 'package:sadhana_cart/core/enums/card_enums.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_drop_down.dart';
@@ -54,12 +54,14 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
           builder: (context, ref, child) {
             final loader = ref.watch(walletLoader);
             final cardBrand = ref.watch(creditCardTypeProvider).name;
+            final color = ref.watch(creditCardColorProvider);
             return CustomElevatedButton(
               onPressed: () async {
                 log("card brand $cardBrand");
                 final isValid = formKey.currentState!.validate();
                 if (!isValid) return;
                 final bool isSuccess = await WalletService.addWallet(
+                  color: color.color,
                   context: context,
                   maskedNumber: cardNumber,
                   expiryDate: expiryDate,
@@ -91,8 +93,9 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
               builder: (context, ref, child) {
                 final cardType = ref.watch(creditCardTypeProvider);
                 final cardImage = ref.watch(creditCardImageProvider);
+                final cardColor = ref.watch(creditCardColorProvider);
                 return CreditCardWidget(
-                  cardBgColor: AppColors.primaryColor,
+                  cardBgColor: cardColor.color,
                   enableFloatingCard: false,
                   cardNumber: cardNumber,
                   expiryDate: expiryDate,
@@ -169,6 +172,31 @@ class _AddPaymentMethodState extends State<AddPaymentMethod> {
                       ref.read(creditCardTypeProvider.notifier).state =
                           mappedCardType;
                     },
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 15),
+            Consumer(
+              builder: (context, ref, child) {
+                final color = ref.watch(creditCardColorProvider);
+                final items = CardColorsEnum.values
+                    .map(
+                      (e) => DropdownMenuItem<CardColorsEnum>(
+                        value: e,
+                        child: Text(e.label),
+                      ),
+                    )
+                    .toList();
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: CustomDropDown<CardColorsEnum>(
+                    items: items,
+                    onChanged: (value) {
+                      ref.read(creditCardColorProvider.notifier).state = value!;
+                    },
+                    value: color,
+                    labelText: "Card Color",
                   ),
                 );
               },

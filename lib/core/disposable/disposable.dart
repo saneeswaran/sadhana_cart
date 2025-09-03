@@ -1,10 +1,10 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/enums/card_colors_enum.dart';
 import 'package:sadhana_cart/core/enums/card_enums.dart';
 
 final loadingProvider = StateProvider.autoDispose<bool>((ref) => false);
@@ -62,3 +62,7 @@ final creditCardImageProvider = StateProvider<CardEnums>((ref) {
   Future.delayed(const Duration(minutes: 3), () => link.close());
   return CardEnums.masterCard;
 });
+
+final creditCardColorProvider = StateProvider.autoDispose<CardColorsEnum>(
+  (ref) => CardColorsEnum.black,
+);

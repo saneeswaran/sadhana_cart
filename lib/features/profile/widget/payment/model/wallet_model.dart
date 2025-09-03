@@ -10,6 +10,7 @@ class WalletModel extends HiveObject {
   final String cardHolderName;
   final String paymentToken;
   final String cardBrand;
+  final String color;
   final String last4Digits;
   WalletModel({
     required this.cardId,
@@ -18,6 +19,7 @@ class WalletModel extends HiveObject {
     required this.expiryDate,
     required this.cardHolderName,
     required this.paymentToken,
+    required this.color,
     required this.cardBrand,
     required this.last4Digits,
   });
@@ -31,6 +33,7 @@ class WalletModel extends HiveObject {
       'cardHolderName': cardHolderName,
       'paymentToken': paymentToken,
       'cardBrand': cardBrand,
+      'color': color,
       'last4Digits': last4Digits,
     };
   }
@@ -43,6 +46,7 @@ class WalletModel extends HiveObject {
       expiryDate: map['expiryDate'] as String,
       cardHolderName: map['cardHolderName'] as String,
       paymentToken: map['paymentToken'] as String,
+      color: map['color'] as String,
       cardBrand: map['cardBrand'] as String,
       last4Digits: map['last4Digits'] as String,
     );

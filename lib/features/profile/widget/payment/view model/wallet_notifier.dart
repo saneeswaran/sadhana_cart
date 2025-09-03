@@ -27,12 +27,14 @@ class WalletNotifier extends StateNotifier<WalletState> {
     try {
       state = state.copyWith(isLoading: true, error: null);
       final wallet = await WalletService.fetchWallet();
-      if (wallet.isNotEmpty) {
-        state = state.copyWith(isLoading: false, wallet: wallet);
-      }
+      state = state.copyWith(isLoading: false, wallet: wallet);
     } catch (e) {
       log("wallet service error $e");
       state = state.copyWith(isLoading: false, error: e.toString());
     }
+  }
+
+  void getWalletDataCount() {
+    state = state.copyWith(wallet: state.wallet);
   }
 }

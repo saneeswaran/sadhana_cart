@@ -23,11 +23,13 @@ class WalletService {
     required String expiryDate,
     required String cardHolderName,
     required String paymentToken,
+    required Color color,
     required String cardBrand,
     required String last4Digits,
     required WidgetRef ref,
   }) async {
     try {
+      ref.read(walletLoader.notifier).state = true;
       final docRef = walletRef.doc();
       final masked = StringHelper.maskCardNumber(maskedNumber);
       final WalletModel walletModel = WalletModel(
@@ -39,14 +41,17 @@ class WalletService {
         paymentToken: paymentToken,
         cardBrand: cardBrand,
         last4Digits: last4Digits,
+        color: color.toString(),
       );
       await docRef.set(walletModel.toMap());
       if (context.mounted) {
         successSnackBar(message: "Wallet added successfully", context: context);
       }
       ref.read(walletStateProvider.notifier).addWallet(wallet: walletModel);
+      ref.read(walletLoader.notifier).state = false;
       return true;
     } catch (e) {
+      ref.read(walletLoader.notifier).state = false;
       if (context.mounted) {
         failedSnackbar(context: context, text: "Failed to add wallet");
       }
