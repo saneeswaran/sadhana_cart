@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
+	<dict>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+  	<key>NSAllowsArbitraryLoads</key>
+  	<true/>
+	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The location permission we need because user can save his address also in application..he can get current location by clicking the button</string>
 	<key>UIBackgroundModes</key>
 	<array>
   	<string>The location permission we need because user can save his address also in application..he can get current location by clicking the button</string>
