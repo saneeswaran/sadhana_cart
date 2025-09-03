@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
+import 'package:sadhana_cart/features/profile/widget/payment/view%20model/list_wallet_page.dart';
 import 'package:sadhana_cart/features/profile/widget/payment/widget/add_payment_method.dart';
 
 class PaymentMethod extends StatelessWidget {
@@ -44,6 +45,7 @@ class PaymentMethod extends StatelessWidget {
               ),
             ],
           ),
+          const ListWalletPage(),
         ],
       ),
     );
