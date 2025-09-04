@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
@@ -33,8 +35,11 @@ class ProductModel extends HiveObject {
   @HiveField(12)
   final String? sellerId;
   @HiveField(13)
+  final String cashOnDelivery;
+  @HiveField(14)
+  final double offerPrice;
+  @HiveField(15)
   final Map<String, dynamic> attributes;
-
   ProductModel({
     required this.productId,
     required this.name,
@@ -48,8 +53,10 @@ class ProductModel extends HiveObject {
     required this.rating,
     required this.timestamp,
     required this.images,
-    required this.attributes,
     this.sellerId,
+    required this.cashOnDelivery,
+    required this.offerPrice,
+    required this.attributes,
   });
 
   Map<String, dynamic> toMap() {
@@ -58,7 +65,7 @@ class ProductModel extends HiveObject {
       'name': name,
       'description': description,
       'category': category,
-      'subCategory': subcategory,
+      'subcategory': subcategory,
       'sku': sku,
       'brand': brand,
       'price': price,
@@ -67,6 +74,8 @@ class ProductModel extends HiveObject {
       'timestamp': timestamp,
       'images': images,
       'sellerId': sellerId,
+      'cashOnDelivery': cashOnDelivery,
+      'offerPrice': offerPrice,
       'attributes': attributes,
     };
   }
@@ -86,6 +95,8 @@ class ProductModel extends HiveObject {
       timestamp: map['timestamp'] as Timestamp,
       images: List<String>.from((map['images'] as List<String>)),
       sellerId: map['sellerId'] != null ? map['sellerId'] as String : null,
+      cashOnDelivery: map['cashOnDelivery'] as String,
+      offerPrice: map['offerPrice'] as double,
       attributes: Map<String, dynamic>.from(
         (map['attributes'] as Map<String, dynamic>),
       ),

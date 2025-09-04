@@ -42,6 +42,14 @@ class AdditionalInfoCard extends StatelessWidget {
           Divider(color: Colors.grey.shade300),
           _customTile(
             icon: const Icon(Icons.favorite),
+            text: "My Orders",
+            onTap: () {
+              navigateTo(context: context, screen: const FavoritePageMobile());
+            },
+          ),
+          Divider(color: Colors.grey.shade300),
+          _customTile(
+            icon: const Icon(Icons.favorite),
             text: "Wishlist",
             onTap: () {
               navigateTo(context: context, screen: const FavoritePageMobile());
