@@ -24,4 +24,6 @@ class Constants {
       "The order was cancelled before completion. "
       "It may have been stopped by the customer or due to a system issue. "
       "No items will be shipped or charged for this order.";
+
+  static const String webClientId = "AIzaSyDpjMz_gzDUtdLtBryB1hDBccT7vgqRYaE";
 }
