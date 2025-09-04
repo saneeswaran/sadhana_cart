@@ -10,16 +10,19 @@ class CheckoutTotalAmountContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Container(
-      margin: const EdgeInsets.all(20),
       padding: const EdgeInsets.all(30),
-      height: size.height * 0.4,
       width: size.width * 1,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.horizontal(
-          left: Radius.circular(20),
-          right: Radius.circular(20),
-        ),
+        border: const Border.fromBorderSide(BorderSide.none),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade300,
+            blurRadius: 5,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: Consumer(
         builder: (context, ref, child) {
@@ -31,7 +34,12 @@ class CheckoutTotalAmountContainer extends StatelessWidget {
               _customDivider(),
               _price(text: "Shipping", value: "Freeship"),
               _customDivider(),
-              _price(text: "Subtotal", value: "1000"),
+              _price(
+                text: "Subtotal",
+                color: Colors.black,
+                fontWight: FontWeight.bold,
+                value: "1000",
+              ),
               _customDivider(),
             ],
           );
@@ -40,11 +48,16 @@ class CheckoutTotalAmountContainer extends StatelessWidget {
     );
   }
 
-  Widget _price({required String text, required String value}) {
-    const TextStyle textStyle = TextStyle(
-      color: Color(0xff8A8A8F),
+  Widget _price({
+    required String text,
+    required String value,
+    Color? color = const Color(0xff8A8A8F),
+    FontWeight? fontWight = FontWeight.w400,
+  }) {
+    final TextStyle textStyle = TextStyle(
+      color: color,
       fontSize: 16,
-      fontWeight: FontWeight.w400,
+      fontWeight: fontWight,
     );
     const TextStyle valueStyle = TextStyle(
       color: Colors.black,

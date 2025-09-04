@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
+import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/checkout_total_amount_container.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/custom_payment_method.dart';
 import 'package:sadhana_cart/features/profile/widget/payment/view%20model/list_wallet_page.dart';
@@ -21,7 +23,7 @@ class PaymentPage extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.only(left: 15.0),
                 child: Text(
-                  "Step 1 of 3",
+                  "Step 2 of 3",
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 16,
@@ -76,6 +78,28 @@ class PaymentPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               const CheckoutTotalAmountContainer(),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  const SizedBox(width: 20),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final value = ref.watch(orderAcceptTerms);
+                      return CustomCheckBox(
+                        value: value,
+                        onChanged: (newValue) {
+                          ref.read(orderAcceptTerms.notifier).state = newValue!;
+                        },
+                      );
+                    },
+                  ),
+                  const Text("I agree to", style: TextStyle(fontSize: 16)),
+                  CustomTextButton(
+                    text: "Terms and Conditions",
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ],
           ),
         ),
