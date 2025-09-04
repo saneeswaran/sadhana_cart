@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 
 class OrderStatusPage extends StatelessWidget {
@@ -27,9 +26,20 @@ class OrderStatusPage extends StatelessWidget {
               child: SizedBox(
                 height: size.height * 0.2,
                 width: size.width * 1,
-                child: SvgPicture.asset(
+                child: Image.asset(
                   AppImages.orderCompleted,
                   fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            const Center(
+              child: Text(
+                "Thank you for your order",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ),

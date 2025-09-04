@@ -8,7 +8,7 @@ class AppImages {
   static const String onboard3 = "assets/images/onboard3.png";
 
   //order status
-  static const String orderCompleted = "assets/order/order_completed.svg";
+  static const String orderCompleted = "assets/order/order_completed.png";
   static const String orderPending = "assets/order/order_pending.png";
   static const String orderProcessing = "assets/order/order_processing.png";
   static const String orderShipped = "assets/order/order_shipped.png";

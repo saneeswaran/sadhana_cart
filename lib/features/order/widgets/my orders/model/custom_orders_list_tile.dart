@@ -106,7 +106,7 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _customText(
-                    title: "Quantity:   ",
+                    title: "Quantity: ",
                     titleFontWeight: FontWeight.bold,
                     titleColor: const Color(0xff777e90),
                     value: "3",

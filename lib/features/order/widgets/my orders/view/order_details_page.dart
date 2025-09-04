@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:sadhana_cart/features/order/widgets/my%20orders/widget/ordered_product_tile.dart';
 
 class OrderDetailsPage extends StatelessWidget {
   const OrderDetailsPage({super.key});
@@ -57,10 +58,92 @@ class OrderDetailsPage extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(height: 20),
+              //basic details
+              Container(
+                height: size.height * 0.2,
+                width: size.width * 1,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 5,
+                      blurRadius: 7,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    spacing: 20,
+                    children: [
+                      _customText(
+                        title: "Order Number",
+                        titleColor: AppColors.orderStatusColor,
+                        value: "1234567890",
+                        valueColor: Colors.black,
+                      ),
+                      _customText(
+                        title: "tracking Number",
+                        titleColor: AppColors.orderStatusColor,
+                        value: "HGJKDSF878",
+                        valueColor: Colors.black,
+                      ),
+                      _customText(
+                        title: "Delivery Address: ",
+                        titleColor: AppColors.orderStatusColor,
+                        value: "Pune, Maharashtra,",
+                        valueColor: Colors.black,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const OrderedProductTile(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _customText({
+    required String title,
+    Color? titleColor = Colors.black,
+    double fontSize = 16,
+    FontWeight? titleFontWeight = FontWeight.normal,
+    required String value,
+    Color? valueColor = const Color(0xff777E90),
+    FontWeight? valueFontWeight = FontWeight.normal,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: titleColor,
+            fontSize: fontSize,
+            fontWeight: titleFontWeight,
+          ),
+        ),
+        Text(
+          value,
+          maxLines: 1,
+          overflow: TextOverflow.clip,
+          style: TextStyle(
+            color: valueColor,
+            fontSize: 16,
+            fontWeight: valueFontWeight,
+          ),
+        ),
+      ],
     );
   }
 }
