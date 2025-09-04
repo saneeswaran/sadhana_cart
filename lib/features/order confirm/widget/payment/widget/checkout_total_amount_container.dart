@@ -9,35 +9,33 @@ class CheckoutTotalAmountContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.all(20),
-        padding: const EdgeInsets.all(30),
-        height: size.height * 0.4,
-        width: size.width * 1,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.horizontal(
-            left: Radius.circular(20),
-            right: Radius.circular(20),
-          ),
+    return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(30),
+      height: size.height * 0.4,
+      width: size.width * 1,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(20),
+          right: Radius.circular(20),
         ),
-        child: Consumer(
-          builder: (context, ref, child) {
-            final index = ref.watch(orderStepperPageProvider);
-            return Column(
-              spacing: index == 1 ? 10 : 20,
-              children: [
-                _price(text: "Product Price", value: "1000"),
-                _customDivider(),
-                _price(text: "Shipping", value: "Freeship"),
-                _customDivider(),
-                _price(text: "Subtotal", value: "1000"),
-                _customDivider(),
-              ],
-            );
-          },
-        ),
+      ),
+      child: Consumer(
+        builder: (context, ref, child) {
+          final index = ref.watch(orderStepperPageProvider);
+          return Column(
+            spacing: index == 1 ? 10 : 20,
+            children: [
+              _price(text: "Product Price", value: "1000"),
+              _customDivider(),
+              _price(text: "Shipping", value: "Freeship"),
+              _customDivider(),
+              _price(text: "Subtotal", value: "1000"),
+              _customDivider(),
+            ],
+          );
+        },
       ),
     );
   }

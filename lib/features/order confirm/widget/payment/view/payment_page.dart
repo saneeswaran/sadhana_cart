@@ -11,68 +11,74 @@ class PaymentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 10),
-          const Padding(
-            padding: EdgeInsets.only(left: 15.0),
-            child: Text(
-              "Step 1 of 3",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 10),
+              const Padding(
+                padding: EdgeInsets.only(left: 15.0),
+                child: Text(
+                  "Step 1 of 3",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 15.0),
-            child: Text(
-              "Payment",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
+              const Padding(
+                padding: EdgeInsets.only(left: 15.0),
+                child: Text(
+                  "Payment",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 30),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(paymentMethodTitle.length, (index) {
-              return Consumer(
-                builder: (context, ref, child) {
-                  return GestureDetector(
-                    onTap: () {
-                      ref.read(orderStepperPageProvider.notifier).state = index;
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(paymentMethodTitle.length, (index) {
+                  return Consumer(
+                    builder: (context, ref, child) {
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(orderStepperPageProvider.notifier).state =
+                              index;
+                        },
+                        child: CustomPaymentMethod(
+                          image: paymentMethodImage[index],
+                          index: index,
+                          title: paymentMethodTitle[index],
+                        ),
+                      );
                     },
-                    child: CustomPaymentMethod(
-                      image: paymentMethodImage[index],
-                      index: index,
-                      title: paymentMethodTitle[index],
-                    ),
                   );
+                }),
+              ),
+              const SizedBox(height: 20),
+              Consumer(
+                builder: (context, ref, child) {
+                  final index = ref.watch(orderStepperPageProvider);
+                  if (index == 0) {
+                    return const SizedBox.shrink();
+                  } else if (index == 1) {
+                    return const ListWalletPage();
+                  } else {
+                    return const SizedBox.shrink();
+                  }
                 },
-              );
-            }),
+              ),
+              const SizedBox(height: 20),
+              const CheckoutTotalAmountContainer(),
+            ],
           ),
-          const SizedBox(height: 20),
-          Consumer(
-            builder: (context, ref, child) {
-              final index = ref.watch(orderStepperPageProvider);
-              if (index == 0) {
-                return const SizedBox.shrink();
-              } else if (index == 1) {
-                return const ListWalletPage();
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          ),
-
-          const CheckoutTotalAmountContainer(),
-        ],
+        ),
       ),
     );
   }
