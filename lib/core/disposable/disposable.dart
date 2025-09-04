@@ -72,3 +72,5 @@ final creditCardColorProvider = StateProvider.autoDispose<CardColorsEnum>(
 final orderStepperPageProvider = StateProvider<int>((ref) => 0);
 
 final orderAcceptTerms = StateProvider<bool>((ref) => false);
+
+final orderStatusIndexProvider = StateProvider<int>((ref) => 0);

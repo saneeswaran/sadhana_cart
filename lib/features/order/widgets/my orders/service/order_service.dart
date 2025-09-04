@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/features/order/widgets/my%20orders/model/order_cancel_request_model.dart';
 import 'package:sadhana_cart/features/order/widgets/my%20orders/model/order_model.dart';
 import 'package:sadhana_cart/features/order/widgets/my%20orders/view%20model/order_notifier.dart';
 
@@ -71,5 +72,30 @@ class OrderService {
       return [];
     }
     return [];
+  }
+
+  static Future<bool> submitOrderCancelRequest({
+    required String orderId,
+    required String reason,
+    required String cancelledBy,
+  }) async {
+    try {
+      final docRef = cancelRequestRef.doc();
+      final OrderCancelRequestModel orderCancelRequestModel =
+          OrderCancelRequestModel(
+            requestId: docRef.id,
+            orderId: orderId,
+            userId: currentUser,
+            reason: reason,
+            cancelledBy: cancelledBy,
+            requestedAt: Timestamp.now(),
+          );
+
+      await docRef.set(orderCancelRequestModel.toMap());
+      return true;
+    } catch (e) {
+      log("order service error $e");
+      return false;
+    }
   }
 }

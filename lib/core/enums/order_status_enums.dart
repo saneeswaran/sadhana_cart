@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum OrderStatusEnums { pending, processing, shipped, delivered, cancelled }
 
 extension OrderStatusEnumsExtension on OrderStatusEnums {
@@ -13,6 +15,23 @@ extension OrderStatusEnumsExtension on OrderStatusEnums {
         return "Delivered";
       case OrderStatusEnums.cancelled:
         return "Cancelled";
+    }
+  }
+}
+
+extension OrderStatusEnumColorExtension on OrderStatusEnums {
+  Color get color {
+    switch (this) {
+      case OrderStatusEnums.pending:
+        return Colors.yellow;
+      case OrderStatusEnums.processing:
+        return Colors.blue;
+      case OrderStatusEnums.shipped:
+        return Colors.green;
+      case OrderStatusEnums.delivered:
+        return Colors.green;
+      case OrderStatusEnums.cancelled:
+        return Colors.red;
     }
   }
 }
