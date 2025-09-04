@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20repo/favorite/favorite_notifier.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
 class FavoriteService {
@@ -51,7 +53,10 @@ class FavoriteService {
     }
   }
 
-  static Future<bool> deleteFavorite({required FavoriteModel favorite}) async {
+  static Future<bool> deleteFavorite({
+    required FavoriteModel favorite,
+    required WidgetRef ref,
+  }) async {
     try {
       final DocumentSnapshot documentSnapshot = await favoriteRef
           .doc(favorite.favoriteId)
@@ -61,6 +66,9 @@ class FavoriteService {
         await documentSnapshot.reference.delete();
         //delete from local
         await HiveHelper.deleteFavorite(key: favorite.productId);
+        ref
+            .read(favoriteProvider.notifier)
+            .removeFromFavorite(favorite: favorite);
         return true;
       }
     } catch (e) {

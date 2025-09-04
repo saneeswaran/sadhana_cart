@@ -44,13 +44,8 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     }
   }
 
-  Future<void> removeFromCart({required CartModel cart}) async {
-    final bool isDeleted = await CartService.deleteCart(cart: cart);
-    if (isDeleted) {
-      state = state.where((e) => e.cartId != cart.cartId).toSet();
-    } else {
-      state = await CartService.fetchCart();
-    }
+  void removeFromCart({required CartModel cart}) {
+    state = state.where((e) => e.productId != cart.productId).toSet();
   }
 
   double getCartTotalAmount() {

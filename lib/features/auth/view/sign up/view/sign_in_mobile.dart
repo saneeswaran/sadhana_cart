@@ -35,6 +35,7 @@ class _SignInMobileState extends ConsumerState<SignInMobile> {
   @override
   Widget build(BuildContext context) {
     final loader = ref.watch(loadingProvider);
+    final passwordEye = ref.watch(passEyeProvider);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -67,6 +68,16 @@ class _SignInMobileState extends ConsumerState<SignInMobile> {
                     labelText: "Password",
                     validator: ValidationHelper.passwordValidate(
                       number: passwordController.text.length,
+                    ),
+                    obscureText: passwordEye,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        passwordEye ? Icons.visibility : Icons.visibility_off,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        ref.read(passEyeProvider.notifier).state = !passwordEye;
+                      },
                     ),
                   ),
                   Align(

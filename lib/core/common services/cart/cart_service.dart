@@ -2,8 +2,10 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
 class CartService {
@@ -51,7 +53,10 @@ class CartService {
   }
 
   //delete
-  static Future<bool> deleteCart({required CartModel cart}) async {
+  static Future<bool> deleteCart({
+    required CartModel cart,
+    required WidgetRef ref,
+  }) async {
     try {
       final DocumentSnapshot documentSnapshot = await cartRef
           .doc(cart.cartId)
@@ -59,6 +64,7 @@ class CartService {
       if (documentSnapshot.exists) {
         await documentSnapshot.reference.delete();
         await HiveHelper.deleteCart(key: cart.productId);
+        ref.read(cartProvider.notifier).removeFromCart(cart: cart);
         return true;
       }
     } catch (e) {

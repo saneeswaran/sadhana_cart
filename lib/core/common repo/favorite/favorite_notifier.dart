@@ -43,14 +43,7 @@ class FavoriteNotifier extends StateNotifier<Set<FavoriteModel>> {
     return {};
   }
 
-  Future<void> removeFromFavorite({required FavoriteModel favorite}) async {
-    final bool isDeleted = await FavoriteService.deleteFavorite(
-      favorite: favorite,
-    );
-    if (isDeleted) {
-      state = state.where((e) => e.favoriteId != favorite.favoriteId).toSet();
-    } else {
-      state = await FavoriteService.fetchFavorites();
-    }
+  void removeFromFavorite({required FavoriteModel favorite}) {
+    state = state.where((e) => e.productId != favorite.productId).toSet();
   }
 }
