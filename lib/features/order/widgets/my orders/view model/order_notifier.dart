@@ -11,7 +11,7 @@ class OrderNotifier extends StateNotifier<OrderState> {
   OrderNotifier() : super(OrderState.initial());
 
   void fetchOrders() async {
-    //for laoding state
+    //for loading state
     state = state.copyWith(loading: true, orders: []);
     //fetching the data from firebase
     final data = await OrderService.fetchOrders();

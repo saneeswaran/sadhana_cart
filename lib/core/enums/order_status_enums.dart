@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sadhana_cart/core/constants/app_images.dart';
 
 enum OrderStatusEnums { pending, processing, shipped, delivered, cancelled }
 
@@ -32,6 +33,23 @@ extension OrderStatusEnumColorExtension on OrderStatusEnums {
         return Colors.green;
       case OrderStatusEnums.cancelled:
         return Colors.red;
+    }
+  }
+}
+
+extension OrderStatusEnumsImageExtension on OrderStatusEnums {
+  String get image {
+    switch (this) {
+      case OrderStatusEnums.pending:
+        return AppImages.orderPendingWhite;
+      case OrderStatusEnums.processing:
+        return AppImages.orderProcessingWhite;
+      case OrderStatusEnums.shipped:
+        return AppImages.orderShippedWhite;
+      case OrderStatusEnums.delivered:
+        return AppImages.orderDeliveredWhite;
+      case OrderStatusEnums.cancelled:
+        return AppImages.orderCanceledWhite;
     }
   }
 }

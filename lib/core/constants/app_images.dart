@@ -15,6 +15,19 @@ class AppImages {
   static const String orderDelivered = "assets/order/order-delivered.png";
   static const String orderCanceled = "assets/order/order_canceled.png";
 
+  //order image with white color
+  static const String orderCanceledWhite =
+      "assets/order/order_canceled_white.png";
+  static const String orderPendingWhite =
+      "assets/order/order_pending_white.png";
+  static const String orderCompletedWhite =
+      "assets/order/order_completed_white.png";
+  static const String orderShippedWhite =
+      "assets/order/order_shipped_white.png";
+  static const String orderProcessingWhite =
+      "assets/order/order_processing_white.png";
+  static const String orderDeliveredWhite =
+      "assets/order/order-delivered_white.png";
   //vectors
   static const String googleSvg = "assets/vectors/google.svg";
   static const String appleSvg = "assets/vectors/apple.svg";

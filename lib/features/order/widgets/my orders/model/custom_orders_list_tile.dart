@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_outline_button.dart';
 import 'package:sadhana_cart/features/order/widgets/my%20orders/view%20model/order_notifier.dart';
+import 'package:sadhana_cart/features/order/widgets/my%20orders/view/order_details_page.dart';
 
 class CustomOrdersListTile extends ConsumerStatefulWidget {
   const CustomOrdersListTile({super.key});
@@ -137,7 +139,12 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                       "Details",
                       style: customOutlinedButtonStyle,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      navigateTo(
+                        context: context,
+                        screen: const OrderDetailsPage(),
+                      );
+                    },
                   ),
                 ],
               ),
