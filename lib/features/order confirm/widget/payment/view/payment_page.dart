@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/checkout_total_amount_container.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/custom_payment_method.dart';
+import 'package:sadhana_cart/features/profile/widget/payment/view%20model/list_wallet_page.dart';
 
 class PaymentPage extends StatelessWidget {
   const PaymentPage({super.key});
@@ -46,8 +48,7 @@ class PaymentPage extends StatelessWidget {
                       ref.read(orderStepperPageProvider.notifier).state = index;
                     },
                     child: CustomPaymentMethod(
-                      blackImage: paymentMethodImageBlack[index],
-                      whiteImage: paymentMethodImageWhite[index],
+                      image: paymentMethodImage[index],
                       index: index,
                       title: paymentMethodTitle[index],
                     ),
@@ -56,6 +57,21 @@ class PaymentPage extends StatelessWidget {
               );
             }),
           ),
+          const SizedBox(height: 20),
+          Consumer(
+            builder: (context, ref, child) {
+              final index = ref.watch(orderStepperPageProvider);
+              if (index == 0) {
+                return const SizedBox.shrink();
+              } else if (index == 1) {
+                return const ListWalletPage();
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
+
+          const CheckoutTotalAmountContainer(),
         ],
       ),
     );

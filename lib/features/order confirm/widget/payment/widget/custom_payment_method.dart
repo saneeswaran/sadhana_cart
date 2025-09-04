@@ -4,14 +4,12 @@ import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 
 class CustomPaymentMethod extends ConsumerWidget {
-  final String blackImage;
-  final String whiteImage;
+  final String image;
   final String title;
   final int? index;
   const CustomPaymentMethod({
     super.key,
-    required this.blackImage,
-    required this.whiteImage,
+    required this.image,
     required this.title,
     this.index,
   });
@@ -26,7 +24,11 @@ class CustomPaymentMethod extends ConsumerWidget {
       width: size.width * 0.3,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: isSelected ? Colors.black : Colors.white,
+        color: Colors.white,
+        border: Border.all(
+          color: isSelected ? Colors.black : Colors.transparent,
+          width: isSelected ? 1.4 : 0,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.shade300,
@@ -41,10 +43,7 @@ class CustomPaymentMethod extends ConsumerWidget {
           SizedBox(
             height: 50,
             width: 100,
-            child: Image.asset(
-              isSelected ? whiteImage : blackImage,
-              fit: BoxFit.contain,
-            ),
+            child: Image.asset(image, fit: BoxFit.contain),
           ),
           Text(
             title,
@@ -60,16 +59,6 @@ class CustomPaymentMethod extends ConsumerWidget {
   }
 }
 
-List<String> paymentMethodTitle = ["Cash", "Card", "More"];
+List<String> paymentMethodTitle = ["Cash", "Card"];
 
-List<String> paymentMethodImageBlack = [
-  AppImages.moneyBlack,
-  AppImages.creditCardBlack,
-  AppImages.moreBlack,
-];
-
-List<String> paymentMethodImageWhite = [
-  AppImages.moneyWhite,
-  AppImages.creditCardWhite,
-  AppImages.moreWhite,
-];
+List<String> paymentMethodImage = [AppImages.money, AppImages.creditCard];

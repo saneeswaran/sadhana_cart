@@ -49,12 +49,9 @@ class AppImages {
   ];
 
   //credit card images
-  static const String creditCardBlack = "assets/images/credit_card_black.png";
-  static const String moneyBlack = "assets/images/money_black.png";
-  static const String moreBlack = "assets/images/more_black.png";
-  static const String moreWhite = "assets/images/more_black.png";
-  static const String creditCardWhite = "assets/images/credit_card_black.png";
-  static const String moneyWhite = "assets/images/money_black.png";
+  static const String creditCard = "assets/images/credit_card.png";
+  static const String money = "assets/images/money.png";
+  static const String more = "assets/images/more.png";
 }
 
 class CreditCardImages {
