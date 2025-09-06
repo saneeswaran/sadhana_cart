@@ -1,54 +1,66 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/common%20model/product/product_fetch_result.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/disposable/disposable.dart';
-import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
 class ProductService {
   static const String products = "products";
   static final CollectionReference productRef = FirebaseFirestore.instance
       .collection(products);
 
-  static Future<ProductFetchResult> fetchProducts({
-    required Ref ref,
-    int limit = 10,
-    DocumentSnapshot? startAfter,
-  }) async {
+  // static Future<ProductFetchResult> fetchProducts({
+  //   required Ref ref,
+  //   int limit = 10,
+  //   DocumentSnapshot? startAfter,
+  // }) async {
+  //   try {
+  //     ref.read(loadingProvider.notifier).state = true;
+
+  //     Query query = productRef
+  //         .orderBy("timestamp", descending: true)
+  //         .limit(limit);
+  //     if (startAfter != null) {
+  //       query = query.startAfterDocument(startAfter);
+  //     }
+
+  //     final querySnapshot = await query.get();
+
+  //     final data = querySnapshot.docs
+  //         .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+  //         .toList();
+
+  //     for (final product in data) {
+  //       await HiveHelper.addProducts(product: product);
+  //     }
+
+  //     ref.read(loadingProvider.notifier).state = false;
+
+  //     return ProductFetchResult(
+  //       products: data,
+  //       lastDocument: querySnapshot.docs.isNotEmpty
+  //           ? querySnapshot.docs.last
+  //           : null,
+  //     );
+  //   } catch (e) {
+  //     log("ProductService fetch error: $e");
+  //     ref.read(loadingProvider.notifier).state = false;
+  //     return ProductFetchResult(products: [], lastDocument: null);
+  //   }
+  // }
+
+  static Future<List<ProductModel>> fetchProducts() async {
     try {
-      ref.read(loadingProvider.notifier).state = true;
+      final QuerySnapshot querySnapshot = await productRef.get();
 
-      Query query = productRef
-          .orderBy("timestamp", descending: true)
-          .limit(limit);
-      if (startAfter != null) {
-        query = query.startAfterDocument(startAfter);
+      if (querySnapshot.docs.isNotEmpty) {
+        final data = querySnapshot.docs
+            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .toList();
+        return data;
       }
-
-      final querySnapshot = await query.get();
-
-      final data = querySnapshot.docs
-          .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
-          .toList();
-
-      for (final product in data) {
-        await HiveHelper.addProducts(product: product);
-      }
-
-      ref.read(loadingProvider.notifier).state = false;
-
-      return ProductFetchResult(
-        products: data,
-        lastDocument: querySnapshot.docs.isNotEmpty
-            ? querySnapshot.docs.last
-            : null,
-      );
+      return [];
     } catch (e) {
       log("ProductService fetch error: $e");
-      ref.read(loadingProvider.notifier).state = false;
-      return ProductFetchResult(products: [], lastDocument: null);
+      return [];
     }
   }
 

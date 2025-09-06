@@ -5,6 +5,7 @@ import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/helper/validation_helper.dart';
+import 'package:sadhana_cart/core/service/google_auth_service.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_form_field.dart';
@@ -161,7 +162,18 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                     children: [
                       RoundedSigninButton(
                         imagePath: AppImages.googleSvg,
-                        onTap: () {},
+                        onTap: () async {
+                          final bool isSuccess =
+                              await GoogleLoginService.signInWithGoogle(
+                                context: context,
+                              );
+                          if (isSuccess && context.mounted) {
+                            navigateToReplacement(
+                              context: context,
+                              screen: const BottomNavOption(),
+                            );
+                          }
+                        },
                       ),
                       const SizedBox(width: 30),
                       RoundedSigninButton(

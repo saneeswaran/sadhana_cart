@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20repo/product/product_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
 class FeaturedProductTile extends ConsumerWidget {
@@ -8,14 +10,16 @@ class FeaturedProductTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
+    final product = ref.watch(productProvider);
     return SizedBox(
       height: size.height * 0.37,
       width: size.width * 1,
       child: ListView.builder(
-        itemCount: 5,
+        itemCount: product.length,
         scrollDirection: Axis.horizontal,
         physics: const ClampingScrollPhysics(),
         itemBuilder: (context, index) {
+          final data = product[index];
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -25,7 +29,9 @@ class FeaturedProductTile extends ConsumerWidget {
                 width: size.width * 0.5,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.pink,
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(data.images[0]),
+                  ),
                 ),
               ),
               const Padding(
