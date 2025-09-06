@@ -12,6 +12,8 @@ class CustomTileDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
+      collapsedBackgroundColor: Colors.transparent,
+      shape: const RoundedRectangleBorder(side: BorderSide.none),
       title: Text(
         title,
         maxLines: 1,

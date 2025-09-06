@@ -6,10 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
 import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_progress_indicator.dart';
 import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
+import 'package:sadhana_cart/features/home%20screen/widgets/product%20details/view/clothing/widget/clothing%20details/rating_tile.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
   final ProductModel product;
@@ -19,6 +22,16 @@ class ClothingProductsDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16),
+        child: CustomElevatedButton(
+          child: const Text(
+            "Add to Cart",
+            style: customElevatedButtonTextStyle,
+          ),
+          onPressed: () {},
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -91,6 +104,7 @@ class ClothingProductsDetails extends StatelessWidget {
             ),
 
             Container(
+              padding: const EdgeInsets.all(10),
               width: size.width * 1,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
@@ -201,7 +215,7 @@ class ClothingProductsDetails extends StatelessWidget {
 
                   //review tile
                   const Padding(
-                    padding: EdgeInsets.only(left: 20),
+                    padding: EdgeInsets.only(left: 15),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -261,7 +275,32 @@ class ClothingProductsDetails extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const CustomProgressIndicator(ratingData: []),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: CustomProgressIndicator(
+                      ratingData: [
+                        {"stars": 5, "percentage": 100},
+                        {"stars": 4, "percentage": 60},
+                        {"stars": 3, "percentage": 10},
+                        {"stars": 2, "percentage": 23},
+                        {"stars": 1, "percentage": 46},
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ListView.builder(
+                    itemCount: 5,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return const RatingTile(
+                        imageUrl: AppImages.noProfile,
+                        name: "sathish",
+                        rating: 4.9,
+                        review: "This product is really good",
+                      );
+                    },
+                  ),
                 ],
               ),
             ),

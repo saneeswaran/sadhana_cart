@@ -17,38 +17,44 @@ class CustomProgressIndicator extends StatelessWidget {
         final ratingStars = rating['stars'];
         final percentage = rating['percentage'] / 100.0;
 
-        return Row(
-          children: [
-            Text(
-              "$ratingStars",
-              style: const TextStyle(
-                color: AppColors.onboardButtonColor,
-                fontSize: 16,
-              ),
-            ),
-            const Icon(Icons.star, color: AppColors.ratingColor),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: LinearProgressIndicator(
-                  value: percentage,
-                  backgroundColor: AppColors.switchTileColor,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.ratingColor,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
+        return Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Row(
+            children: [
+              const SizedBox(width: 10),
+              Text(
+                "$ratingStars",
+                style: const TextStyle(
+                  color: AppColors.onboardButtonColor,
+                  fontSize: 16,
                 ),
               ),
-            ),
-            // Percentage text
-            Text(
-              "${(percentage * 100).toStringAsFixed(0)}%",
-              style: const TextStyle(
-                color: AppColors.ratingColor,
-                fontWeight: FontWeight.bold,
+              const SizedBox(width: 10),
+              const Icon(Icons.star, color: AppColors.ratingColor),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: LinearProgressIndicator(
+                    value: percentage,
+                    backgroundColor: AppColors.switchTileColor,
+                    valueColor: const AlwaysStoppedAnimation<Color>(
+                      AppColors.ratingColor,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
               ),
-            ),
-          ],
+              // Percentage text
+              Text(
+                "${(percentage * 100).toStringAsFixed(0)}%",
+                style: const TextStyle(
+                  color: AppColors.ratingColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         );
       },
     );
