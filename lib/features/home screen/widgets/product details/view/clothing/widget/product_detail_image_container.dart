@@ -9,23 +9,27 @@ class ProductDetailImageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return CarouselSlider(
-      items: images
-          .map(
-            (e) => Container(
-              height: size.height * 0.5,
-              width: size.width * 1,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image: DecorationImage(
-                  image: CachedNetworkImageProvider(e, cacheKey: e),
-                  fit: BoxFit.fitHeight,
+    return SizedBox(
+      height: size.height * 0.4,
+      width: size.width * 1,
+      child: CarouselSlider(
+        items: images
+            .map(
+              (e) => Container(
+                height: size.height * 0.4,
+                width: size.width * 1,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(e, cacheKey: e),
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
               ),
-            ),
-          )
-          .toList(),
-      options: CarouselOptions(),
+            )
+            .toList(),
+        options: CarouselOptions(),
+      ),
     );
   }
 }
