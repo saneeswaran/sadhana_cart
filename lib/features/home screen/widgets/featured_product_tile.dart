@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20repo/product/product_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/features/home%20screen/widgets/product%20details/view/clothing/view/clothing_products_details.dart';
 
 class FeaturedProductTile extends ConsumerWidget {
   const FeaturedProductTile({super.key});
@@ -23,14 +25,24 @@ class FeaturedProductTile extends ConsumerWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                height: size.height * 0.3,
-                width: size.width * 0.5,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(data.images[0]),
+              GestureDetector(
+                onTap: () {
+                  if (data.category == "Clothing") {
+                    navigateTo(
+                      context: context,
+                      screen: ClothingProductsDetails(product: data),
+                    );
+                  }
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  height: size.height * 0.3,
+                  width: size.width * 0.5,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(data.images[0]),
+                    ),
                   ),
                 ),
               ),

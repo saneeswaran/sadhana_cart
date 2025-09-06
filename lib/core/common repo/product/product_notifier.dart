@@ -1,7 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/dummy_product.dart';
 import 'package:sadhana_cart/core/common%20services/product/product_service.dart';
+
+final firestoreProvider = Provider<FirebaseFirestore>((ref) {
+  return FirebaseFirestore.instance;
+});
 
 final productProvider =
     StateNotifierProvider<ProductNotifier, List<ProductModel>>(
@@ -23,6 +28,16 @@ final productBySubcategoryProvider = FutureProvider.autoDispose
 final productByBrandProvider = FutureProvider.autoDispose
     .family<List<ProductModel>, String>((ref, brand) async {
       return await ProductService.getProductByBrands(brand: brand);
+    });
+
+final uiTemplateProvider = FutureProvider.family
+    .autoDispose<Map<String, dynamic>, String>((ref, category) async {
+      final firebaseStore = ref.watch(firestoreProvider);
+      final doc = await firebaseStore
+          .collection('ui_templates')
+          .doc(category)
+          .get();
+      return doc.data()!;
     });
 
 class ProductNotifier extends StateNotifier<List<ProductModel>> {
