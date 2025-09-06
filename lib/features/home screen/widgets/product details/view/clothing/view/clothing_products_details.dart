@@ -1,6 +1,15 @@
+import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating/flutter_rating.dart';
+import 'package:sadhana_cart/core/colors/app_colors.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/widgets/custom_progress_indicator.dart';
+import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
   final ProductModel product;
@@ -8,150 +17,276 @@ class ClothingProductsDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
-      ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Product Image with circular background
-              Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey[200],
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Stack(
+              children: [
+                CarouselSlider(
+                  items: product.images
+                      .map(
+                        (e) => Container(
+                          height: size.height * 0.4,
+                          width: size.width * 1,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(e, cacheKey: e),
+                              fit: BoxFit.fitHeight,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  options: CarouselOptions(height: size.height * 0.4),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 10,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CachedNetworkImage(
-                      imageUrl: product.images[0],
-                      height: 250,
-                      fit: BoxFit.cover,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: const CircleBorder(),
+                        ),
+                        onPressed: () => navigateBack(context: context),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.black,
+                        ),
+                      ),
+                      IconButton(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: const CircleBorder(),
+                        ),
+                        onPressed: () {},
+                        icon: const Icon(Icons.favorite, color: Colors.red),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-
-              // Product Name and Price
-              const Text(
-                'Sportwear Set',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                Positioned(
+                  top: size.height * 0.37,
+                  right: size.width * 0.45,
+                  child: DotsIndicator(
+                    dotsCount: product.images.length,
+                    animate: true,
+                    axis: Axis.horizontal,
+                    animationDuration: const Duration(milliseconds: 200),
+                    position: 0,
+                    onTap: (value) {
+                      log(value.toString());
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                '\$80.00',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+              ],
+            ),
+
+            Container(
+              width: size.width * 1,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
                 ),
-              ),
-              const SizedBox(height: 10),
-
-              // Rating section
-              Row(
-                children: List.generate(5, (index) {
-                  return Icon(
-                    index < 4 ? Icons.star : Icons.star_border,
-                    color: Colors.yellow,
-                    size: 20,
-                  );
-                }),
-              ),
-              const SizedBox(height: 5),
-              const Text(
-                '(83 Reviews)',
-                style: TextStyle(color: Colors.grey, fontSize: 14),
-              ),
-              const SizedBox(height: 20),
-
-              // Color Options
-              const Text(
-                'Color',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  colorOption(const Color(0xFFF4C2C2)), // Light pink color
-                  colorOption(Colors.black), // Black color
-                  colorOption(const Color(0xFFFF5C5C)), // Red color
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 7,
+                    offset: const Offset(0, 3),
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
+              child: Column(
+                children: [
+                  ListTile(
+                    title: Text(
+                      product.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: StarRating(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      rating: product.rating,
+                      color: AppColors.ratingColor,
+                      size: 25.0,
+                      onRatingChanged: (value) => log(value.toString()),
+                    ),
+                    trailing: Text(
+                      "${Constants.indianCurrency} ${product.price}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Divider(color: AppColors.lightGrey, thickness: 1.2),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Expanded(
+                          child: _colorTile(
+                            text: "Color",
+                            widget: Text(
+                              product.brand,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: _colorTile(
+                            text: "Size",
+                            widget: Wrap(
+                              children: List.generate(
+                                product.attributes["Size"].length,
+                                (index) {
+                                  final size =
+                                      product.attributes["Size"][index];
+                                  return Container(
+                                    height: 40,
+                                    width: 40,
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                      vertical: 5,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey.shade300,
+                                    ),
+                                    child: Center(child: Text(size)),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(color: AppColors.lightGrey, thickness: 1.2),
+                  CustomTileDropdown(
+                    title: "Description",
+                    value: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        product.description,
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                  ),
+                  const Divider(color: AppColors.lightGrey, thickness: 1.2),
 
-              // Size Options
-              const Text(
-                'Size',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  //review tile
+                  const Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Reviews",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          "4.9",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        "OUT OF 5",
+                        style: TextStyle(
+                          color: Colors.grey.shade400,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 90),
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              StarRating(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                color: AppColors.switchTileColor,
+                                size: 30,
+                                rating: 5,
+                              ),
+                              Text(
+                                "84 Ratings",
+                                style: TextStyle(
+                                  color: Colors.grey.shade300,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const CustomProgressIndicator(ratingData: []),
+                ],
               ),
-              const SizedBox(height: 10),
-              Row(
-                children: [sizeOption('S'), sizeOption('M'), sizeOption('L')],
-              ),
-              const SizedBox(height: 20),
-
-              // Description Section
-              const Text(
-                'Description',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'Sportswear is no longer under culture, it is no longer indie or cobbled together as it once was. Sport is fashion today. The top is oversized in fit and style, may need to size down.',
-                style: TextStyle(color: Colors.grey[700]),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Read more',
-                style: TextStyle(
-                  color: Colors.blue,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // Color option widget
-  Widget colorOption(Color color) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: CircleAvatar(radius: 20, backgroundColor: color),
-    );
-  }
-
-  // Size option widget
-  Widget sizeOption(String size) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-      child: Chip(
-        label: Text(size, style: const TextStyle(fontSize: 16)),
-        backgroundColor: Colors.grey[200],
-      ),
+  Widget _colorTile({required String text, required Widget widget}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 5),
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.grey.shade400,
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 10),
+        widget,
+      ],
     );
   }
 }

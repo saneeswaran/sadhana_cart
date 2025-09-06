@@ -22,7 +22,7 @@ final List<ProductModel> productModel = [
     ],
     cashOnDelivery: "Yes",
     attributes: {
-      'Size': 'M',
+      'Size': ["M", "L", "XL", "XXL"],
       'Color': 'Navy Blue',
       'Material': '100% Cotton',
       'Fit': 'Regular',

@@ -11,4 +11,5 @@ class AppColors {
   static const Color switchTileColor = Color(0xff508A7B);
   static const Color settingTitleColor = Color(0xff33302E);
   static const Color orderStatusColor = Color(0xff43484B);
+  static const Color ratingColor = Color(0xff508A7B);
 }
