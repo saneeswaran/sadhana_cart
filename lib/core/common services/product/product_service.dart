@@ -53,7 +53,10 @@ class ProductService {
 
       if (querySnapshot.docs.isNotEmpty) {
         final data = querySnapshot.docs
-            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .map(
+              (e) =>
+                  ProductModel.fromExcelMap(e.data() as Map<String, dynamic>),
+            )
             .toList();
         return data;
       }
@@ -74,7 +77,10 @@ class ProductService {
 
       if (querySnapshot.docs.isNotEmpty) {
         final data = querySnapshot.docs
-            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .map(
+              (e) =>
+                  ProductModel.fromExcelMap(e.data() as Map<String, dynamic>),
+            )
             .toList();
         return data;
       }
@@ -94,7 +100,10 @@ class ProductService {
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         final data = querySnapshot.docs
-            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .map(
+              (e) =>
+                  ProductModel.fromExcelMap(e.data() as Map<String, dynamic>),
+            )
             .toList();
         return data;
       }
@@ -114,7 +123,10 @@ class ProductService {
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         final data = querySnapshot.docs
-            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .map(
+              (e) =>
+                  ProductModel.fromExcelMap(e.data() as Map<String, dynamic>),
+            )
             .toList();
         return data;
       }
