@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 
 class CustomSwitchTile extends StatelessWidget {
   final String title;
@@ -17,12 +17,12 @@ class CustomSwitchTile extends StatelessWidget {
     return SwitchListTile(
       value: value,
       onChanged: onChanged,
-      activeColor: AppColors.switchTileColor,
+      activeColor: AppColor.switchTileColor,
       thumbColor: WidgetStateProperty.all<Color>(Colors.white),
       inactiveTrackColor: const Color(0xffCBCDD8),
       title: Text(
         title,
-        style: const TextStyle(color: AppColors.dartPrimaryColor),
+        style: const TextStyle(color: AppColor.dartPrimaryColor),
       ),
     );
   }

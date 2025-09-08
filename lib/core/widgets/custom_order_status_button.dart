@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/order_status_enums.dart';
 import 'package:sadhana_cart/core/helper/string_helper.dart';
@@ -27,7 +27,7 @@ class CustomOrderStatusButton extends StatelessWidget {
             width: size.width * 0.3,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: selected ? AppColors.orderStatusColor : Colors.white,
+              color: selected ? AppColor.orderStatusColor : Colors.white,
             ),
             child: Center(
               child: Text(

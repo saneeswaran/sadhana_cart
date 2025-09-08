@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/home%20screen/model/custom_home_page_drawer.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/banner_list_mobile.dart';
@@ -17,7 +17,7 @@ class HomePageMobile extends StatelessWidget {
       backgroundColor: const Color(0xffFFFFFF),
       drawer: const CustomHomePageDrawer(),
       appBar: AppBar(
-        backgroundColor: AppColors.pureWhite,
+        backgroundColor: AppColor.pureWhite,
         centerTitle: true,
         title: const Text(
           "Sadhana Cart",

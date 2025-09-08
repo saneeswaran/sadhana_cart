@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/features/cart/view/cart_page_mobile.dart';
 import 'package:sadhana_cart/features/home%20screen/view/home_page_mobile.dart';
 import 'package:sadhana_cart/features/profile/view/profile_page_mobile.dart';
@@ -10,25 +10,25 @@ List<BottomBarItem> bottomBarItems = [
   BottomBarItem(
     icon: const Icon(Icons.home),
     title: const Text("Home"),
-    selectedColor: AppColors.primaryColor,
+    selectedColor: AppColor.primaryColor,
     selectedIcon: const Icon(Icons.home),
   ),
   BottomBarItem(
     icon: const Icon(Icons.search),
     title: const Text("Search"),
-    selectedColor: AppColors.primaryColor,
+    selectedColor: AppColor.primaryColor,
     selectedIcon: const Icon(Icons.search),
   ),
   BottomBarItem(
     icon: const Icon(Icons.shopping_bag),
     title: const Text("Cart"),
-    selectedColor: AppColors.primaryColor,
+    selectedColor: AppColor.primaryColor,
     selectedIcon: const Icon(Icons.shopping_bag),
   ),
   BottomBarItem(
     icon: const Icon(Icons.person),
     title: const Text("Profile"),
-    selectedColor: AppColors.primaryColor,
+    selectedColor: AppColor.primaryColor,
     selectedIcon: const Icon(Icons.person),
   ),
 ];
@@ -37,7 +37,7 @@ final List<Widget> bottomPages = [
   const HomePageMobile(),
   SearchProductMobile(
     appBar: AppBar(
-      backgroundColor: AppColors.pureWhite,
+      backgroundColor: AppColor.pureWhite,
       centerTitle: true,
       title: const Text(
         "Discover Something New",
@@ -51,7 +51,7 @@ final List<Widget> bottomPages = [
   ),
   CartPageMobile(
     appBar: AppBar(
-      backgroundColor: AppColors.pureWhite,
+      backgroundColor: AppColor.pureWhite,
       centerTitle: true,
       title: const Text(
         "Your Cart",

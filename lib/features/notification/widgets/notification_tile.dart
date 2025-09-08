@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 
 class NotificationTile extends StatelessWidget {
   const NotificationTile({super.key});
@@ -40,7 +40,7 @@ class NotificationTile extends StatelessWidget {
                   SlidableAction(
                     icon: Icons.delete,
                     label: "Delete",
-                    backgroundColor: AppColors.onboardButtonColor,
+                    backgroundColor: AppColor.onboardButtonColor,
                     borderRadius: BorderRadius.circular(12),
                     autoClose: true,
                     onPressed: (context) {},
@@ -66,7 +66,7 @@ class NotificationTile extends StatelessWidget {
                 ),
                 leading: Icon(
                   Icons.notifications,
-                  color: AppColors.primaryColor,
+                  color: AppColor.primaryColor,
                 ),
               ),
             ),

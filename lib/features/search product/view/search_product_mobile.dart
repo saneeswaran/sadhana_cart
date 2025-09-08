@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/widgets/custom_search_field.dart';
 
 class SearchProductMobile extends StatefulWidget {
@@ -35,7 +35,7 @@ class _SearchProductMobileState extends State<SearchProductMobile> {
                 Expanded(
                   child: CustomSearchBar(
                     controller: controller,
-                    backgroundColor: AppColors.pureWhite,
+                    backgroundColor: AppColor.pureWhite,
                   ),
                 ),
                 const SizedBox(width: 10),

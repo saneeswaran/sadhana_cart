@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
 part 'product_model.g.dart';
@@ -48,7 +49,7 @@ class ProductModel extends HiveObject {
   double rating;
 
   @HiveField(11)
-  DateTime timestamp;
+  Timestamp timestamp;
 
   @HiveField(12)
   List<String> images;
@@ -136,7 +137,7 @@ class ProductModel extends HiveObject {
   String? graphics;
 
   @HiveField(39)
-  String? screenSize;
+  List<String>? screenSize;
 
   @HiveField(40)
   String? operatingSystem;
@@ -375,7 +376,7 @@ class ProductModel extends HiveObject {
       'offerPrice': offerPrice,
       'stock': stock,
       'rating': rating,
-      'timestamp': timestamp.toIso8601String(),
+      'timestamp': timestamp,
       'images': images.join(';'),
       'sellerId': sellerId,
       'cashOnDelivery': cashOnDelivery,
@@ -466,9 +467,7 @@ class ProductModel extends HiveObject {
       offerPrice: double.tryParse(map['offerPrice']?.toString() ?? '0') ?? 0,
       stock: int.tryParse(map['stock']?.toString() ?? '0') ?? 0,
       rating: double.tryParse(map['rating']?.toString() ?? '0') ?? 0,
-      timestamp:
-          DateTime.tryParse(map['timestamp']?.toString() ?? '') ??
-          DateTime.now(),
+      timestamp: map['timestamp']?.toDate(),
       images: (map['images']?.toString().split(';') ?? [])
           .where((e) => e.isNotEmpty)
           .toList(),

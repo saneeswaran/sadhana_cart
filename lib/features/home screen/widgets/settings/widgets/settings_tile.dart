@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 
 class SettingsTile extends StatelessWidget {
   final IconData icon;
@@ -21,12 +21,12 @@ class SettingsTile extends StatelessWidget {
         title: Text(
           text,
           style: const TextStyle(
-            color: AppColors.settingTitleColor,
+            color: AppColor.settingTitleColor,
             fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
-        leading: Icon(icon, size: 40, color: AppColors.tileColor),
+        leading: Icon(icon, size: 40, color: AppColor.tileColor),
       ),
     );
   }

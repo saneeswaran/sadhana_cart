@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/profile/widget/address/widget/add_address_page.dart';
 import 'package:sadhana_cart/features/profile/widget/address/widget/user_address_data.dart';
@@ -24,7 +24,7 @@ class UserAddressPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         elevation: 0.0,
-        backgroundColor: AppColors.primaryColor,
+        backgroundColor: AppColor.primaryColor,
         onPressed: () {
           navigateTo(context: context, screen: const AddAddressPage());
         },

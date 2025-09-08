@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/features/order/widgets/my%20orders/widget/ordered_product_tile.dart';
 
@@ -33,7 +33,7 @@ class OrderDetailsPage extends StatelessWidget {
                 width: size.width * 1,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  color: AppColors.primaryColor,
+                  color: AppColor.primaryColor,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -82,19 +82,19 @@ class OrderDetailsPage extends StatelessWidget {
                     children: [
                       _customText(
                         title: "Order Number",
-                        titleColor: AppColors.orderStatusColor,
+                        titleColor: AppColor.orderStatusColor,
                         value: "1234567890",
                         valueColor: Colors.black,
                       ),
                       _customText(
                         title: "tracking Number",
-                        titleColor: AppColors.orderStatusColor,
+                        titleColor: AppColor.orderStatusColor,
                         value: "HGJKDSF878",
                         valueColor: Colors.black,
                       ),
                       _customText(
                         title: "Delivery Address: ",
-                        titleColor: AppColors.orderStatusColor,
+                        titleColor: AppColor.orderStatusColor,
                         value: "Pune, Maharashtra,",
                         valueColor: Colors.black,
                       ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/customer/customer_model.dart';
 import 'package:sadhana_cart/core/helper/extension_helper.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
@@ -38,11 +38,11 @@ class DrawerContent extends StatelessWidget {
         ListTile(
           onTap: () =>
               navigateTo(context: context, screen: const SettingsPage()),
-          leading: const Icon(Icons.settings, color: AppColors.tileColor),
+          leading: const Icon(Icons.settings, color: AppColor.tileColor),
           title: const Text(
             "Settings",
             style: TextStyle(
-              color: AppColors.tileColor,
+              color: AppColor.tileColor,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -50,11 +50,11 @@ class DrawerContent extends StatelessWidget {
         ),
         ListTile(
           onTap: () {},
-          leading: const Icon(Icons.support_agent, color: AppColors.tileColor),
+          leading: const Icon(Icons.support_agent, color: AppColor.tileColor),
           title: const Text(
             "Support",
             style: TextStyle(
-              color: AppColors.tileColor,
+              color: AppColor.tileColor,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -62,11 +62,11 @@ class DrawerContent extends StatelessWidget {
         ),
         ListTile(
           onTap: () {},
-          leading: const Icon(Icons.info, color: AppColors.tileColor),
+          leading: const Icon(Icons.info, color: AppColor.tileColor),
           title: const Text(
             "About Us",
             style: TextStyle(
-              color: AppColors.tileColor,
+              color: AppColor.tileColor,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),

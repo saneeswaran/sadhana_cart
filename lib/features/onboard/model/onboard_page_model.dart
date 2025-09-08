@@ -2,7 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/oboard_button.dart';
 import 'package:sadhana_cart/features/auth/view/sign%20up/view/sign_up_mobile.dart';
@@ -40,7 +40,7 @@ class _OnboardPageModelState extends ConsumerState<OnboardPageModel> {
             child: Container(
               height: size.height * 0.50,
               width: size.width,
-              color: AppColors.primaryColor,
+              color: AppColor.primaryColor,
             ),
           ),
           PageView.builder(
@@ -83,7 +83,7 @@ class _OnboardPageModelState extends ConsumerState<OnboardPageModel> {
                       height: size.height * 0.5,
                       width: size.width * 0.8,
                       decoration: BoxDecoration(
-                        color: AppColors.onboardGreyColor,
+                        color: AppColor.onboardGreyColor,
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
                           image: AssetImage(item.imagePath),

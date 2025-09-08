@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 
 class CustomRatioButton<T> extends StatelessWidget {
   final T groupValue;
@@ -17,12 +17,12 @@ class CustomRatioButton<T> extends StatelessWidget {
     return Radio.adaptive(
       value: value,
       onChanged: onChanged,
-      activeColor: AppColors.primaryColor,
+      activeColor: AppColor.primaryColor,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       visualDensity: VisualDensity.compact,
       groupValue: groupValue,
-      focusColor: AppColors.primaryColor,
-      hoverColor: AppColors.primaryColor,
+      focusColor: AppColor.primaryColor,
+      hoverColor: AppColor.primaryColor,
       splashRadius: 0.0,
     );
   }

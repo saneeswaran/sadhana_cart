@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 
 class CustomProgressIndicator extends StatelessWidget {
   final List<Map<String, dynamic>> ratingData;
@@ -25,21 +25,21 @@ class CustomProgressIndicator extends StatelessWidget {
               Text(
                 "$ratingStars",
                 style: const TextStyle(
-                  color: AppColors.onboardButtonColor,
+                  color: AppColor.onboardButtonColor,
                   fontSize: 16,
                 ),
               ),
               const SizedBox(width: 10),
-              const Icon(Icons.star, color: AppColors.ratingColor),
+              const Icon(Icons.star, color: AppColor.ratingColor),
               const SizedBox(width: 10),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: LinearProgressIndicator(
                     value: percentage,
-                    backgroundColor: AppColors.switchTileColor,
+                    backgroundColor: AppColor.switchTileColor,
                     valueColor: const AlwaysStoppedAnimation<Color>(
-                      AppColors.ratingColor,
+                      AppColor.ratingColor,
                     ),
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -49,7 +49,7 @@ class CustomProgressIndicator extends StatelessWidget {
               Text(
                 "${(percentage * 100).toStringAsFixed(0)}%",
                 style: const TextStyle(
-                  color: AppColors.ratingColor,
+                  color: AppColor.ratingColor,
                   fontWeight: FontWeight.bold,
                 ),
               ),

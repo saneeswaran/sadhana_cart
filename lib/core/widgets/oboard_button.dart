@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 
 class OboardButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -13,7 +13,7 @@ class OboardButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         splashFactory: NoSplash.splashFactory,
         minimumSize: Size(size.width * 0.70, size.height * 0.07),
-        backgroundColor: AppColors.onboardButtonColor,
+        backgroundColor: AppColor.onboardButtonColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(50),
           side: const BorderSide(color: Colors.white, width: 1.2),

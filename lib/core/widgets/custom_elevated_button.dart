@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   final Widget child;
@@ -16,7 +16,7 @@ class CustomElevatedButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         minimumSize: Size(size.width * 0.7, size.height * 0.07),
-        backgroundColor: AppColors.dartPrimaryColor,
+        backgroundColor: AppColor.dartPrimaryColor,
       ),
       onPressed: onPressed,
       child: child,

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20repo/category/category_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -35,7 +35,7 @@ class CategoriesListMobile extends ConsumerWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
                       border: Border.all(
-                        color: AppColors.primaryColor,
+                        color: AppColor.primaryColor,
                         width: 0.9,
                       ),
                     ),
@@ -66,7 +66,7 @@ class CategoriesListMobile extends ConsumerWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                        color: AppColors.onboardButtonColor,
+                        color: AppColor.onboardButtonColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w300,
                       ),

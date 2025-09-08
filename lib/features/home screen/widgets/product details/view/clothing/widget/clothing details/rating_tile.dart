@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 
 class RatingTile extends StatelessWidget {
@@ -42,7 +42,7 @@ class RatingTile extends StatelessWidget {
             ),
             subtitle: StarRating(
               mainAxisAlignment: MainAxisAlignment.start,
-              color: AppColors.ratingColor,
+              color: AppColor.ratingColor,
               size: 20,
               rating: rating,
             ),

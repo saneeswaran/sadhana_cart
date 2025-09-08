@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 
 class CheckoutTotalAmountContainer extends StatelessWidget {
@@ -74,6 +74,6 @@ class CheckoutTotalAmountContainer extends StatelessWidget {
   }
 
   Widget _customDivider() {
-    return const Divider(color: AppColors.tileColor, thickness: 1.2);
+    return const Divider(color: AppColor.tileColor, thickness: 1.2);
   }
 }

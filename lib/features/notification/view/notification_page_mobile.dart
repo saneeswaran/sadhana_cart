@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/colors/app_colors.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/features/notification/widgets/notification_tile.dart';
 
 class NotificationPageMobile extends StatelessWidget {
@@ -17,7 +17,7 @@ class NotificationPageMobile extends StatelessWidget {
               child: Text(
                 "Notifications",
                 style: TextStyle(
-                  color: AppColors.primaryColor,
+                  color: AppColor.primaryColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
