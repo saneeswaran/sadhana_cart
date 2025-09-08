@@ -10,12 +10,14 @@ class FootWearDesign extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(height: 40),
-          FootWearCarousel(product: product),
-          FootWearDetails(product: product),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 40),
+            FootWearCarousel(product: product),
+            FootWearDetails(product: product),
+          ],
+        ),
       ),
     );
   }

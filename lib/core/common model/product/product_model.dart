@@ -62,7 +62,7 @@ class ProductModel extends HiveObject {
 
   // Clothing attributes
   @HiveField(15)
-  String? color;
+  List<String>? color;
 
   @HiveField(16)
   String? material;
@@ -84,10 +84,10 @@ class ProductModel extends HiveObject {
 
   // Footwear attributes
   @HiveField(22)
-  String? footwearSize;
+  List<String>? footwearSize;
 
   @HiveField(23)
-  String? footwearColor;
+  List<String>? footwearColor;
 
   @HiveField(24)
   String? footwearMaterial;
