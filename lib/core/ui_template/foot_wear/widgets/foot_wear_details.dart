@@ -20,54 +20,59 @@ class FootWearDetails extends StatelessWidget {
     return Container(
       width: size.width,
       padding: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Product Name, Rating, Price
-            ListTile(
-              contentPadding: const EdgeInsets.all(12),
-              minVerticalPadding: 12,
-              title: Text(
-                product.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+            Padding(
+              padding: const EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 16,
+                bottom: 10,
               ),
-              subtitle: StarRating(
-                mainAxisAlignment: MainAxisAlignment.start,
-                rating: product.rating,
-                color: AppColor.ratingColor,
-                size: 25.0,
-                onRatingChanged: (value) => log(value.toString()),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    product.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "${Constants.indianCurrency} ${product.price}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
-              trailing: Text(
-                "${Constants.indianCurrency} ${product.price}",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  StarRating(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    rating: product.rating,
+                    color: AppColor.ratingColor,
+                    size: 25.0,
+                    onRatingChanged: (value) {
+                      log(value.toString());
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  const Text("(4)"),
+                ],
               ),
             ),
 

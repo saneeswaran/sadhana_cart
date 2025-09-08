@@ -4,42 +4,40 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 
-class CustomCarouselSlider extends StatelessWidget {
+final carouselController = StateProvider.autoDispose<int>((ref) => 0);
+
+class CustomCarouselSlider extends ConsumerWidget {
   final ProductModel product;
   const CustomCarouselSlider({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
+    final controller = CarouselSliderController();
+
     return Stack(
       children: [
         CarouselSlider(
           items: product.images
               .map(
-                (e) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: CachedNetworkImage(
-                      cacheKey: e,
-                      imageUrl: e,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      errorWidget: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[200],
-                          alignment: Alignment.center,
-                          child: const Icon(Icons.broken_image, size: 40),
-                        );
-                      },
+                (e) => Container(
+                  height: size.height * 0.4,
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(e, cacheKey: e),
+                      fit: BoxFit.fitHeight,
                     ),
                   ),
                 ),
               )
               .toList(),
+          carouselController: controller,
           options: CarouselOptions(
             height: size.height * 0.4,
             autoPlay: true,
@@ -52,6 +50,10 @@ class CustomCarouselSlider extends StatelessWidget {
             enableInfiniteScroll: true,
             pauseAutoPlayOnTouch: true,
             scrollPhysics: const BouncingScrollPhysics(),
+            onPageChanged: (index, reason) {
+              ref.read(carouselController.notifier).state = index;
+              log("Page changed: $index");
+            },
           ),
         ),
         Padding(
@@ -81,14 +83,29 @@ class CustomCarouselSlider extends StatelessWidget {
         Positioned(
           top: size.height * 0.37,
           right: size.width * 0.45,
-          child: DotsIndicator(
-            dotsCount: product.images.length,
-            animate: true,
-            axis: Axis.horizontal,
-            animationDuration: const Duration(milliseconds: 200),
-            position: 0,
-            onTap: (value) {
-              log(value.toString());
+          child: Consumer(
+            builder: (context, ref, child) {
+              final dot = ref.watch(carouselController);
+              return DotsIndicator(
+                dotsCount: product.images.length,
+                axis: Axis.horizontal,
+                animationDuration: const Duration(milliseconds: 200),
+                position: dot.toDouble(),
+                onTap: (value) {
+                  ref.read(carouselController.notifier).state = value;
+                  controller.animateToPage(value);
+                  log("Dot tapped: $value");
+                },
+                decorator: DotsDecorator(
+                  size: const Size.square(8.0),
+                  activeSize: const Size(18.0, 8.0),
+                  color: Colors.grey.shade400,
+                  activeColor: AppColor.dartPrimaryColor,
+                  activeShape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
+                ),
+              );
             },
           ),
         ),
