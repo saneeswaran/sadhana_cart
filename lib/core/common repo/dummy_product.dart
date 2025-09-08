@@ -153,11 +153,12 @@ final List<ProductModel> productModel = [
   ProductModel(
     productId: "LAP005",
     name: "Nike Air Max 90",
-    description: "dummy description",
+    description:
+        "The Nike Air Max 90 is a classic running shoe that is now a lifestyle icon. With its visible Air unit and comfortable fit, it's no wonder it's been a favorite among sneakerheads and casual wearers alike.",
     category: "Footwear",
     subcategory: "shoe",
     sku: "dummy sku",
-    brand: "dummy brand",
+    brand: "Nike",
     price: 2000,
     offerPrice: 500,
     stock: 10,

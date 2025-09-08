@@ -1,62 +1,29 @@
 import 'package:flutter/material.dart';
 
-class CustomTabBar extends StatefulWidget {
-  final List<String> tabTitles;
-  final List<Widget> tabViews;
-
+class CustomTabBar extends StatelessWidget {
+  final int length;
+  final List<Widget> tabs;
+  final double tabBarViewHeight;
+  final List<Widget> tabBarViewChildren;
   const CustomTabBar({
     super.key,
-    required this.tabTitles,
-    required this.tabViews,
+    required this.length,
+    required this.tabs,
+    required this.tabBarViewHeight,
+    required this.tabBarViewChildren,
   });
-
-  @override
-  State<CustomTabBar> createState() => _CustomTabBarState();
-}
-
-class _CustomTabBarState extends State<CustomTabBar>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    _tabController = TabController(
-      length: widget.tabTitles.length,
-      vsync: this,
-    );
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        /// Custom Tab Bar
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 10),
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.black,
-            indicator: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            tabs: widget.tabTitles.map((title) => Tab(text: title)).toList(),
-          ),
+        DefaultTabController(
+          length: length,
+          child: TabBar(tabs: tabs),
         ),
-
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: widget.tabViews,
-          ),
+        SizedBox(
+          height: tabBarViewHeight,
+          child: TabBarView(children: tabBarViewChildren),
         ),
       ],
     );

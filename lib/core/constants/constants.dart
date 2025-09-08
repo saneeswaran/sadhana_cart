@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
 class Constants {
   static const String indianCurrency = "₹";
   static const String orderPendingText =
@@ -26,4 +29,10 @@ class Constants {
       "No items will be shipped or charged for this order.";
 
   static const String webClientId = "AIzaSyDpjMz_gzDUtdLtBryB1hDBccT7vgqRYaE";
+
+  static const TextStyle productTabBarTextStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
 }
