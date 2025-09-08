@@ -180,7 +180,7 @@ final List<ProductModel> productModel = [
       "White",
       "Yellow",
       "Orange",
-      "Pink",
+      "Navy Blue",
     ],
     footwearMaterial: "Leather",
     footwearType: "Sneaker",

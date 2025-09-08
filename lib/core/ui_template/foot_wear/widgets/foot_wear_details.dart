@@ -8,7 +8,7 @@ import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 import 'package:sadhana_cart/core/ui_template/foot_wear/view%20model/footwear_notifier.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
-import 'package:sadhana_cart/core/widgets/custom_tab_bar.dart';
+import 'package:sadhana_cart/core/widgets/widget_template.dart';
 
 class FootWearDetails extends StatelessWidget {
   final ProductModel product;
@@ -234,13 +234,76 @@ class FootWearDetails extends StatelessWidget {
                 );
               },
             ),
-
-            const CustomDivider(),
-            CustomTabBar(
+            const SizedBox(height: 20),
+            DefaultTabController(
               length: 2,
-              tabs: [],
-              tabBarViewHeight: size.height,
-              tabBarViewChildren: [],
+              child: Column(
+                children: [
+                  const TabBar(
+                    indicatorColor: AppColor.primaryColor,
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          "Description",
+                          style: Constants.productTabBarTextStyle,
+                        ),
+                      ),
+                      Tab(
+                        child: Text(
+                          "Details",
+                          style: Constants.productTabBarTextStyle,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 200,
+                    child: TabBarView(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            product.description,
+                            style: const TextStyle(
+                              color: WidgetTemplate.textColor,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Column(
+                            spacing: 5,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              product.footwearType != null
+                                  ? WidgetTemplate.productDetailsRowTemplate(
+                                      title: "Footwear Type: ",
+                                      value: product.footwearType!,
+                                    )
+                                  : const Text(""),
+                              product.footwearMaterial != null
+                                  ? WidgetTemplate.productDetailsRowTemplate(
+                                      title: "Material: ",
+                                      value: product.footwearMaterial != null
+                                          ? product.footwearMaterial!
+                                          : "N/A",
+                                    )
+                                  : const Text(""),
+                              product.gender != null
+                                  ? WidgetTemplate.productDetailsRowTemplate(
+                                      title: "Gender",
+                                      value: product.gender!,
+                                    )
+                                  : const Text(""),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

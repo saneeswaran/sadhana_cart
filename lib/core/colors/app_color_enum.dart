@@ -197,5 +197,5 @@ final Map<String, AppColors> colorNameMap = {
 Color getColorFromDatabase(String colorName) {
   final normalizedName = colorName.toLowerCase().replaceAll(' ', '');
   final colorEnum = colorNameMap[normalizedName];
-  return colorEnum?.color ?? AppColors.black.color;
+  return colorEnum?.color ?? Colors.black;
 }
