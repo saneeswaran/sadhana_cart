@@ -1,13 +1,13 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating/flutter_rating.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/colors/app_color_enum.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rating.dart';
 import 'package:sadhana_cart/core/ui_template/foot_wear/view%20model/footwear_notifier.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
+import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/widget_template.dart';
 
 class FootWearDetails extends StatelessWidget {
@@ -17,65 +17,13 @@ class FootWearDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Container(
+    return SizedBox(
       width: size.width,
-      padding: const EdgeInsets.only(bottom: 20),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: 16,
-                bottom: 10,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    product.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    "${Constants.indianCurrency} ${product.price}",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  StarRating(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    rating: product.rating,
-                    color: AppColor.ratingColor,
-                    size: 25.0,
-                    onRatingChanged: (value) {
-                      log(value.toString());
-                    },
-                  ),
-                  const SizedBox(height: 12),
-                  const Text("(4)"),
-                ],
-              ),
-            ),
-
+            ProductPriceRating(product: product),
             const CustomDivider(),
             const SizedBox(height: 10),
 
@@ -285,26 +233,39 @@ class FootWearDetails extends StatelessWidget {
                                   ? WidgetTemplate.productDetailsRowTemplate(
                                       title: "Footwear Type: ",
                                       value: product.footwearType!,
+                                      isGiveSpaceAtlast: true,
                                     )
-                                  : const Text(""),
+                                  : const SizedBox.shrink(),
                               product.footwearMaterial != null
                                   ? WidgetTemplate.productDetailsRowTemplate(
                                       title: "Material: ",
                                       value: product.footwearMaterial != null
                                           ? product.footwearMaterial!
                                           : "N/A",
+                                      isGiveSpaceAtlast: true,
                                     )
-                                  : const Text(""),
+                                  : const SizedBox.shrink(),
                               product.gender != null
                                   ? WidgetTemplate.productDetailsRowTemplate(
                                       title: "Gender",
                                       value: product.gender!,
+                                      isGiveSpaceAtlast: true,
                                     )
-                                  : const Text(""),
+                                  : const SizedBox.shrink(),
                             ],
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: CustomElevatedButton(
+                      child: const Text(
+                        "Add to Cart",
+                        style: customElevatedButtonTextStyle,
+                      ),
+                      onPressed: () {},
                     ),
                   ),
                 ],

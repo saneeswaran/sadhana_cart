@@ -56,7 +56,7 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       connectivity: fields[36] as String?,
       warranty: fields[37] as String?,
       graphics: fields[38] as String?,
-      screenSize: (fields[39] as List?)?.cast<String>(),
+      screenSize: fields[39] as String?,
       operatingSystem: fields[40] as String?,
       port: fields[41] as String?,
       weight: fields[42] as String?,

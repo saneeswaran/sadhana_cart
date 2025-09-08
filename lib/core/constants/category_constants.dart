@@ -9,4 +9,5 @@ class CategoryConstants {
   static const String beauty = 'Beauty';
   static const String books = 'Books';
   static const String toys = 'Toys';
+  static const String laptop = 'Laptop';
 }

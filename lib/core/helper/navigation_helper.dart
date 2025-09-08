@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/constants/category_constants.dart';
 import 'package:sadhana_cart/core/ui_template/foot_wear/view/foot_wear_design.dart';
+import 'package:sadhana_cart/core/ui_template/laptop/view/laptop_template.dart';
+import 'package:sadhana_cart/core/ui_template/mobile/view/mobile_template.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/product%20details/view/clothing/view/clothing_products_details.dart';
 
 void navigateTo({required BuildContext context, required Widget screen}) {
@@ -28,15 +31,27 @@ void navigateToProductDesignBasedOnCategory({
 }) {
   final categoryLowerCase = categoryName.toLowerCase().replaceAll(' ', '_');
 
-  if (categoryLowerCase == 'clothing'.toLowerCase()) {
+  if (categoryLowerCase == CategoryConstants.clothing.toLowerCase()) {
     navigateTo(
       context: context,
       screen: ClothingProductsDetails(product: product),
     );
-  } else if (categoryName == "Footwear".toLowerCase()) {
+  } else if (categoryName == CategoryConstants.footwear.toLowerCase()) {
     navigateTo(
       context: context,
       screen: FootWearDesign(product: product),
+    );
+  } else if (categoryLowerCase.toLowerCase() ==
+      CategoryConstants.mobile.toLowerCase()) {
+    navigateTo(
+      context: context,
+      screen: MobileTemplate(product: product),
+    );
+  } else if (categoryLowerCase.toLowerCase() ==
+      CategoryConstants.laptop.toLowerCase()) {
+    navigateTo(
+      context: context,
+      screen: LaptopTemplate(product: product),
     );
   }
 }

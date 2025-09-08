@@ -137,7 +137,7 @@ class ProductModel extends HiveObject {
   String? graphics;
 
   @HiveField(39)
-  List<String>? screenSize;
+  String? screenSize;
 
   @HiveField(40)
   String? operatingSystem;

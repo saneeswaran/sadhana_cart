@@ -5,6 +5,7 @@ class WidgetTemplate {
   static Widget productDetailsRowTemplate({
     required String title,
     required String value,
+    required bool isGiveSpaceAtlast,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -33,7 +34,7 @@ class WidgetTemplate {
           ),
           const SizedBox(width: 8),
           Expanded(
-            flex: 2,
+            flex: 4,
             child: Text(
               value,
               style: const TextStyle(
@@ -45,7 +46,9 @@ class WidgetTemplate {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 40),
+          isGiveSpaceAtlast
+              ? const SizedBox(width: 40)
+              : const SizedBox.shrink(),
         ],
       ),
     );
