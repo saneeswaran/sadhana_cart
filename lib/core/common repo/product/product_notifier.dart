@@ -30,16 +30,6 @@ final productByBrandProvider = FutureProvider.autoDispose
       return await ProductService.getProductByBrands(brand: brand);
     });
 
-final uiTemplateProvider = FutureProvider.family
-    .autoDispose<Map<String, dynamic>, String>((ref, category) async {
-      final firebaseStore = ref.watch(firestoreProvider);
-      final doc = await firebaseStore
-          .collection('ui_templates')
-          .doc(category)
-          .get();
-      return doc.data()!;
-    });
-
 class ProductNotifier extends StateNotifier<List<ProductModel>> {
   final Ref ref;
   ProductNotifier(this.ref) : super([]);
@@ -50,7 +40,7 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
   // final int _limit = 10;
 
   void initializeProducts() async {
-    state = productModel;
+    state = sampleProducts;
     // _lastDocument = null;
     // _hasMore = true;
     // await fetchNextProducts();
@@ -105,4 +95,8 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
         )
         .toList();
   }
+
+  void fetchProductBySubcategory() async {}
+
+  void fetchProductsByCategory() async {}
 }
