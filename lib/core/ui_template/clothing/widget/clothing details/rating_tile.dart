@@ -51,7 +51,7 @@ class RatingTile extends StatelessWidget {
             padding: const EdgeInsets.only(left: 60.0),
             child: Text(
               review,
-              textAlign: TextAlign.justify,
+              // textAlign: TextAlign.justify,
               style: const TextStyle(
                 color: Colors.grey,
                 fontSize: 16,

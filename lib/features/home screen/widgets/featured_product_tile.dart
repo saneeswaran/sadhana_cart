@@ -29,6 +29,7 @@ class FeaturedProductTile extends ConsumerWidget {
               GestureDetector(
                 onTap: () {
                   log(data.category);
+
                   navigateToProductDesignBasedOnCategory(
                     context: context,
                     categoryName: data.category.toLowerCase(),

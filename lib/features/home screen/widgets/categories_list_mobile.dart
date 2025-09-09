@@ -5,7 +5,7 @@ import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20repo/category/category_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
-import 'package:sadhana_cart/features/category/view/subcategory_page.dart';
+import 'package:sadhana_cart/features/sub%20category/view/subcategory_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CategoriesListMobile extends ConsumerWidget {

@@ -22,7 +22,7 @@
           }
         },
         {
-          "client_id": "126398142924-t5s8i5vnvlh2v4fdhohfrpitin6bvcp6.apps.googleusercontent.com",
+          "client_id": "126398142924-h98c3lckqi5rp2p4he7s9kv4ii04beqr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -39,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "126398142924-lj8d6upp9v2hkjma44r5eicq1lgfikqh.apps.googleusercontent.com",
+              "client_id": "126398142924-iko2cbqi6d86ru9pbiv35j4qfru2r1gp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.sadhanaCart"
+                "bundle_id": "com.sadhanacart.app"
               }
             }
           ]
@@ -90,7 +90,7 @@
           }
         },
         {
-          "client_id": "126398142924-t5s8i5vnvlh2v4fdhohfrpitin6bvcp6.apps.googleusercontent.com",
+          "client_id": "126398142924-h98c3lckqi5rp2p4he7s9kv4ii04beqr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -107,10 +107,10 @@
               "client_type": 3
             },
             {
-              "client_id": "126398142924-lj8d6upp9v2hkjma44r5eicq1lgfikqh.apps.googleusercontent.com",
+              "client_id": "126398142924-iko2cbqi6d86ru9pbiv35j4qfru2r1gp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.sadhanaCart"
+                "bundle_id": "com.sadhanacart.app"
               }
             }
           ]
@@ -126,7 +126,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "126398142924-t5s8i5vnvlh2v4fdhohfrpitin6bvcp6.apps.googleusercontent.com",
+          "client_id": "126398142924-h98c3lckqi5rp2p4he7s9kv4ii04beqr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -143,10 +143,46 @@
               "client_type": 3
             },
             {
-              "client_id": "126398142924-lj8d6upp9v2hkjma44r5eicq1lgfikqh.apps.googleusercontent.com",
+              "client_id": "126398142924-iko2cbqi6d86ru9pbiv35j4qfru2r1gp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.sadhanaCart"
+                "bundle_id": "com.sadhanacart.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126398142924:android:0a3fb262da3df33f85a569",
+        "android_client_info": {
+          "package_name": "com.sadhana_cart_seller.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126398142924-h98c3lckqi5rp2p4he7s9kv4ii04beqr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtraD4VRw_kJsltygAqzKtcYdyfnLeHZk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126398142924-8t9578dnble72nfpjg8o77u4v7ta6n8d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "126398142924-iko2cbqi6d86ru9pbiv35j4qfru2r1gp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sadhanacart.app"
               }
             }
           ]
