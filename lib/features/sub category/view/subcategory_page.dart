@@ -33,6 +33,9 @@ class _SubcategoryPageState extends ConsumerState<SubcategoryPage> {
     if (subcategory.error != null) {
       return const Center(child: Text("Error"));
     }
+    if (subcategory.subcategory.isEmpty) {
+      return const Scaffold(body: Center(child: Text("No Subcategory")));
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -59,6 +62,7 @@ class _SubcategoryPageState extends ConsumerState<SubcategoryPage> {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(height: 20),
             SubcategoryTile(),
           ],
         ),

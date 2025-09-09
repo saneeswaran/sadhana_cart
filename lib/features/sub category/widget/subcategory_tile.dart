@@ -28,12 +28,13 @@ class SubcategoryTile extends ConsumerWidget {
               ref.read(subCategorySelected.notifier).state = index;
             },
             child: Container(
-              height: size.height * 0.05,
-              width: size.width,
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              height: size.height * 0.06,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(20),
-                  right: Radius.circular(20),
+                  left: Radius.circular(12),
+                  right: Radius.circular(12),
                 ),
                 color: isSelected
                     ? AppColor.primaryColor
