@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common%20repo/order/order_notifier.dart';
 import 'package:sadhana_cart/core/enums/order_status_enums.dart';
 
@@ -32,6 +33,7 @@ class OrderService {
   }) async {
     try {
       final orderDoc = orderRef.doc();
+
       final OrderModel orderModel = OrderModel(
         quantity: quantity,
         userId: currentUser,
@@ -46,27 +48,74 @@ class OrderService {
         createdAt: createdAt,
         products: products,
       );
-      for (final doc in products) {
-        //i want to make some changes here... because i want to update the stock count of different size product
-        final productId = doc.productId;
-        final sizeList = doc.sizeOptions;
-        final DocumentSnapshot documentSnapshot = await productRef
-            .doc(productId)
-            .get();
-        if (documentSnapshot.exists) {
-          documentSnapshot.reference.update({
-            "totalStock": FieldValue.increment(-quantity),
-            "sizeVariants": {},
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        for (final orderedProduct in products) {
+          final productId = orderedProduct.productId;
+          final List<SizeVariant> orderedVariants = orderedProduct.sizeVariants;
+
+          final productRefDoc = productRef.doc(productId);
+          final productSnapshot = await transaction.get(productRefDoc);
+
+          if (!productSnapshot.exists) {
+            throw Exception("Product not found: $productId");
+          }
+
+          final data = ProductModel.fromMap(
+            productSnapshot.data() as Map<String, dynamic>,
+          );
+
+          final currentTotalStock = data.totalStock;
+          List<dynamic> sizeVariants = data.sizeVariants;
+
+          // Update each size variant stock
+          final updatedVariants = sizeVariants.map((variant) {
+            final variantSize = variant['size'];
+            final variantColor = variant['color'];
+
+            final matchingOrderedVariant = orderedVariants.firstWhere(
+              (ordered) =>
+                  ordered.size == variantSize &&
+                  (ordered.color ?? '') == (variantColor ?? ''),
+            );
+
+            final currentStock = variant['stock'] ?? 0;
+            final stockToSubtract = matchingOrderedVariant.stock;
+
+            final newStock = (currentStock as int) - stockToSubtract;
+
+            if (newStock < 0) {
+              throw Exception(
+                "Insufficient stock for product $productId, size ${matchingOrderedVariant.size}",
+              );
+            }
+
+            return {...variant, 'stock': newStock};
+          }).toList();
+
+          // Decrease total stock by sum of all variant quantities in this product
+          final totalStockToSubtract = orderedVariants.fold<int>(
+            0,
+            (int sum, v) => sum + v.stock,
+          );
+
+          transaction.update(productRefDoc, {
+            'totalStock': currentTotalStock - totalStockToSubtract,
+            'sizeVariants': updatedVariants,
           });
-          ref.read(orderProvider.notifier).addOrder(order: orderModel);
-        } else {
-          log("product not found");
         }
-      }
-      await orderDoc.set(orderModel.toMap());
+
+        // Add order to Firestore
+        transaction.set(orderDoc, orderModel.toMap());
+      });
+
+      // Update provider outside the transaction
+      ref.read(orderProvider.notifier).addOrder(order: orderModel);
+
       return true;
-    } catch (e) {
-      log("order service error $e");
+    } catch (e, stack) {
+      log("Order Service Error: $e");
+      log("Stack Trace: $stack");
       return false;
     }
   }
