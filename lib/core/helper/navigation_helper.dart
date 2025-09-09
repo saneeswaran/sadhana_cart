@@ -4,7 +4,7 @@ import 'package:sadhana_cart/core/constants/category_constants.dart';
 import 'package:sadhana_cart/core/ui_template/foot_wear/view/foot_wear_design.dart';
 import 'package:sadhana_cart/core/ui_template/laptop/view/laptop_template.dart';
 import 'package:sadhana_cart/core/ui_template/mobile/view/mobile_template.dart';
-import 'package:sadhana_cart/features/home%20screen/widgets/product%20details/view/clothing/view/clothing_products_details.dart';
+import 'package:sadhana_cart/core/ui_template/clothing/view/clothing_products_details.dart';
 
 void navigateTo({required BuildContext context, required Widget screen}) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => screen));

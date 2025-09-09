@@ -1,23 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
+import 'package:sadhana_cart/core/common%20repo/subcategory/subcategory_state.dart';
 import 'package:sadhana_cart/core/common%20services/subcategory/subcategory_service.dart';
-import 'package:sadhana_cart/core/helper/connection_helper.dart';
-import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
 final subcategoryProvider =
-    StateNotifierProvider<SubcategoryNotifier, List<SubcategoryModel>>(
-      (ref) => SubcategoryNotifier()..initialize(),
+    StateNotifierProvider<SubcategoryNotifier, SubcategoryState>(
+      (ref) => SubcategoryNotifier(),
     );
 
-class SubcategoryNotifier extends StateNotifier<List<SubcategoryModel>> {
-  SubcategoryNotifier() : super([]);
+final getSpecificSubcategoryByCategoryProvider = FutureProvider.autoDispose
+    .family<List<SubcategoryModel>, String>((ref, category) async {
+      return await SubcategoryService.fetchSubcategory();
+    });
 
-  void initialize() async {
-    final bool isInternet = await ConnectionHelper.checkInternetConnection();
-    if (isInternet) {
-      state = await SubcategoryService.fetchSubcategory();
-    } else {
-      state = HiveHelper.getSubcategory();
-    }
-  }
+class SubcategoryNotifier extends StateNotifier<SubcategoryState> {
+  SubcategoryNotifier() : super(SubcategoryState.initial());
 }

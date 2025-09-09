@@ -27,4 +27,28 @@ class SubcategoryService {
       return [];
     }
   }
+
+  static Future<List<SubcategoryModel>> fetchSubcategoryByCategoryName({
+    required String category,
+  }) async {
+    try {
+      final QuerySnapshot querySnapshot = await subcategoryRef
+          .where("category", isEqualTo: category)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final data = querySnapshot.docs
+            .map(
+              (e) => SubcategoryModel.fromMap(e.data() as Map<String, dynamic>),
+            )
+            .toList();
+        return data;
+      } else {
+        return [];
+      }
+    } catch (e) {
+      log("subcategory service error $e");
+      return [];
+    }
+  }
 }

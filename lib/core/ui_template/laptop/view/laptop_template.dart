@@ -4,7 +4,7 @@ import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rat
 import 'package:sadhana_cart/core/ui_template/foot_wear/view/laptop_additional_information.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
-import 'package:sadhana_cart/features/home%20screen/widgets/product%20details/view/clothing/widget/clothing%20details/rating_tile.dart';
+import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
 
 class LaptopTemplate extends StatelessWidget {
   final ProductModel product;
