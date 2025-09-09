@@ -17,9 +17,7 @@ final productDataProvider = FutureProvider.family
           .where("id", isEqualTo: id)
           .get();
       final data = querySnapshot.docs
-          .map(
-            (e) => ProductModel.fromExcelMap(e.data() as Map<String, dynamic>),
-          )
+          .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
           .toList()
           .first;
       ref.read(loadingProvider.notifier).state = false;

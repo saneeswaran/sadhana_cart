@@ -47,10 +47,10 @@ class FootWearDetails extends StatelessWidget {
                       return Expanded(
                         child: Wrap(
                           children: List.generate(
-                            product.footwearColor?.length ?? 0,
+                            product.colorOptions?.length ?? 0,
                             (index) {
                               final isSelected = index == selecIndex;
-                              final colorName = product.footwearColor![index];
+                              final colorName = product.colorOptions![index];
                               final color = getColorFromDatabase(colorName);
                               final isWhite = color == AppColors.white.color;
 
@@ -133,9 +133,9 @@ class FootWearDetails extends StatelessWidget {
                       Expanded(
                         child: Wrap(
                           children: List.generate(
-                            product.footwearSize?.length ?? 0,
+                            product.colorOptions?.length ?? 0,
                             (index) {
-                              final sizeItem = product.footwearSize![index];
+                              final sizeItem = product.colorOptions![index];
                               final firstPart = sizeItem.split(',').first;
                               final isSelected = index == selectSize;
                               return GestureDetector(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 part 'product_model.g.dart';
 
@@ -31,7 +32,7 @@ class ProductModel extends HiveObject {
   String subcategory;
 
   @HiveField(5)
-  String sku;
+  String baseSku; // Base SKU without size/color variants
 
   @HiveField(6)
   String brand;
@@ -43,7 +44,8 @@ class ProductModel extends HiveObject {
   double offerPrice;
 
   @HiveField(9)
-  int stock;
+  int get totalStock =>
+      sizeVariants.fold(0, (int sum, variant) => sum + variant.stock);
 
   @HiveField(10)
   double rating;
@@ -58,220 +60,218 @@ class ProductModel extends HiveObject {
   String? sellerId;
 
   @HiveField(14)
-  String cashOnDelivery;
+  bool cashOnDelivery;
+
+  // Size variants for inventory management
+  @HiveField(15)
+  List<SizeVariant> sizeVariants;
 
   // Clothing attributes
-  @HiveField(15)
-  List<String>? color;
-
   @HiveField(16)
-  String? material;
+  List<String>? colorOptions;
 
   @HiveField(17)
-  String? fit;
+  String? material;
 
   @HiveField(18)
-  String? pattern;
+  String? fit;
 
   @HiveField(19)
-  String? sleeveType;
+  String? pattern;
 
   @HiveField(20)
-  String? careInstruction;
+  String? sleeveType;
 
   @HiveField(21)
-  List<String>? size;
+  String? careInstruction;
+
+  @HiveField(22)
+  List<String>? sizeOptions;
 
   // Footwear attributes
-  @HiveField(22)
-  List<String>? footwearSize;
-
   @HiveField(23)
-  List<String>? footwearColor;
-
-  @HiveField(24)
   String? footwearMaterial;
 
-  @HiveField(25)
+  @HiveField(24)
   String? footwearType;
 
-  @HiveField(26)
+  @HiveField(25)
   String? gender;
 
   // Mobile attributes
-  @HiveField(27)
+  @HiveField(26)
   String? model;
 
-  @HiveField(28)
+  @HiveField(27)
   String? mobileColor;
 
-  @HiveField(29)
+  @HiveField(28)
   String? ram;
 
-  @HiveField(30)
+  @HiveField(29)
   String? storage;
 
-  @HiveField(31)
+  @HiveField(30)
   String? battery;
 
-  @HiveField(32)
+  @HiveField(31)
   String? camera;
 
-  @HiveField(33)
+  @HiveField(32)
   String? processor;
 
-  @HiveField(34)
+  @HiveField(33)
   String? display;
 
-  @HiveField(35)
+  @HiveField(34)
   String? os;
 
-  @HiveField(36)
+  @HiveField(35)
   String? connectivity;
 
-  @HiveField(37)
+  @HiveField(36)
   String? warranty;
 
   // Laptop attributes
-  @HiveField(38)
+  @HiveField(37)
   String? graphics;
 
-  @HiveField(39)
+  @HiveField(38)
   String? screenSize;
 
-  @HiveField(40)
+  @HiveField(39)
   String? operatingSystem;
 
-  @HiveField(41)
+  @HiveField(40)
   String? port;
 
-  @HiveField(42)
+  @HiveField(41)
   String? weight;
 
   // Electronics attributes
-  @HiveField(43)
+  @HiveField(42)
   String? resolution;
 
-  @HiveField(44)
+  @HiveField(43)
   String? displayType;
 
-  @HiveField(45)
+  @HiveField(44)
   String? smartFeatures;
 
-  @HiveField(46)
+  @HiveField(45)
   String? energyRating;
 
-  @HiveField(47)
+  @HiveField(46)
   String? powerConsumption;
 
   // Furniture attributes
-  @HiveField(48)
+  @HiveField(47)
   String? dimension;
 
-  @HiveField(49)
+  @HiveField(48)
   String? weightCapacity;
 
-  @HiveField(50)
+  @HiveField(49)
   String? assembly;
 
-  @HiveField(51)
+  @HiveField(50)
   String? style;
 
-  @HiveField(52)
+  @HiveField(51)
   String? roomType;
 
   // Grocery attributes
-  @HiveField(53)
+  @HiveField(52)
   String? weightVolume;
 
-  @HiveField(54)
+  @HiveField(53)
   String? quantity;
 
-  @HiveField(55)
+  @HiveField(54)
   String? organic;
 
-  @HiveField(56)
+  @HiveField(55)
   String? expiryDate;
 
-  @HiveField(57)
+  @HiveField(56)
   String? storageInstruction;
 
-  @HiveField(58)
+  @HiveField(57)
   String? dietaryPreference;
 
   // Beauty attributes
-  @HiveField(59)
+  @HiveField(58)
   String? shadeColor;
 
-  @HiveField(60)
+  @HiveField(59)
   String? beautyType;
 
-  @HiveField(61)
+  @HiveField(60)
   String? ingredients;
 
-  @HiveField(62)
+  @HiveField(61)
   String? skinHairType;
 
-  @HiveField(63)
+  @HiveField(62)
   String? beautyWeightVolume;
 
-  @HiveField(64)
+  @HiveField(63)
   String? beautyExpiryDate;
 
-  @HiveField(65)
+  @HiveField(64)
   String? dermatologicallyTested;
 
   // Jewellery attributes
-  @HiveField(66)
+  @HiveField(65)
   String? jewelleryMaterial;
 
-  @HiveField(67)
+  @HiveField(66)
   String? purity;
 
-  @HiveField(68)
+  @HiveField(67)
   String? jewelleryWeight;
 
-  @HiveField(69)
+  @HiveField(68)
   String? jewelleryColor;
 
-  @HiveField(70)
+  @HiveField(69)
   String? jewellerySize;
 
-  @HiveField(71)
+  @HiveField(70)
   String? gemstone;
 
-  @HiveField(72)
+  @HiveField(71)
   String? certification;
 
-  @HiveField(73)
+  @HiveField(72)
   String? occasion;
 
   // Book attributes
-  @HiveField(74)
+  @HiveField(73)
   String? title;
 
-  @HiveField(75)
+  @HiveField(74)
   String? author;
 
-  @HiveField(76)
+  @HiveField(75)
   String? publisher;
 
-  @HiveField(77)
+  @HiveField(76)
   String? edition;
 
-  @HiveField(78)
+  @HiveField(77)
   String? language;
 
-  @HiveField(79)
+  @HiveField(78)
   String? isbn;
 
-  @HiveField(80)
+  @HiveField(79)
   String? pages;
 
-  @HiveField(81)
+  @HiveField(80)
   String? binding;
 
-  @HiveField(82)
+  @HiveField(81)
   String? genre;
 
   ProductModel({
@@ -280,27 +280,23 @@ class ProductModel extends HiveObject {
     required this.description,
     required this.category,
     required this.subcategory,
-    required this.sku,
+    required this.baseSku,
     required this.brand,
     required this.price,
     required this.offerPrice,
-    required this.stock,
     required this.rating,
     required this.timestamp,
     required this.images,
     this.sellerId,
     required this.cashOnDelivery,
-
-    // Category-specific attributes with default values
-    this.color,
+    required this.sizeVariants,
+    this.colorOptions,
     this.material,
     this.fit,
     this.pattern,
     this.sleeveType,
     this.careInstruction,
-    this.size,
-    this.footwearSize,
-    this.footwearColor,
+    this.sizeOptions,
     this.footwearMaterial,
     this.footwearType,
     this.gender,
@@ -363,34 +359,30 @@ class ProductModel extends HiveObject {
   });
 
   // Helper method to get all attributes as a map for easy Excel import/export
-  Map<String, dynamic> toExcelMap() {
+  Map<String, dynamic> toMap() {
     return {
       'productId': productId,
       'name': name,
       'description': description,
       'category': category,
       'subcategory': subcategory,
-      'sku': sku,
+      'baseSku': baseSku,
       'brand': brand,
       'price': price,
       'offerPrice': offerPrice,
-      'stock': stock,
       'rating': rating,
       'timestamp': timestamp,
-      'images': images.join(';'),
+      'images': images,
       'sellerId': sellerId,
       'cashOnDelivery': cashOnDelivery,
-
-      // Category-specific attributes
-      'color': color,
+      'sizeVariants': sizeVariants.map((v) => v.toMap()).toList(),
+      'colorOptions': colorOptions,
       'material': material,
       'fit': fit,
       'pattern': pattern,
       'sleeveType': sleeveType,
       'careInstruction': careInstruction,
-      'size': size,
-      'footwearSize': footwearSize,
-      'footwearColor': footwearColor,
+      'sizeOptions': sizeOptions,
       'footwearMaterial': footwearMaterial,
       'footwearType': footwearType,
       'gender': gender,
@@ -453,37 +445,35 @@ class ProductModel extends HiveObject {
     };
   }
 
-  // Factory method to create a Product from Excel row data
-  factory ProductModel.fromExcelMap(Map<String, dynamic> map) {
+  // Create from Map
+  factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
       productId: map['productId'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       category: map['category'] ?? '',
       subcategory: map['subcategory'] ?? '',
-      sku: map['sku'] ?? '',
+      baseSku: map['baseSku'] ?? '',
       brand: map['brand'] ?? '',
-      price: double.tryParse(map['price']?.toString() ?? '0') ?? 0,
-      offerPrice: double.tryParse(map['offerPrice']?.toString() ?? '0') ?? 0,
-      stock: int.tryParse(map['stock']?.toString() ?? '0') ?? 0,
-      rating: double.tryParse(map['rating']?.toString() ?? '0') ?? 0,
-      timestamp: map['timestamp']?.toDate(),
-      images: (map['images']?.toString().split(';') ?? [])
-          .where((e) => e.isNotEmpty)
-          .toList(),
+      price: (map['price'] ?? 0).toDouble(),
+      offerPrice: (map['offerPrice'] ?? 0).toDouble(),
+      rating: (map['rating'] ?? 0).toDouble(),
+      timestamp: map['timestamp'] ?? Timestamp.now(),
+      images: List<String>.from(map['images'] ?? []),
       sellerId: map['sellerId'],
-      cashOnDelivery: map['cashOnDelivery'],
-
-      // Category-specific attributes
-      color: map['color'],
+      cashOnDelivery: map['cashOnDelivery'] ?? false,
+      sizeVariants:
+          (map['sizeVariants'] as List<dynamic>?)
+              ?.map((v) => SizeVariant.fromMap(Map<String, dynamic>.from(v)))
+              .toList() ??
+          [],
+      colorOptions: List<String>.from(map['colorOptions'] ?? []),
       material: map['material'],
       fit: map['fit'],
       pattern: map['pattern'],
       sleeveType: map['sleeveType'],
       careInstruction: map['careInstruction'],
-      size: map['size'],
-      footwearSize: map['footwearSize'],
-      footwearColor: map['footwearColor'],
+      sizeOptions: List<String>.from(map['sizeOptions'] ?? []),
       footwearMaterial: map['footwearMaterial'],
       footwearType: map['footwearType'],
       gender: map['gender'],
@@ -544,145 +534,5 @@ class ProductModel extends HiveObject {
       binding: map['binding'],
       genre: map['genre'],
     );
-  }
-
-  // Helper method to get category-specific attributes as a map
-  Map<String, dynamic> getCategoryAttributes() {
-    switch (category.toLowerCase()) {
-      case 'clothing':
-        return {
-          'Color': color,
-          'Material': material,
-          'Fit': fit,
-          'Pattern': pattern,
-          'Sleeve Type': sleeveType,
-          'Care Instruction': careInstruction,
-          'Size': size,
-        };
-      case 'footwear':
-        return {
-          'Size': footwearSize,
-          'Color': footwearColor,
-          'Material': footwearMaterial,
-          'Type': footwearType,
-          'Gender': gender,
-        };
-      case 'mobile':
-        return {
-          'Model': model,
-          'Color': mobileColor,
-          'Ram': ram,
-          'Storage': storage,
-          'Battery': battery,
-          'Camera': camera,
-          'Processor': processor,
-          'Display': display,
-          'OS': os,
-          'Connectivity': connectivity,
-          'Warranty': warranty,
-        };
-      case 'laptop':
-        return {
-          'Model': model,
-          'Graphics': graphics,
-          'Ram': ram,
-          'Storage': storage,
-          'Battery': battery,
-          'Camera': camera,
-          'Processor': processor,
-          'Display': display,
-          'OS': os,
-          'Connectivity': connectivity,
-          'Warranty': warranty,
-          'Screen Size': screenSize,
-          'Operating System': operatingSystem,
-          'Port': port,
-          'Weight': weight,
-        };
-      case 'electronics':
-        return {
-          'Model': model,
-          'Screen Size': screenSize,
-          'Resolution': resolution,
-          'Display Type': displayType,
-          'Smart Features': smartFeatures,
-          'Connectivity': connectivity,
-          'Energy Rating': energyRating,
-          'Power Consumption': powerConsumption,
-          'Warranty': warranty,
-        };
-      case 'furniture':
-        return {
-          'Material': material,
-          'Color': color,
-          'Dimension': dimension,
-          'Weight Capacity': weightCapacity,
-          'Assembly': assembly,
-          'Style': style,
-          'Room Type': roomType,
-          'Warranty': warranty,
-        };
-      case 'grocery':
-        return {
-          'Weight/Volume': weightVolume,
-          'Quantity': quantity,
-          'Organic/Non Organic': organic,
-          'Expiry Date': expiryDate,
-          'Storage Instruction': storageInstruction,
-          'Dietary Preference': dietaryPreference,
-        };
-      case 'beauty':
-        return {
-          'Shade/Color': shadeColor,
-          'Type': beautyType,
-          'Ingredients': ingredients,
-          'Skin/Hair Type': skinHairType,
-          'Weight/Volume': beautyWeightVolume,
-          'Expiry Date': beautyExpiryDate,
-          'Dermatologically Tested': dermatologicallyTested,
-        };
-      case 'jewellery':
-        return {
-          'Material': jewelleryMaterial,
-          'Purity': purity,
-          'Weight': jewelleryWeight,
-          'Color': jewelleryColor,
-          'Size': jewellerySize,
-          'Gemstone': gemstone,
-          'Certification': certification,
-          'Occasion': occasion,
-        };
-      case 'book':
-        return {
-          'Title': title,
-          'Author': author,
-          'Publisher': publisher,
-          'Edition': edition,
-          'Language': language,
-          'ISBN': isbn,
-          'Pages': pages,
-          'Binding': binding,
-          'Genre': genre,
-        };
-      default:
-        return {};
-    }
-  }
-
-  // Calculate discount percentage
-  double get discountPercentage {
-    if (price == 0) return 0;
-    return ((price - offerPrice) / price) * 100;
-  }
-
-  // Check if product is in stock
-  bool get isInStock => stock > 0;
-
-  // Check if product is on sale
-  bool get isOnSale => offerPrice < price;
-
-  @override
-  String toString() {
-    return 'Product{productId: $productId, name: $name, category: $category, price: $price, stock: $stock}';
   }
 }
