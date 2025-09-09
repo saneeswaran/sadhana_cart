@@ -32,7 +32,7 @@ class ProductModel extends HiveObject {
   String subcategory;
 
   @HiveField(5)
-  String baseSku; // Base SKU without size/color variants
+  String baseSku;
 
   @HiveField(6)
   String brand;

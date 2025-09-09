@@ -19,20 +19,26 @@ class SubcategoryModelAdapter extends TypeAdapter<SubcategoryModel> {
     return SubcategoryModel(
       id: fields[0] as String,
       name: fields[1] as String,
-      categoryId: fields[2] as String,
+      categoryName: fields[2] as String,
+      createdAt: fields[3] as Timestamp?,
+      updatedAt: fields[4] as Timestamp?,
     );
   }
 
   @override
   void write(BinaryWriter writer, SubcategoryModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.categoryId);
+      ..write(obj.categoryName)
+      ..writeByte(3)
+      ..write(obj.createdAt)
+      ..writeByte(4)
+      ..write(obj.updatedAt);
   }
 
   @override

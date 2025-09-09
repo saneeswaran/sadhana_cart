@@ -4,15 +4,26 @@ import 'package:sadhana_cart/core/common%20repo/subcategory/subcategory_state.da
 import 'package:sadhana_cart/core/common%20services/subcategory/subcategory_service.dart';
 
 final subcategoryProvider =
-    StateNotifierProvider<SubcategoryNotifier, SubcategoryState>(
+    StateNotifierProvider.autoDispose<SubcategoryNotifier, SubcategoryState>(
       (ref) => SubcategoryNotifier(),
     );
 
-final getSpecificSubcategoryByCategoryProvider = FutureProvider.autoDispose
-    .family<List<SubcategoryModel>, String>((ref, category) async {
-      return await SubcategoryService.fetchSubcategory();
-    });
-
 class SubcategoryNotifier extends StateNotifier<SubcategoryState> {
   SubcategoryNotifier() : super(SubcategoryState.initial());
+
+  Future<List<SubcategoryModel>> fetchSubcategoryByCategoryName({
+    required String categoryName,
+  }) async {
+    try {
+      state = state.copyWith(isLoading: true, error: null, subcategory: []);
+      final data = await SubcategoryService.fetchSubcategoryByCategoryName(
+        category: categoryName,
+      );
+      state = state.copyWith(isLoading: false, subcategory: data, error: null);
+      return data;
+    } catch (e) {
+      state.copyWith(isLoading: false, error: e.toString(), subcategory: []);
+    }
+    return [];
+  }
 }

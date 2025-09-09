@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20repo/category/category_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/features/category/view/subcategory_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CategoriesListMobile extends ConsumerWidget {
@@ -41,18 +43,26 @@ class CategoriesListMobile extends ConsumerWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        height: size.height * 0.06,
-                        width: size.width * 0.12,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: CachedNetworkImageProvider(
-                              cat.image,
-                              cacheKey: cat.id,
+                      child: GestureDetector(
+                        onTap: () {
+                          navigateTo(
+                            context: context,
+                            screen: SubcategoryPage(categoryName: cat.name),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          height: size.height * 0.06,
+                          width: size.width * 0.12,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: CachedNetworkImageProvider(
+                                cat.image,
+                                cacheKey: cat.id,
+                              ),
+                              fit: BoxFit.contain,
                             ),
-                            fit: BoxFit.contain,
                           ),
                         ),
                       ),

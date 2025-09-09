@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
 
 part 'subcategory_model.g.dart';
@@ -12,22 +13,40 @@ class SubcategoryModel extends HiveObject {
   @HiveField(1)
   final String name;
   @HiveField(2)
-  final String categoryId;
+  final String categoryName;
+  @HiveField(3)
+  final Timestamp? createdAt;
+  @HiveField(4)
+  final Timestamp? updatedAt;
   SubcategoryModel({
     required this.id,
     required this.name,
-    required this.categoryId,
+    required this.categoryName,
+    this.createdAt,
+    this.updatedAt,
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'id': id, 'name': name, 'categoryId': categoryId};
+    return <String, dynamic>{
+      'id': id,
+      'name': name,
+      'categoryName': categoryName,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
   }
 
   factory SubcategoryModel.fromMap(Map<String, dynamic> map) {
     return SubcategoryModel(
       id: map['id'] as String,
       name: map['name'] as String,
-      categoryId: map['categoryId'] as String,
+      categoryName: map['categoryName'] as String,
+      createdAt: map['createdAt'] != null
+          ? map['createdAt'] as Timestamp
+          : null,
+      updatedAt: map['updatedAt'] != null
+          ? map['updatedAt'] as Timestamp
+          : null,
     );
   }
 
