@@ -38,7 +38,7 @@ class ProductModelAdapter extends TypeAdapter<ProductModel> {
       pattern: fields[18] as String?,
       sleeveType: fields[19] as String?,
       careInstruction: fields[20] as String?,
-      size: fields[21] as String?,
+      size: (fields[21] as List?)?.cast<String>(),
       footwearSize: (fields[22] as List?)?.cast<String>(),
       footwearColor: (fields[23] as List?)?.cast<String>(),
       footwearMaterial: fields[24] as String?,

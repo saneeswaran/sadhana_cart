@@ -4,6 +4,7 @@ import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rat
 import 'package:sadhana_cart/core/ui_template/foot_wear/view/laptop_additional_information.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
+import 'package:sadhana_cart/features/home%20screen/widgets/product%20details/view/clothing/widget/clothing%20details/rating_tile.dart';
 
 class LaptopTemplate extends StatelessWidget {
   final ProductModel product;
@@ -29,6 +30,12 @@ class LaptopTemplate extends StatelessWidget {
             CustomCarouselSlider(product: product),
             ProductPriceRating(product: product),
             LaptopAdditionalInformation(product: product),
+            RatingTile(
+              imageUrl: product.images[0],
+              name: "This is the placeholder",
+              rating: 4.5,
+              review: "This is the placeholder",
+            ),
           ],
         ),
       ),

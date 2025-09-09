@@ -80,7 +80,7 @@ class ProductModel extends HiveObject {
   String? careInstruction;
 
   @HiveField(21)
-  String? size;
+  List<String>? size;
 
   // Footwear attributes
   @HiveField(22)

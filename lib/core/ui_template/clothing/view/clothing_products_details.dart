@@ -8,9 +8,8 @@ import 'package:sadhana_cart/core/constants/constants.dart';
 import 'package:sadhana_cart/core/widgets/color_list_tile.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
-import 'package:sadhana_cart/core/widgets/custom_progress_indicator.dart';
 import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
-import 'package:sadhana_cart/features/home%20screen/widgets/product%20details/view/clothing/widget/clothing%20details/rating_tile.dart';
+import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
   final ProductModel product;
@@ -35,7 +34,6 @@ class ClothingProductsDetails extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
             CustomCarouselSlider(product: product),
-
             Container(
               padding: const EdgeInsets.all(10),
               width: size.width * 1,
@@ -103,33 +101,6 @@ class ClothingProductsDetails extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // Expanded(
-                        //   child: _colorTile(
-                        //     text: "Size",
-                        //     widget: Wrap(
-                        //       children: List.generate(
-                        //         product.attributes["Size"].length,
-                        //         (index) {
-                        //           final size =
-                        //               product.attributes["Size"][index];
-                        //           return Container(
-                        //             height: 40,
-                        //             width: 40,
-                        //             margin: const EdgeInsets.symmetric(
-                        //               horizontal: 5,
-                        //               vertical: 5,
-                        //             ),
-                        //             decoration: BoxDecoration(
-                        //               shape: BoxShape.circle,
-                        //               color: Colors.grey.shade300,
-                        //             ),
-                        //             child: Center(child: Text(size)),
-                        //           );
-                        //         },
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -207,18 +178,6 @@ class ClothingProductsDetails extends StatelessWidget {
                         ],
                       ),
                     ],
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: CustomProgressIndicator(
-                      ratingData: [
-                        {"stars": 5, "percentage": 100},
-                        {"stars": 4, "percentage": 60},
-                        {"stars": 3, "percentage": 10},
-                        {"stars": 2, "percentage": 23},
-                        {"stars": 1, "percentage": 46},
-                      ],
-                    ),
                   ),
                   const SizedBox(height: 20),
                   ListView.builder(
