@@ -13,7 +13,7 @@ class SubcategoryModel extends HiveObject {
   @HiveField(1)
   final String name;
   @HiveField(2)
-  final String categoryName;
+  final String category;
   @HiveField(3)
   final Timestamp? createdAt;
   @HiveField(4)
@@ -21,7 +21,7 @@ class SubcategoryModel extends HiveObject {
   SubcategoryModel({
     required this.id,
     required this.name,
-    required this.categoryName,
+    required this.category,
     this.createdAt,
     this.updatedAt,
   });
@@ -30,7 +30,7 @@ class SubcategoryModel extends HiveObject {
     return <String, dynamic>{
       'id': id,
       'name': name,
-      'categoryName': categoryName,
+      'category': category,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
@@ -40,7 +40,7 @@ class SubcategoryModel extends HiveObject {
     return SubcategoryModel(
       id: map['id'] as String,
       name: map['name'] as String,
-      categoryName: map['categoryName'] as String,
+      category: map['category'] as String,
       createdAt: map['createdAt'] != null
           ? map['createdAt'] as Timestamp
           : null,
