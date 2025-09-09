@@ -4,7 +4,6 @@ import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rat
 import 'package:sadhana_cart/core/ui_template/head%20phones/widgets/product_detail_row.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
-import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
 import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
 
 class HeadPhoneTemplate extends StatefulWidget {

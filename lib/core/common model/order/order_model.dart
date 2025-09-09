@@ -1,8 +1,12 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+
 class OrderModel {
+  final int quantity;
   final String userId;
   final double totalAmount;
   final String address;
@@ -13,8 +17,9 @@ class OrderModel {
   final String orderDate;
   final String orderId;
   final Timestamp createdAt;
-  final List<Map<String, dynamic>> products;
+  final List<ProductModel> products;
   OrderModel({
+    required this.quantity,
     required this.userId,
     required this.totalAmount,
     required this.address,
@@ -40,12 +45,13 @@ class OrderModel {
       'orderDate': orderDate,
       'orderId': orderId,
       'createdAt': createdAt,
-      'products': products,
+      'products': products.map((x) => x.toMap()).toList(),
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
+      quantity: map['quantity'] as int,
       userId: map['userId'] as String,
       totalAmount: map['totalAmount'] as double,
       address: map['address'] as String,
@@ -56,7 +62,11 @@ class OrderModel {
       orderDate: map['orderDate'] as String,
       orderId: map['orderId'] as String,
       createdAt: map['createdAt'] as Timestamp,
-      products: map['products'] as List<Map<String, dynamic>>,
+      products: List<ProductModel>.from(
+        (map['products'] as List<int>).map<ProductModel>(
+          (x) => ProductModel.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
     );
   }
 
@@ -64,4 +74,34 @@ class OrderModel {
 
   factory OrderModel.fromJson(String source) =>
       OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  OrderModel copyWith({
+    String? userId,
+    double? totalAmount,
+    String? address,
+    int? phoneNumber,
+    double? latitude,
+    double? longitude,
+    String? orderStatus,
+    String? orderDate,
+    String? orderId,
+    Timestamp? createdAt,
+    List<ProductModel>? products,
+    int? quantity,
+  }) {
+    return OrderModel(
+      quantity: quantity ?? this.quantity,
+      userId: userId ?? this.userId,
+      totalAmount: totalAmount ?? this.totalAmount,
+      address: address ?? this.address,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      orderStatus: orderStatus ?? this.orderStatus,
+      orderDate: orderDate ?? this.orderDate,
+      orderId: orderId ?? this.orderId,
+      createdAt: createdAt ?? this.createdAt,
+      products: products ?? this.products,
+    );
+  }
 }
