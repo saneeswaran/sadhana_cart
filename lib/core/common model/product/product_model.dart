@@ -535,4 +535,124 @@ class ProductModel extends HiveObject {
       genre: map['genre'],
     );
   }
+  Map<String, dynamic> getCategoryAttributes() {
+    switch (category.toLowerCase()) {
+      case 'clothing':
+        return {
+          'Color': colorOptions ?? [],
+          'Material': material ?? 'Not specified',
+          'Fit': fit ?? 'Not specified',
+          'Pattern': pattern ?? 'Not specified',
+          'Sleeve Type': sleeveType ?? 'Not specified',
+          'Care Instruction': careInstruction ?? 'Not specified',
+          'Available Sizes': sizeOptions ?? [],
+        };
+      case 'footwear':
+        return {
+          'Available Sizes': sizeVariants.map((v) => v.size).toList(),
+          'Available Colors': colorOptions ?? [],
+          'Material': footwearMaterial ?? 'Not specified',
+          'Type': footwearType ?? 'Not specified',
+          'Gender': gender ?? 'Not specified',
+        };
+      case 'mobile':
+        return {
+          'Model': model ?? 'Not specified',
+          'Color': mobileColor ?? 'Not specified',
+          'RAM': ram ?? 'Not specified',
+          'Storage': storage ?? 'Not specified',
+          'Battery': battery ?? 'Not specified',
+          'Camera': camera ?? 'Not specified',
+          'Processor': processor ?? 'Not specified',
+          'Display': display ?? 'Not specified',
+          'Operating System': os ?? 'Not specified',
+          'Connectivity': connectivity ?? 'Not specified',
+          'Warranty': warranty ?? 'Not specified',
+        };
+      case 'laptop':
+        return {
+          'Model': model ?? 'Not specified',
+          'Graphics': graphics ?? 'Not specified',
+          'RAM': ram ?? 'Not specified',
+          'Storage': storage ?? 'Not specified',
+          'Battery': battery ?? 'Not specified',
+          'Camera': camera ?? 'Not specified',
+          'Processor': processor ?? 'Not specified',
+          'Display': display ?? 'Not specified',
+          'Operating System': os ?? 'Not specified',
+          'Connectivity': connectivity ?? 'Not specified',
+          'Warranty': warranty ?? 'Not specified',
+          'Screen Size': screenSize ?? 'Not specified',
+          'Ports': port ?? 'Not specified',
+          'Weight': weight ?? 'Not specified',
+        };
+      case 'electronics':
+        return {
+          'Model': model ?? 'Not specified',
+          'Screen Size': screenSize ?? 'Not specified',
+          'Resolution': resolution ?? 'Not specified',
+          'Display Type': displayType ?? 'Not specified',
+          'Smart Features': smartFeatures ?? 'Not specified',
+          'Connectivity': connectivity ?? 'Not specified',
+          'Energy Rating': energyRating ?? 'Not specified',
+          'Power Consumption': powerConsumption ?? 'Not specified',
+          'Warranty': warranty ?? 'Not specified',
+        };
+      case 'furniture':
+        return {
+          'Material': material ?? 'Not specified',
+          'Color': colorOptions?.join(', ') ?? 'Not specified',
+          'Dimension': dimension ?? 'Not specified',
+          'Weight Capacity': weightCapacity ?? 'Not specified',
+          'Assembly': assembly ?? 'Not specified',
+          'Style': style ?? 'Not specified',
+          'Room Type': roomType ?? 'Not specified',
+          'Warranty': warranty ?? 'Not specified',
+        };
+      case 'grocery':
+        return {
+          'Weight/Volume': weightVolume ?? 'Not specified',
+          'Quantity': quantity ?? 'Not specified',
+          'Organic': organic ?? 'Not specified',
+          'Expiry Date': expiryDate ?? 'Not specified',
+          'Storage Instruction': storageInstruction ?? 'Not specified',
+          'Dietary Preference': dietaryPreference ?? 'Not specified',
+        };
+      case 'beauty':
+        return {
+          'Shade/Color': shadeColor ?? 'Not specified',
+          'Type': beautyType ?? 'Not specified',
+          'Ingredients': ingredients ?? 'Not specified',
+          'Skin/Hair Type': skinHairType ?? 'Not specified',
+          'Weight/Volume': beautyWeightVolume ?? 'Not specified',
+          'Expiry Date': beautyExpiryDate ?? 'Not specified',
+          'Dermatologically Tested': dermatologicallyTested ?? 'Not specified',
+        };
+      case 'jewellery':
+        return {
+          'Material': jewelleryMaterial ?? 'Not specified',
+          'Purity': purity ?? 'Not specified',
+          'Weight': jewelleryWeight ?? 'Not specified',
+          'Color': jewelleryColor ?? 'Not specified',
+          'Size': jewellerySize ?? 'Not specified',
+          'Gemstone': gemstone ?? 'Not specified',
+          'Certification': certification ?? 'Not specified',
+          'Occasion': occasion ?? 'Not specified',
+        };
+      case 'book':
+        return {
+          'Title': title ?? 'Not specified',
+          'Author': author ?? 'Not specified',
+          'Publisher': publisher ?? 'Not specified',
+          'Edition': edition ?? 'Not specified',
+          'Language': language ?? 'Not specified',
+          'ISBN': isbn ?? 'Not specified',
+          'Pages': pages ?? 'Not specified',
+          'Binding': binding ?? 'Not specified',
+          'Genre': genre ?? 'Not specified',
+        };
+      default:
+        return {};
+    }
+  }
 }
