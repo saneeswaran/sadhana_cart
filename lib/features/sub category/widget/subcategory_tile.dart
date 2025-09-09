@@ -13,34 +13,45 @@ class SubcategoryTile extends ConsumerWidget {
     final Size size = MediaQuery.of(context).size;
     final subcategory = ref.watch(subcategoryProvider);
     final subIndex = ref.watch(subCategorySelected);
-    return ListView.builder(
-      itemCount: subcategory.subcategory.length,
-      scrollDirection: Axis.horizontal,
-      physics: const AlwaysScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        final sub = subcategory.subcategory[index];
-        final isSelected = index == subIndex;
-        return Container(
-          height: size.height * 0.05,
-          width: size.width,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.horizontal(
-              left: Radius.circular(20),
-              right: Radius.circular(20),
-            ),
-            color: isSelected ? AppColor.primaryColor : Colors.grey.shade200,
-          ),
-          child: Center(
-            child: Text(
-              sub.name,
-              style: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-                fontWeight: FontWeight.w400,
+    return SizedBox(
+      height: size.height * 0.05,
+      width: size.width * 1,
+      child: ListView.builder(
+        itemCount: subcategory.subcategory.length,
+        scrollDirection: Axis.horizontal,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final sub = subcategory.subcategory[index];
+          final isSelected = index == subIndex;
+          return GestureDetector(
+            onTap: () {
+              ref.read(subCategorySelected.notifier).state = index;
+            },
+            child: Container(
+              height: size.height * 0.05,
+              width: size.width,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.horizontal(
+                  left: Radius.circular(20),
+                  right: Radius.circular(20),
+                ),
+                color: isSelected
+                    ? AppColor.primaryColor
+                    : Colors.grey.shade200,
+              ),
+              child: Center(
+                child: Text(
+                  sub.name,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.black,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }

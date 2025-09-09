@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20repo/subcategory/subcategory_notifier.dart';
 import 'package:sadhana_cart/core/skeletonizer/subcategory_loader.dart';
+import 'package:sadhana_cart/features/sub%20category/widget/subcategory_tile.dart';
 
 class SubcategoryPage extends ConsumerStatefulWidget {
   final String categoryName;
@@ -15,9 +16,11 @@ class _SubcategoryPageState extends ConsumerState<SubcategoryPage> {
   @override
   void initState() {
     super.initState();
-    ref
-        .read(subcategoryProvider.notifier)
-        .fetchSubcategoryByCategoryName(categoryName: widget.categoryName);
+    Future.microtask(() {
+      ref
+          .read(subcategoryProvider.notifier)
+          .fetchSubcategoryByCategoryName(categoryName: widget.categoryName);
+    });
   }
 
   @override
@@ -30,6 +33,36 @@ class _SubcategoryPageState extends ConsumerState<SubcategoryPage> {
     if (subcategory.error != null) {
       return const Center(child: Text("Error"));
     }
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          widget.categoryName,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: const Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            Text(
+              "Subcategory",
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SubcategoryTile(),
+          ],
+        ),
+      ),
+    );
   }
 }
