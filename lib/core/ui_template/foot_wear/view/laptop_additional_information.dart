@@ -99,7 +99,7 @@ class LaptopAdditionalInformation extends StatelessWidget {
           if (product.weight != null)
             WidgetTemplate.productDetailsRowTemplate(
               title: "Weight",
-              value: product.weight!,
+              value: product.weight!.toString(),
               isGiveSpaceAtlast: false,
             ),
           if (product.dimension != null)

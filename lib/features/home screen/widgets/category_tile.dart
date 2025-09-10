@@ -21,9 +21,7 @@ class CategoryTile extends ConsumerWidget {
           final category = categories[index];
 
           return GestureDetector(
-            onTap: () {
-              // TODO: Add navigation to category page
-            },
+            onTap: () {},
             child: Container(
               margin: const EdgeInsets.only(right: 12),
               width: size.width * 0.35,

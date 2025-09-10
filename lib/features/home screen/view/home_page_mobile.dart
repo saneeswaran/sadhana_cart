@@ -5,7 +5,6 @@ import 'package:sadhana_cart/features/home%20screen/model/custom_home_page_drawe
 import 'package:sadhana_cart/features/home%20screen/widgets/banner_list_mobile.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/categories_list_mobile.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/category_tile.dart';
-import 'package:sadhana_cart/features/home%20screen/widgets/featured_product_tile.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/recommanded_product_tile.dart';
 import 'package:sadhana_cart/features/notification/view/notification_page_mobile.dart';
 

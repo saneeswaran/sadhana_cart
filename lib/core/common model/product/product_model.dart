@@ -11,9 +11,11 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class ProductModel {
   // Common Fields (Non-nullable)
+  final String productId;
   final String name;
   final String description;
   final String category;
@@ -27,7 +29,7 @@ class ProductModel {
   final List<String> images;
   final String sellerId;
   final bool cashOnDelivery;
-  final List<String> sizeVariants;
+  final List<SizeVariant> sizeVariants;
   final Timestamp? timestamp;
 
   // Fashion / Clothing
@@ -164,6 +166,7 @@ class ProductModel {
 
   ProductModel({
     // Required
+    required this.productId,
     required this.name,
     required this.description,
     required this.category,
@@ -295,6 +298,7 @@ class ProductModel {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'productId': productId,
       'name': name,
       'description': description,
       'category': category,
@@ -425,6 +429,7 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
+      productId: map['id'] as String,
       name: map['name'] as String,
       description: map['description'] as String,
       category: map['category'] as String,
@@ -438,7 +443,9 @@ class ProductModel {
       images: List<String>.from((map['images'] as List<String>)),
       sellerId: map['sellerId'] as String,
       cashOnDelivery: map['cashOnDelivery'] as bool,
-      sizeVariants: List<String>.from((map['sizeVariants'] as List<String>)),
+      sizeVariants: List<SizeVariant>.from(
+        (map['sizeVariants'] as List<SizeVariant>),
+      ),
       timestamp: map['timestamp'] != null
           ? (map['timestamp'] as Timestamp)
           : null,

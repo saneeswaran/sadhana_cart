@@ -62,12 +62,14 @@ class ClothingProductsDetails extends StatelessWidget {
                               spacing: 8,
                               runSpacing: 8,
                               children: List.generate(
-                                product.colorOptions?.length ?? 0,
+                                product.sizeVariants.length,
                                 (index) {
                                   final isSelected = index == selecIndex;
                                   final colorName =
-                                      product.colorOptions![index];
-                                  final color = getColorFromDatabase(colorName);
+                                      product.sizeVariants[index].color;
+                                  final color = getColorFromDatabase(
+                                    colorName!,
+                                  );
                                   final isWhite =
                                       color == AppColors.white.color;
 
