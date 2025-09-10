@@ -54,21 +54,22 @@ class FavoriteService {
   }
 
   static Future<bool> deleteFavorite({
-    required FavoriteModel favorite,
+    required String favoriteId,
     required WidgetRef ref,
   }) async {
     try {
-      final DocumentSnapshot documentSnapshot = await favoriteRef
-          .doc(favorite.favoriteId)
+      final QuerySnapshot querySnapshot = await favoriteRef
+          .where('favoriteId', isEqualTo: favoriteId)
+          .where('customerId', isEqualTo: currentUserId)
           .get();
 
-      if (documentSnapshot.exists) {
-        await documentSnapshot.reference.delete();
+      if (querySnapshot.docs.isNotEmpty) {
+        await querySnapshot.docs.first.reference.delete();
         //delete from local
-        await HiveHelper.deleteFavorite(key: favorite.productId);
+        await HiveHelper.deleteFavorite(key: favoriteId);
         ref
             .read(favoriteProvider.notifier)
-            .removeFromFavorite(favorite: favorite);
+            .removeFromFavorite(favProductId: favoriteId);
         return true;
       }
     } catch (e) {

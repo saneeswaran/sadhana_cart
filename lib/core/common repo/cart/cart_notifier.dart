@@ -55,7 +55,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     for (final cart in state) {
       final product = products.firstWhere((p) => p.productId == cart.productId);
 
-      total += product.price * cart.quantity;
+      total += product.offerPrice * cart.quantity;
     }
 
     return total;

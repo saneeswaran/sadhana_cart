@@ -1,21 +1,34 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20repo/favorite/favorite_notifier.dart';
+import 'package:sadhana_cart/core/common%20services/favorite/favorite_service.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 
-class FavoriteProductTile extends StatelessWidget {
+class FavoriteProductTile extends ConsumerWidget {
   const FavoriteProductTile({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
+    final fav = ref
+        .watch(favoriteProvider.notifier)
+        .getFavoriteProducts()
+        .toList();
+
+    if (fav.isEmpty) {
+      return const Expanded(child: Center(child: Text("No Favorites")));
+    }
     return Expanded(
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.6,
         ),
-        itemCount: 6,
+        itemCount: fav.length,
         itemBuilder: (context, index) {
+          final favorite = fav[index];
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -25,8 +38,11 @@ class FavoriteProductTile extends StatelessWidget {
                   width: size.width * 0.4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    image: const DecorationImage(
-                      image: AssetImage(AppImages.onboard),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                        favorite.images[0],
+                        cacheKey: favorite.productId,
+                      ),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -38,32 +54,38 @@ class FavoriteProductTile extends StatelessWidget {
                         elevation: 1,
                         shape: const CircleBorder(),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        _likedOnPress(
+                          context: context,
+                          ref: ref,
+                          favoriteId: favorite.productId,
+                        );
+                      },
                       icon: const Icon(Icons.favorite, color: Colors.red),
                     ),
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
                 child: Text(
-                  "Name",
+                  favorite.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 10),
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
                 child: Text(
-                  "${Constants.indianCurrency} 1000",
+                  "${Constants.indianCurrency} ${favorite.offerPrice}",
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -75,5 +97,19 @@ class FavoriteProductTile extends StatelessWidget {
         },
       ),
     );
+  }
+
+  void _likedOnPress({
+    required String favoriteId,
+    required WidgetRef ref,
+    required BuildContext context,
+  }) async {
+    final bool isSuccess = await FavoriteService.deleteFavorite(
+      favoriteId: favoriteId,
+      ref: ref,
+    );
+    if (isSuccess && context.mounted) {
+      successSnackBar(message: "Removed from favorites", context: context);
+    }
   }
 }

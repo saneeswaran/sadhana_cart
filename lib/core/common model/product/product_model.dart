@@ -31,6 +31,7 @@ class ProductModel {
   final bool cashOnDelivery;
   final List<SizeVariant> sizeVariants;
   final Timestamp? timestamp;
+  final DateTime? date;
 
   // Fashion / Clothing
   final String? material;
@@ -177,11 +178,12 @@ class ProductModel {
     required this.offerPrice,
     required this.totalStock,
     required this.rating,
-    required this.timestamp,
     required this.images,
     required this.sellerId,
     required this.cashOnDelivery,
     required this.sizeVariants,
+    this.timestamp,
+    this.date,
 
     // Optional
     this.material,
@@ -299,6 +301,7 @@ class ProductModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'productId': productId,
+      'date': date,
       'name': name,
       'description': description,
       'category': category,
@@ -430,6 +433,7 @@ class ProductModel {
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
       productId: map['id'] as String,
+      date: map['date'] as DateTime,
       name: map['name'] as String,
       description: map['description'] as String,
       category: map['category'] as String,

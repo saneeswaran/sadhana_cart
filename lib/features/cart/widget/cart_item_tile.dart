@@ -1,21 +1,30 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
-class CartItemTile extends StatelessWidget {
+class CartItemTile extends ConsumerWidget {
   const CartItemTile({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Set<ProductModel> cartProducts = ref
+        .watch(cartProvider.notifier)
+        .getCartProducts();
+    final cart = cartProducts.toList();
     final Size size = MediaQuery.of(context).size;
     return SizedBox(
       height: size.height * 0.5,
       width: size.width * 1,
       child: ListView.builder(
-        itemCount: 5,
+        itemCount: cart.length,
         shrinkWrap: true,
         physics: const ClampingScrollPhysics(),
         itemBuilder: (context, index) {
+          final car = cart[index];
+          final variant = car.sizeVariants[index];
           //outside container
           return Container(
             margin: const EdgeInsets.all(10),
@@ -39,8 +48,8 @@ class CartItemTile extends StatelessWidget {
                   height: size.height * 0.17,
                   width: size.width * 0.3,
                   decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage(AppImages.onboard2),
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(car.images[0]),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(12),
@@ -52,21 +61,21 @@ class CartItemTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "product Name",
+                      Text(
+                        car.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Text(
-                        "${Constants.indianCurrency} 445",
+                      Text(
+                        "${Constants.indianCurrency} ${car.offerPrice}",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.black,
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -74,29 +83,32 @@ class CartItemTile extends StatelessWidget {
                       ),
                       //more details
                       const SizedBox(height: 5),
-                      const Row(
-                        children: [
-                          Text(
-                            "Size : L",
-                            maxLines: 1,
-                            overflow: TextOverflow.clip,
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(width: 20),
-                          Text(
-                            "Color: Red",
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
+
+                      variant.color!.isNotEmpty && variant.size.isNotEmpty
+                          ? Row(
+                              children: [
+                                Text(
+                                  "Size : ${variant.color}",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.clip,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                const SizedBox(width: 20),
+                                Text(
+                                  "Color: ${variant.color}",
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
                       const SizedBox(height: 10),
                       _quantityContainer(size: size),
                     ],

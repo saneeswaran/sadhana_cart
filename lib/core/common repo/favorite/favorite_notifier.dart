@@ -36,14 +36,14 @@ class FavoriteNotifier extends StateNotifier<Set<FavoriteModel>> {
   }
 
   Set<ProductModel> getFavoriteProducts() {
-    final product = ref.watch(productProvider);
-    for (final favorite in state) {
-      return product.where((e) => e.productId == favorite.productId).toSet();
-    }
-    return {};
+    final products = ref.watch(productProvider);
+    final favoriteProductIds = state.map((e) => e.productId).toSet();
+    return products
+        .where((e) => favoriteProductIds.contains((e.productId)))
+        .toSet();
   }
 
-  void removeFromFavorite({required FavoriteModel favorite}) {
-    state = state.where((e) => e.productId != favorite.productId).toSet();
+  void removeFromFavorite({required String favProductId}) {
+    state = state.where((e) => e.productId != favProductId).toSet();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/common%20repo/dummy_product.dart';
+import 'package:sadhana_cart/core/common%20repo/category/category_notifier.dart';
 
 class CategoryTile extends ConsumerWidget {
   const CategoryTile({super.key});
@@ -9,7 +9,7 @@ class CategoryTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
-
+    final categories = ref.watch(categoryProvider);
     return SizedBox(
       height: size.height * 0.2,
       width: size.width,
