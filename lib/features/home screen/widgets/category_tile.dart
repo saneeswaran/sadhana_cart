@@ -1,12 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-<<<<<<< HEAD
-import 'package:sadhana_cart/core/common%20repo/dummy_product.dart';
-import 'package:sadhana_cart/core/ui_template/catagories/category_list_page.dart';
-=======
 import 'package:sadhana_cart/core/common%20repo/category/category_notifier.dart';
->>>>>>> 765a30664c52cb183c2304584bf5a6dcc740c6f6
 
 class CategoryTile extends ConsumerWidget {
   const CategoryTile({super.key});
@@ -26,27 +21,8 @@ class CategoryTile extends ConsumerWidget {
           final category = categories[index];
 
           return GestureDetector(
-<<<<<<< HEAD
-            onTap: () {
-              // Collect all products under this category
-              final categoryProducts = category.subcategories
-                  .expand((subcat) => subcat.products)
-                  .toList();
-
-              // Navigate to CategoryListPage with filtered products
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CategoryListPage(
-                    title: category.name,
-                    products: categoryProducts,
-                  ),
-                ),
-              );
-            },
-=======
             onTap: () {},
->>>>>>> 765a30664c52cb183c2304584bf5a6dcc740c6f6
+
             child: Container(
               margin: const EdgeInsets.only(right: 12),
               width: size.width * 0.35,

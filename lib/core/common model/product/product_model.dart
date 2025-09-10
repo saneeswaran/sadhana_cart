@@ -432,7 +432,7 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-<<<<<<< HEAD
+      totalStock: map['stock'] ?? 0,
       productId: map['productId'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
@@ -460,7 +460,6 @@ class ProductModel {
               ?.map((v) => SizeVariant.fromMap(Map<String, dynamic>.from(v)))
               .toList() ??
           [],
-      colorOptions: List<String>.from(map['colorOptions'] ?? []),
       material: map['material'],
       fit: map['fit'],
       pattern: map['pattern'],
@@ -526,52 +525,7 @@ class ProductModel {
       pages: map['pages'],
       binding: map['binding'],
       genre: map['genre'],
-=======
-      productId: map['id'] as String,
-      date: map['date'] as DateTime,
-      name: map['name'] as String,
-      description: map['description'] as String,
-      category: map['category'] as String,
-      subcategory: map['subcategory'] as String,
-      baseSku: map['baseSku'] as String,
-      brand: map['brand'] as String,
-      price: map['price'] as double,
-      offerPrice: map['offerPrice'] as double,
-      totalStock: map['totalStock'] as int,
-      rating: map['rating'] as double,
-      images: List<String>.from((map['images'] as List<String>)),
-      sellerId: map['sellerId'] as String,
-      cashOnDelivery: map['cashOnDelivery'] as bool,
-      sizeVariants: List<SizeVariant>.from(
-        (map['sizeVariants'] as List<SizeVariant>),
-      ),
-      timestamp: map['timestamp'] != null
-          ? (map['timestamp'] as Timestamp)
-          : null,
-      material: map['material'] != null ? map['material'] as String : null,
-      fit: map['fit'] != null ? map['fit'] as String : null,
-      pattern: map['pattern'] != null ? map['pattern'] as String : null,
-      sleeveType: map['sleeveType'] != null
-          ? map['sleeveType'] as String
-          : null,
-      careInstruction: map['careInstruction'] != null
-          ? map['careInstruction'] as String
-          : null,
-      sizeOptions: map['sizeOptions'] != null
-          ? List<String>.from((map['sizeOptions'] as List<String>))
-          : null,
-      hsnCode: map['hsnCode'] != null ? map['hsnCode'] as String : null,
-      weight: map['weight'] != null ? map['weight'] as double : null,
-      length: map['length'] != null ? map['length'] as double : null,
-      width: map['width'] != null ? map['width'] as double : null,
-      height: map['height'] != null ? map['height'] as double : null,
-      fitType: map['fitType'] != null ? map['fitType'] as String : null,
-      gender: map['gender'] != null ? map['gender'] as String : null,
-      neckType: map['neckType'] != null ? map['neckType'] as String : null,
-      occasion: map['occasion'] != null ? map['occasion'] as String : null,
-      stitchType: map['stitchType'] != null
-          ? map['stitchType'] as String
-          : null,
+
       vendor: map['vendor'] != null ? map['vendor'] as String : null,
       variantSku: map['variantSku'] != null
           ? map['variantSku'] as String
@@ -583,7 +537,6 @@ class ProductModel {
           ? map['embroideryStyle'] as String
           : null,
       lining: map['lining'] != null ? map['lining'] as String : null,
-      model: map['model'] != null ? map['model'] as String : null,
       neckStyle: map['neckStyle'] != null ? map['neckStyle'] as String : null,
       padType: map['padType'] != null ? map['padType'] as String : null,
       pockets: map['pockets'] != null ? map['pockets'] as String : null,
@@ -605,7 +558,6 @@ class ProductModel {
           ? map['specialFeatures'] as String
           : null,
       strapType: map['strapType'] != null ? map['strapType'] as String : null,
-      style: map['style'] != null ? map['style'] as String : null,
       transparent: map['transparent'] != null
           ? map['transparent'] as bool
           : null,
@@ -622,38 +574,9 @@ class ProductModel {
       waistStyle: map['waistStyle'] != null
           ? map['waistStyle'] as String
           : null,
-      mobileColor: map['mobileColor'] != null
-          ? map['mobileColor'] as String
-          : null,
-      ram: map['ram'] != null ? map['ram'] as String : null,
-      storage: map['storage'] != null ? map['storage'] as String : null,
-      battery: map['battery'] != null ? map['battery'] as String : null,
-      camera: map['camera'] != null ? map['camera'] as String : null,
-      processor: map['processor'] != null ? map['processor'] as String : null,
-      display: map['display'] != null ? map['display'] as String : null,
-      os: map['os'] != null ? map['os'] as String : null,
-      connectivity: map['connectivity'] != null
-          ? map['connectivity'] as String
-          : null,
-      warranty: map['warranty'] != null ? map['warranty'] as String : null,
       color: map['color'] != null ? map['color'] as String : null,
       designOptions: map['designOptions'] != null
           ? map['designOptions'] as String
-          : null,
-      resolution: map['resolution'] != null
-          ? map['resolution'] as String
-          : null,
-      displayType: map['displayType'] != null
-          ? map['displayType'] as String
-          : null,
-      smartFeatures: map['smartFeatures'] != null
-          ? map['smartFeatures'] as String
-          : null,
-      energyRating: map['energyRating'] != null
-          ? map['energyRating'] as String
-          : null,
-      powerConsumption: map['powerConsumption'] != null
-          ? map['powerConsumption'] as String
           : null,
       expDate: map['expDate'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['expDate'] as int)
@@ -663,92 +586,11 @@ class ProductModel {
       otherHighlights: map['otherHighlights'] != null
           ? map['otherHighlights'] as String
           : null,
-      jewelleryMaterial: map['jewelleryMaterial'] != null
-          ? map['jewelleryMaterial'] as String
-          : null,
-      purity: map['purity'] != null ? map['purity'] as String : null,
-      jewelleryWeight: map['jewelleryWeight'] != null
-          ? map['jewelleryWeight'] as double
-          : null,
-      jewelleryColor: map['jewelleryColor'] != null
-          ? map['jewelleryColor'] as String
-          : null,
-      jewellerySize: map['jewellerySize'] != null
-          ? map['jewellerySize'] as String
-          : null,
-      gemstone: map['gemstone'] != null ? map['gemstone'] as String : null,
-      certification: map['certification'] != null
-          ? map['certification'] as String
-          : null,
-      title: map['title'] != null ? map['title'] as String : null,
-      author: map['author'] != null ? map['author'] as String : null,
-      publisher: map['publisher'] != null ? map['publisher'] as String : null,
-      edition: map['edition'] != null ? map['edition'] as String : null,
-      language: map['language'] != null ? map['language'] as String : null,
-      isbn: map['isbn'] != null ? map['isbn'] as String : null,
-      pages: map['pages'] != null ? map['pages'] as int : null,
-      binding: map['binding'] != null ? map['binding'] as String : null,
-      genre: map['genre'] != null ? map['genre'] as String : null,
       frameMaterial: map['frameMaterial'] != null
           ? map['frameMaterial'] as String
           : null,
       mountingType: map['mountingType'] != null
           ? map['mountingType'] as String
-          : null,
-      shadeColor: map['shadeColor'] != null
-          ? map['shadeColor'] as String
-          : null,
-      beautyType: map['beautyType'] != null
-          ? map['beautyType'] as String
-          : null,
-      ingredients: map['ingredients'] != null
-          ? List<String>.from((map['ingredients'] as List<String>))
-          : null,
-      skinHairType: map['skinHairType'] != null
-          ? map['skinHairType'] as String
-          : null,
-      beautyWeightVolume: map['beautyWeightVolume'] != null
-          ? map['beautyWeightVolume'] as String
-          : null,
-      beautyExpiryDate: map['beautyExpiryDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['beautyExpiryDate'] as int)
-          : null,
-      dermatologicallyTested: map['dermatologicallyTested'] != null
-          ? map['dermatologicallyTested'] as bool
-          : null,
-      dimension: map['dimension'] != null ? map['dimension'] as String : null,
-      weightCapacity: map['weightCapacity'] != null
-          ? map['weightCapacity'] as String
-          : null,
-      assembly: map['assembly'] != null ? map['assembly'] as String : null,
-      roomType: map['roomType'] != null ? map['roomType'] as String : null,
-      weightVolume: map['weightVolume'] != null
-          ? map['weightVolume'] as String
-          : null,
-      quantity: map['quantity'] != null ? map['quantity'] as String : null,
-      organic: map['organic'] != null ? map['organic'] as bool : null,
-      expiryDate: map['expiryDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['expiryDate'] as int)
-          : null,
-      storageInstruction: map['storageInstruction'] != null
-          ? map['storageInstruction'] as String
-          : null,
-      dietaryPreference: map['dietaryPreference'] != null
-          ? map['dietaryPreference'] as String
-          : null,
-      graphics: map['graphics'] != null ? map['graphics'] as String : null,
-      screenSize: map['screenSize'] != null
-          ? map['screenSize'] as String
-          : null,
-      operatingSystem: map['operatingSystem'] != null
-          ? map['operatingSystem'] as String
-          : null,
-      port: map['port'] != null ? map['port'] as String : null,
-      footwearMaterial: map['footwearMaterial'] != null
-          ? map['footwearMaterial'] as String
-          : null,
-      footwearType: map['footwearType'] != null
-          ? map['footwearType'] as String
           : null,
       shoeSize: map['shoeSize'] != null ? map['shoeSize'] as String : null,
       heelHeight: map['heelHeight'] != null
@@ -758,7 +600,6 @@ class ProductModel {
           ? map['soleMaterial'] as String
           : null,
       toeShape: map['toeShape'] != null ? map['toeShape'] as String : null,
->>>>>>> 765a30664c52cb183c2304584bf5a6dcc740c6f6
     );
   }
 

@@ -4,23 +4,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/common%20repo/dummy_product.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 import 'package:sadhana_cart/core/ui_template/catagories/product_details_page.dart';
 
 class RecommandedProductTile extends ConsumerWidget {
-  RecommandedProductTile({super.key});
+  const RecommandedProductTile({super.key});
 
   // get all product and Shuffle
   List<ProductModel> getRandomProducts() {
-    List<ProductModel> allProducts = [];
-    for (var category in categories) {
-      for (var sub in category.subcategories) {
-        allProducts.addAll(sub.products);
-      }
-    }
-    allProducts.shuffle();
-    return allProducts.take(5).toList();
+    // for (var category in categories) {
+    //   for (var sub in category.subcategories) {
+    //     allProducts.addAll(sub.products);
+    //   }
+    // }
+    // allProducts.shuffle();
+    // return allProducts.take(5).toList();
+    return [];
   }
 
   @override

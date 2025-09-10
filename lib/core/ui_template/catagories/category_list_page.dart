@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/ui_template/catagories/product_details_page.dart';
 
 class CategoryListPage extends StatelessWidget {
   final String title;

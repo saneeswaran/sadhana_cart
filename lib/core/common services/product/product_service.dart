@@ -11,8 +11,6 @@ class ProductService {
   static final CollectionReference productRef = FirebaseFirestore.instance
       .collection(products);
 
-<<<<<<< HEAD
-=======
   static final FirebaseStorage storage = FirebaseStorage.instance;
 
   static Future<ProductFetchResult> fetchProductByPagination({
@@ -51,7 +49,6 @@ class ProductService {
     }
   }
 
->>>>>>> 765a30664c52cb183c2304584bf5a6dcc740c6f6
   static Future<List<ProductModel>> fetchProducts() async {
     try {
       final QuerySnapshot querySnapshot = await productRef.get();
