@@ -22,38 +22,41 @@ class CustomCarouselSlider extends ConsumerWidget {
 
     return Stack(
       children: [
-        CarouselSlider(
-          items: product.images
-              .map(
-                (e) => Container(
-                  height: size.height * 0.4,
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(e, cacheKey: e),
-                      fit: BoxFit.fitHeight,
+        Padding(
+          padding: const EdgeInsets.only(top: 55),
+          child: CarouselSlider(
+            items: product.images
+                .map(
+                  (e) => Container(
+                    height: size.height * 0.4,
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: CachedNetworkImageProvider(e, cacheKey: e),
+                        fit: BoxFit.fitHeight,
+                      ),
                     ),
                   ),
-                ),
-              )
-              .toList(),
-          carouselController: controller,
-          options: CarouselOptions(
-            height: size.height * 0.4,
-            autoPlay: true,
-            autoPlayInterval: const Duration(seconds: 4),
-            autoPlayAnimationDuration: const Duration(milliseconds: 800),
-            enlargeCenterPage: true,
-            viewportFraction: 1,
-            aspectRatio: 16 / 9,
-            scrollDirection: Axis.horizontal,
-            enableInfiniteScroll: true,
-            pauseAutoPlayOnTouch: true,
-            scrollPhysics: const BouncingScrollPhysics(),
-            onPageChanged: (index, reason) {
-              ref.read(carouselController.notifier).state = index;
-              log("Page changed: $index");
-            },
+                )
+                .toList(),
+            carouselController: controller,
+            options: CarouselOptions(
+              height: size.height * 0.4,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 4),
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              enlargeCenterPage: true,
+              viewportFraction: 1,
+              aspectRatio: 16 / 9,
+              scrollDirection: Axis.horizontal,
+              enableInfiniteScroll: true,
+              pauseAutoPlayOnTouch: true,
+              scrollPhysics: const BouncingScrollPhysics(),
+              onPageChanged: (index, reason) {
+                ref.read(carouselController.notifier).state = index;
+                log("Page changed: $index");
+              },
+            ),
           ),
         ),
         Padding(

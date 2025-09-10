@@ -4,7 +4,6 @@ import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/home%20screen/model/custom_home_page_drawer.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/banner_list_mobile.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/categories_list_mobile.dart';
-import 'package:sadhana_cart/features/home%20screen/widgets/category_tile.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/featured_product_tile.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/recommanded_product_tile.dart';
 import 'package:sadhana_cart/features/notification/view/notification_page_mobile.dart';
@@ -47,31 +46,31 @@ class HomePageMobile extends StatelessWidget {
           const SizedBox(width: 20),
         ],
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 30),
-              CategoriesListMobile(),
-              SizedBox(height: 20),
-              BannerListMobile(),
-              SizedBox(height: 20),
-              Text(
-                // "Featured Products",
-                "Categories",
+              const SizedBox(height: 30),
+              const CategoriesListMobile(),
+              const SizedBox(height: 20),
+              const BannerListMobile(),
+              const SizedBox(height: 20),
+              const Text(
+                "Featured Products",
+                // "Categories",
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
-              // FeaturedProductTile(),
-              CategoryTile(),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const FeaturedProductTile(),
+              // CategoryTile(),
+              const SizedBox(height: 20),
+              const Text(
                 "Recommended Products",
                 style: TextStyle(
                   color: Colors.black,
@@ -79,7 +78,7 @@ class HomePageMobile extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               RecommandedProductTile(),
             ],
           ),

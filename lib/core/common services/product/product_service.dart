@@ -7,46 +7,6 @@ class ProductService {
   static final CollectionReference productRef = FirebaseFirestore.instance
       .collection(products);
 
-  // static Future<ProductFetchResult> fetchProducts({
-  //   required Ref ref,
-  //   int limit = 10,
-  //   DocumentSnapshot? startAfter,
-  // }) async {
-  //   try {
-  //     ref.read(loadingProvider.notifier).state = true;
-
-  //     Query query = productRef
-  //         .orderBy("timestamp", descending: true)
-  //         .limit(limit);
-  //     if (startAfter != null) {
-  //       query = query.startAfterDocument(startAfter);
-  //     }
-
-  //     final querySnapshot = await query.get();
-
-  //     final data = querySnapshot.docs
-  //         .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
-  //         .toList();
-
-  //     for (final product in data) {
-  //       await HiveHelper.addProducts(product: product);
-  //     }
-
-  //     ref.read(loadingProvider.notifier).state = false;
-
-  //     return ProductFetchResult(
-  //       products: data,
-  //       lastDocument: querySnapshot.docs.isNotEmpty
-  //           ? querySnapshot.docs.last
-  //           : null,
-  //     );
-  //   } catch (e) {
-  //     log("ProductService fetch error: $e");
-  //     ref.read(loadingProvider.notifier).state = false;
-  //     return ProductFetchResult(products: [], lastDocument: null);
-  //   }
-  // }
-
   static Future<List<ProductModel>> fetchProducts() async {
     try {
       final QuerySnapshot querySnapshot = await productRef.get();

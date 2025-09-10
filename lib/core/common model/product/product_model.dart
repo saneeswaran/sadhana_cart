@@ -458,10 +458,18 @@ class ProductModel extends HiveObject {
       price: (map['price'] ?? 0).toDouble(),
       offerPrice: (map['offerPrice'] ?? 0).toDouble(),
       rating: (map['rating'] ?? 0).toDouble(),
-      timestamp: map['timestamp'] ?? Timestamp.now(),
+      timestamp: map['timestamp'] is Timestamp
+          ? map['timestamp']
+          : Timestamp.fromDate(
+              DateTime.parse(
+                map['timestamp'] ?? DateTime.now().toIso8601String(),
+              ),
+            ),
       images: List<String>.from(map['images'] ?? []),
       sellerId: map['sellerId'],
-      cashOnDelivery: map['cashOnDelivery'] ?? false,
+      cashOnDelivery: (map['cashOnDelivery'] is bool)
+          ? map['cashOnDelivery']
+          : ((map['cashOnDelivery'] ?? '').toString().toLowerCase() == 'yes'),
       sizeVariants:
           (map['sizeVariants'] as List<dynamic>?)
               ?.map((v) => SizeVariant.fromMap(Map<String, dynamic>.from(v)))

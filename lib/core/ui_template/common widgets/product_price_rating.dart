@@ -12,6 +12,7 @@ class ProductPriceRating extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Column(
       children: [
         Padding(
@@ -24,14 +25,17 @@ class ProductPriceRating extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                product.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              SizedBox(
+                width: size.width * 0.5,
+                child: Text(
+                  product.name,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               Text(
@@ -61,7 +65,7 @@ class ProductPriceRating extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 12),
-              const Text("(4)"),
+              // const Text("(4)"),
             ],
           ),
         ),
