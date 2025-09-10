@@ -3,13 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/colors/app_color_enum.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
-import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/ui_template/common widgets/product_price_rating.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
-import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing details/rating_tile.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
   final ProductModel product;
@@ -62,13 +60,13 @@ class ClothingProductsDetails extends StatelessWidget {
                               spacing: 8,
                               runSpacing: 8,
                               children: List.generate(
-                                product.sizeVariants!.length,
+                                product.sizeVariants?.length ?? 0,
                                 (index) {
                                   final isSelected = index == selecIndex;
                                   final colorName =
-                                      product.sizeVariants![index].color;
+                                      product.sizeVariants?[index].color;
                                   final color = getColorFromDatabase(
-                                    colorName!,
+                                    colorName ?? "black",
                                   );
                                   final isWhite =
                                       color == AppColors.white.color;
@@ -157,7 +155,7 @@ class ClothingProductsDetails extends StatelessWidget {
                           children: List.generate(
                             product.sizeOptions?.length ?? 0,
                             (index) {
-                              final sizeItem = product.sizeOptions![index];
+                              final sizeItem = product.sizeOptions?[index];
                               final isSelected = index == selectSize;
                               return GestureDetector(
                                 onTap: () {
@@ -184,7 +182,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                     ],
                                   ),
                                   child: Text(
-                                    sizeItem,
+                                    sizeItem ?? "",
                                     style: TextStyle(
                                       color: isSelected
                                           ? Colors.white
@@ -207,19 +205,19 @@ class ClothingProductsDetails extends StatelessWidget {
             const SizedBox(height: 20),
 
             /// Reviews
-            ListView.builder(
-              itemCount: 5,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return const RatingTile(
-                  imageUrl: AppImages.noProfile,
-                  name: "Sathish",
-                  rating: 4.9,
-                  review: "This product is really good",
-                );
-              },
-            ),
+            // ListView.builder(
+            //   itemCount: 5,
+            //   shrinkWrap: true,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   itemBuilder: (context, index) {
+            //     return const RatingTile(
+            //       imageUrl: AppImages.noProfile,
+            //       name: "Sathish",
+            //       rating: 4.9,
+            //       review: "This product is really good",
+            //     );
+            //   },
+            // ),
           ],
         ),
       ),

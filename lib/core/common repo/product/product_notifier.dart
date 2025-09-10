@@ -31,6 +31,12 @@ final productByBrandProvider = FutureProvider.autoDispose
       return await ProductService.getProductByBrands(brand: brand);
     });
 
+final getFutureproductProvider = FutureProvider<List<ProductModel>>((
+  ref,
+) async {
+  return await ProductService.getFeatureProducts();
+});
+
 class ProductNotifier extends StateNotifier<List<ProductModel>> {
   final Ref ref;
   ProductNotifier(this.ref) : super([]);

@@ -1,6 +1,6 @@
 class CategoryConstants {
   static const String footwear = 'Footwear';
-  static const String clothing = 'Clothing';
+  static const String fashion = 'Fashion';
   static const String mobile = 'Mobile';
   static const String electronics = 'Electronics';
   static const String accessories = 'Accessories';

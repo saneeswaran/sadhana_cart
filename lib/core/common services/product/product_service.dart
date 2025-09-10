@@ -128,4 +128,21 @@ class ProductService {
   }
 
   //pagination
+
+  static Future<List<ProductModel>> getFeatureProducts() async {
+    try {
+      final QuerySnapshot querySnapshot = await productRef.get();
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs
+            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .toList();
+      } else {
+        log("feature product not found");
+        return [];
+      }
+    } catch (e) {
+      log("ProductService fetch error: $e");
+      return [];
+    }
+  }
 }

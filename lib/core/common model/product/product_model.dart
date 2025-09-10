@@ -8,6 +8,10 @@
 //when they upload the product with bulk upload option... that thing is waste until they strictly follow the data structure
 //please explain and optimize the data structure to client
 //i don't have choice now.. if any good developer see this this if you can optimize the model please do
+
+//here import message
+//we mention datetime, timestamp also string.... because of the bulk upload option.. it don't have any option
+//if any developer see this means please don't curse us...
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class ProductModel {

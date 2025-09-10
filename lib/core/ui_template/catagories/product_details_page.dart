@@ -27,7 +27,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         widget.product.display != null ||
         widget.product.os != null;
 
-    if (!hasSpecs) return const SizedBox.shrink(); // hide section if no specs
+    if (!hasSpecs) return const SizedBox.shrink();
 
     return Column(
       children: [
@@ -163,30 +163,30 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   Divider(color: Colors.grey[200]),
 
                   // Overview Section
-                  CustomTileDropdown(
-                    title: "Overview",
-                    value: Column(
-                      children: [
-                        ProductDetailRow(
-                          title: "Brand",
-                          value: widget.product.brand!,
-                        ),
+                  // CustomTileDropdown(
+                  //   title: "Overview",
+                  //   value: Column(
+                  //     children: [
+                  //       ProductDetailRow(
+                  //         title: "Brand",
+                  //         value: widget.product.brand!,
+                  //       ),
 
-                        ProductDetailRow(
-                          title: "Model",
-                          value: widget.product.baseSku!,
-                        ),
-                        ProductDetailRow(
-                          title: "Category",
-                          value: widget.product.category!,
-                        ),
-                        ProductDetailRow(
-                          title: "Subcategory",
-                          value: widget.product.subcategory!,
-                        ),
-                      ],
-                    ),
-                  ),
+                  //       ProductDetailRow(
+                  //         title: "Model",
+                  //         value: widget.product.baseSku!,
+                  //       ),
+                  //       ProductDetailRow(
+                  //         title: "Category",
+                  //         value: widget.product.category!,
+                  //       ),
+                  //       ProductDetailRow(
+                  //         title: "Subcategory",
+                  //         value: widget.product.subcategory!,
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   Divider(color: Colors.grey[200]),
 
                   // Specs Section (conditionally visible)

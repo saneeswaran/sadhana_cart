@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/common%20services/product/product_service.dart';
+import 'package:sadhana_cart/core/common%20repo/product/product_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
-import 'package:sadhana_cart/core/ui_template/catagories/product_details_page.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/skeletonizer/image_loader.dart';
+import 'package:sadhana_cart/core/skeletonizer/product_loader.dart';
 
 class FeaturedProductTile extends ConsumerWidget {
   const FeaturedProductTile({super.key});
@@ -15,51 +15,19 @@ class FeaturedProductTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
+    final prod = ref.watch(getFutureproductProvider);
+
     return SizedBox(
       height: size.height * 0.38,
       width: size.width * 1,
-      child: FutureBuilder<List<ProductModel>>(
-        future: ProductService.fetchProducts(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // Show 4 skeleton placeholders
-            return ListView.builder(
-              itemCount: 4,
-              scrollDirection: Axis.horizontal,
-              physics: const ClampingScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 6,
-                  ),
-                  child: Skeletonizer(
-                    child: Container(
-                      width: size.width * 0.45,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No products found'));
-          }
-
-          final allProducts = snapshot.data!;
-
+      child: prod.when(
+        data: (data) {
           return ListView.builder(
-            itemCount: allProducts.length,
+            itemCount: data.length,
             scrollDirection: Axis.horizontal,
             physics: const ClampingScrollPhysics(),
             itemBuilder: (context, index) {
-              final product = allProducts[index];
-              final data = allProducts[index];
+              final product = data[index];
               return Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8.0,
@@ -73,28 +41,24 @@ class FeaturedProductTile extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.shade300, // dark shadow
-                        // spreadRadius: 5, // how much the shadow spreads
-                        blurRadius: 5, // softness of the shadow
+                        color: Colors.grey.shade300,
+
+                        blurRadius: 5,
                         offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
                         onTap: () {
-                          log(product.name!);
+                          log(product.category!);
 
-                          // Navigate to Product Detail Page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductDetailPage(product: product),
-                            ),
+                          navigateToProductDesignBasedOnCategory(
+                            context: context,
+                            categoryName: product.category!.toLowerCase(),
+                            product: product,
                           );
                         },
                         child: ClipRRect(
@@ -107,10 +71,10 @@ class FeaturedProductTile extends ConsumerWidget {
                               // Image
                               Container(
                                 color: Colors.white,
-                                child: Image(
-                                  image: CachedNetworkImageProvider(
-                                    data.images![0],
-                                  ),
+                                child: CachedNetworkImage(
+                                  imageUrl: product.images![0],
+                                  errorWidget: (context, _, _) =>
+                                      const ImageLoader(),
                                   height: size.height * 0.25,
                                   width: double.infinity,
                                   fit: BoxFit.contain,
@@ -166,7 +130,7 @@ class FeaturedProductTile extends ConsumerWidget {
                           vertical: 6,
                         ),
                         child: Text(
-                          data.name!,
+                          product.name!,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -179,7 +143,7 @@ class FeaturedProductTile extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
-                          "${Constants.indianCurrency} ${data.price}",
+                          "${Constants.indianCurrency} ${product.price}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -196,6 +160,8 @@ class FeaturedProductTile extends ConsumerWidget {
             },
           );
         },
+        error: (error, stackTrace) => Center(child: Text(error.toString())),
+        loading: () => const ProductLoader(),
       ),
     );
   }
