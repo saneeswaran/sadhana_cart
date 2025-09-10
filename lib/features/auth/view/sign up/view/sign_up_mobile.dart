@@ -93,7 +93,7 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                       onPressed: () =>
                           ref.read(passEyeProvider.notifier).state = !passEye,
                       icon: Icon(
-                        passEye ? Icons.visibility : Icons.visibility_off,
+                        passEye ? Icons.visibility_off : Icons.visibility,
                       ),
                     ),
                     validator: ValidationHelper.passwordValidate(
@@ -108,7 +108,7 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                           ref.read(confirmPassEyeProvider.notifier).state =
                               !confirmEye,
                       icon: Icon(
-                        confirmEye ? Icons.visibility : Icons.visibility_off,
+                        confirmEye ? Icons.visibility_off : Icons.visibility,
                       ),
                     ),
                     labelText: "Confirm password",

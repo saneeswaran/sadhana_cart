@@ -27,8 +27,8 @@ final genderProvider = StateProvider.autoDispose<String?>((ref) => null);
 
 final profileImageProvider = StateProvider.autoDispose<File?>((ref) => null);
 
-final passEyeProvider = StateProvider.autoDispose<bool>((ref) => false);
-final confirmPassEyeProvider = StateProvider.autoDispose<bool>((ref) => false);
+final passEyeProvider = StateProvider.autoDispose<bool>((ref) => true);
+final confirmPassEyeProvider = StateProvider.autoDispose<bool>((ref) => true);
 
 final userAdderssIconProvider = StateProvider.autoDispose<IconData>(
   (ref) => Icons.home,
