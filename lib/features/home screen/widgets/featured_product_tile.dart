@@ -23,6 +23,7 @@ class FeaturedProductTile extends ConsumerWidget {
         physics: const ClampingScrollPhysics(),
         itemBuilder: (context, index) {
           final data = product[index];
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -30,11 +31,11 @@ class FeaturedProductTile extends ConsumerWidget {
                 onTap: () {
                   log(data.category);
 
-                  navigateToProductDesignBasedOnCategory(
-                    context: context,
-                    categoryName: data.category.toLowerCase(),
-                    product: data,
-                  );
+                  // navigateToProductDesignBasedOnCategory(
+                  //   context: context,
+                  //   categoryName: data.category.toLowerCase(),
+                  //   product: data,
+                  // );
                 },
                 child: Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
