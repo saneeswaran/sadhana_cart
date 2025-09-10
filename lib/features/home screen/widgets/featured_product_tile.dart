@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20repo/product/product_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
-import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 
 class FeaturedProductTile extends ConsumerWidget {
   const FeaturedProductTile({super.key});
