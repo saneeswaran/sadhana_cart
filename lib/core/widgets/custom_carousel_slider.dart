@@ -25,7 +25,7 @@ class CustomCarouselSlider extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.only(top: 55),
           child: CarouselSlider(
-            items: product.images
+            items: product.images!
                 .map(
                   (e) => Container(
                     height: size.height * 0.4,
@@ -90,7 +90,7 @@ class CustomCarouselSlider extends ConsumerWidget {
             builder: (context, ref, child) {
               final dot = ref.watch(carouselController);
               return DotsIndicator(
-                dotsCount: product.images.length,
+                dotsCount: product.images!.length,
                 axis: Axis.horizontal,
                 animationDuration: const Duration(milliseconds: 200),
                 position: dot.toDouble(),

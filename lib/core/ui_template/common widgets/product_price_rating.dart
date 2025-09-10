@@ -28,7 +28,7 @@ class ProductPriceRating extends StatelessWidget {
               SizedBox(
                 width: size.width * 0.5,
                 child: Text(
-                  product.name,
+                  product.name!,
                   maxLines: 4,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
@@ -57,7 +57,7 @@ class ProductPriceRating extends StatelessWidget {
             children: [
               StarRating(
                 mainAxisAlignment: MainAxisAlignment.start,
-                rating: product.rating,
+                rating: product.rating!,
                 color: AppColor.ratingColor,
                 size: 25.0,
                 onRatingChanged: (value) {

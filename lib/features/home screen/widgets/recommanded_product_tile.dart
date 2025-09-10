@@ -60,7 +60,7 @@ class RecommandedProductTile extends ConsumerWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      log(product.name);
+                      log(product.name!);
 
                       // Navigate to Product Detail Page
                       Navigator.push(
@@ -83,7 +83,7 @@ class RecommandedProductTile extends ConsumerWidget {
                             color: Colors.white,
                             child: Image(
                               image: CachedNetworkImageProvider(
-                                product.images[0],
+                                product.images![0],
                               ),
                               height: size.height * 0.25,
                               width: double.infinity,
@@ -140,7 +140,7 @@ class RecommandedProductTile extends ConsumerWidget {
                       vertical: 6,
                     ),
                     child: Text(
-                      product.name,
+                      product.name!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

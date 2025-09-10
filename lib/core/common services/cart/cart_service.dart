@@ -24,7 +24,7 @@ class CartService {
       final CartModel cartModel = CartModel(
         cartId: docRef.id,
         customerId: currentUserId,
-        productId: product.productId,
+        productId: product.productId!,
         quantity: 1,
       );
       await cartRef.doc(docRef.id).set(cartModel.toMap());

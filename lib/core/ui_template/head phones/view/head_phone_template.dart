@@ -58,7 +58,7 @@ class _HeadPhoneTemplateState extends State<HeadPhoneTemplate> {
                     value: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        widget.product.description,
+                        widget.product.description!,
                         style: TextStyle(color: Colors.grey[700], fontSize: 16),
                       ),
                     ),

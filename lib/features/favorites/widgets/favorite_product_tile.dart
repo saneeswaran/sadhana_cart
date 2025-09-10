@@ -51,7 +51,7 @@ class _FavoriteProductTileState extends ConsumerState<FavoriteProductTile> {
                         borderRadius: BorderRadius.circular(12),
                         image: DecorationImage(
                           image: CachedNetworkImageProvider(
-                            favorite.images[0],
+                            favorite.images![0],
                             cacheKey: favorite.productId,
                           ),
                           fit: BoxFit.cover,
@@ -69,7 +69,7 @@ class _FavoriteProductTileState extends ConsumerState<FavoriteProductTile> {
                             _likedOnPress(
                               context: context,
                               ref: ref,
-                              favoriteId: favorite.productId,
+                              favoriteId: favorite.productId!,
                             );
                           },
                           icon: const Icon(Icons.favorite, color: Colors.red),
@@ -80,7 +80,7 @@ class _FavoriteProductTileState extends ConsumerState<FavoriteProductTile> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      favorite.name,
+                      favorite.name!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(

@@ -51,32 +51,35 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
     if (_isLoading || !_hasMore) return;
 
     _isLoading = true;
+    try {
+      Query query = FirebaseFirestore.instance
+          .collection(ProductService.products)
+          .orderBy("productId", descending: true)
+          .limit(_limit);
 
-    Query query = FirebaseFirestore.instance
-        .collection(ProductService.products)
-        .orderBy("productId", descending: true)
-        .limit(_limit);
+      if (_lastDocument != null) {
+        query = query.startAfterDocument(_lastDocument!);
+      }
 
-    if (_lastDocument != null) {
-      query = query.startAfterDocument(_lastDocument!);
-    }
+      final snapshot = await query.get();
 
-    final snapshot = await query.get();
+      if (snapshot.docs.isNotEmpty) {
+        final products = snapshot.docs
+            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .toList();
 
-    if (snapshot.docs.isNotEmpty) {
-      final products = snapshot.docs
-          .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
-          .toList();
+        state = [...state, ...products];
+        log(state.toString());
+        _lastDocument = snapshot.docs.last;
 
-      state = [...state, ...products];
-      log(state.toString());
-      _lastDocument = snapshot.docs.last;
-
-      if (products.length < _limit) {
+        if (products.length < _limit) {
+          _hasMore = false;
+        }
+      } else {
         _hasMore = false;
       }
-    } else {
-      _hasMore = false;
+    } catch (e) {
+      log(e.toString());
     }
 
     _isLoading = false;
@@ -89,10 +92,10 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
     state = state
         .where(
           (e) =>
-              e.name.toLowerCase().contains(query.toLowerCase()) ||
-              e.category.toLowerCase().contains(query.toLowerCase()) ||
-              e.subcategory.toLowerCase().contains(query.toLowerCase()) ||
-              e.brand.toLowerCase().contains(query.toLowerCase()),
+              e.name!.toLowerCase().contains(query.toLowerCase()) ||
+              e.category!.toLowerCase().contains(query.toLowerCase()) ||
+              e.subcategory!.toLowerCase().contains(query.toLowerCase()) ||
+              e.brand!.toLowerCase().contains(query.toLowerCase()),
         )
         .toList();
   }

@@ -7,31 +7,28 @@
 //i don't have choice now... sometime the stock count not showing in the product list
 //when they upload the product with bulk upload option... that thing is waste until they strictly follow the data structure
 //please explain and optimize the data structure to client
-//i don't have choice now
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+//i don't have choice now.. if any good developer see this this if you can optimize the model please do
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class ProductModel {
-  // Common Fields (Non-nullable)
-  final String productId;
-  final String name;
-  final String description;
-  final String category;
-  final String subcategory;
-  final String baseSku;
-  final String brand;
-  final double price;
-  final double offerPrice;
-  final int totalStock;
-  final double rating;
-  final List<String> images;
-  final String sellerId;
-  final bool cashOnDelivery;
-  final List<SizeVariant> sizeVariants;
-  final Timestamp? timestamp;
-  final DateTime? date;
+  // Common Fields
+  final String? productId;
+  final String? name;
+  final String? description;
+  final String? category;
+  final String? subcategory;
+  final String? baseSku;
+  final String? brand;
+  final double? price;
+  final double? offerPrice;
+  final int? stock;
+  final double? rating;
+  final List<String>? images;
+  final String? sellerId;
+  final String? cashOnDelivery;
+  final List<SizeVariant>? sizeVariants;
+  final String? timestamp;
+  final String? date;
 
   // Fashion / Clothing
   final String? material;
@@ -134,7 +131,7 @@ class ProductModel {
   final List<String>? ingredients;
   final String? skinHairType;
   final String? beautyWeightVolume;
-  final DateTime? beautyExpiryDate;
+  final String? beautyExpiryDate;
   final bool? dermatologicallyTested;
 
   // Furniture
@@ -147,7 +144,7 @@ class ProductModel {
   final String? weightVolume;
   final String? quantity;
   final bool? organic;
-  final DateTime? expiryDate;
+  final String? expiryDate;
   final String? storageInstruction;
   final String? dietaryPreference;
 
@@ -166,26 +163,23 @@ class ProductModel {
   final String? toeShape;
 
   ProductModel({
-    // Required
-    required this.productId,
-    required this.name,
-    required this.description,
-    required this.category,
-    required this.subcategory,
-    required this.baseSku,
-    required this.brand,
-    required this.price,
-    required this.offerPrice,
-    required this.totalStock,
-    required this.rating,
-    required this.images,
-    required this.sellerId,
-    required this.cashOnDelivery,
-    required this.sizeVariants,
+    this.productId,
+    this.name,
+    this.description,
+    this.category,
+    this.subcategory,
+    this.baseSku,
+    this.brand,
+    this.price,
+    this.offerPrice,
+    this.stock,
+    this.rating,
+    this.images,
+    this.sellerId,
+    this.cashOnDelivery,
+    this.sizeVariants,
     this.timestamp,
     this.date,
-
-    // Optional
     this.material,
     this.fit,
     this.pattern,
@@ -297,11 +291,10 @@ class ProductModel {
     this.soleMaterial,
     this.toeShape,
   });
-
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
+      // Common Fields
       'productId': productId,
-      'date': date,
       'name': name,
       'description': description,
       'category': category,
@@ -310,13 +303,16 @@ class ProductModel {
       'brand': brand,
       'price': price,
       'offerPrice': offerPrice,
-      'totalStock': totalStock,
+      'stock': stock,
       'rating': rating,
       'images': images,
       'sellerId': sellerId,
       'cashOnDelivery': cashOnDelivery,
-      'sizeVariants': sizeVariants,
+      'sizeVariants': sizeVariants?.map((e) => e.toMap()).toList(),
       'timestamp': timestamp,
+      'date': date,
+
+      // Fashion / Clothing
       'material': material,
       'fit': fit,
       'pattern': pattern,
@@ -361,6 +357,8 @@ class ProductModel {
       'age': age,
       'ageGroup': ageGroup,
       'waistStyle': waistStyle,
+
+      // Mobile
       'mobileColor': mobileColor,
       'ram': ram,
       'storage': storage,
@@ -373,15 +371,19 @@ class ProductModel {
       'warranty': warranty,
       'color': color,
       'designOptions': designOptions,
+
+      // Electronics
       'resolution': resolution,
       'displayType': displayType,
       'smartFeatures': smartFeatures,
       'energyRating': energyRating,
       'powerConsumption': powerConsumption,
-      'expDate': expDate?.millisecondsSinceEpoch,
+      'expDate': expDate,
       'mfgDate': mfgDate,
       'highlight': highlight,
       'otherHighlights': otherHighlights,
+
+      // Jewellery
       'jewelleryMaterial': jewelleryMaterial,
       'purity': purity,
       'jewelleryWeight': jewelleryWeight,
@@ -389,6 +391,8 @@ class ProductModel {
       'jewellerySize': jewellerySize,
       'gemstone': gemstone,
       'certification': certification,
+
+      // Book
       'title': title,
       'author': author,
       'publisher': publisher,
@@ -398,29 +402,41 @@ class ProductModel {
       'pages': pages,
       'binding': binding,
       'genre': genre,
+
+      // Home & Kitchen
       'frameMaterial': frameMaterial,
       'mountingType': mountingType,
+
+      // Beauty
       'shadeColor': shadeColor,
       'beautyType': beautyType,
       'ingredients': ingredients,
       'skinHairType': skinHairType,
       'beautyWeightVolume': beautyWeightVolume,
-      'beautyExpiryDate': beautyExpiryDate?.millisecondsSinceEpoch,
+      'beautyExpiryDate': beautyExpiryDate,
       'dermatologicallyTested': dermatologicallyTested,
+
+      // Furniture
       'dimension': dimension,
       'weightCapacity': weightCapacity,
       'assembly': assembly,
       'roomType': roomType,
+
+      // Grocery
       'weightVolume': weightVolume,
       'quantity': quantity,
       'organic': organic,
-      'expiryDate': expiryDate?.millisecondsSinceEpoch,
+      'expiryDate': expiryDate,
       'storageInstruction': storageInstruction,
       'dietaryPreference': dietaryPreference,
+
+      // Laptop
       'graphics': graphics,
       'screenSize': screenSize,
       'operatingSystem': operatingSystem,
       'port': port,
+
+      // Footwear
       'footwearMaterial': footwearMaterial,
       'footwearType': footwearType,
       'shoeSize': shoeSize,
@@ -432,44 +448,73 @@ class ProductModel {
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      totalStock: map['stock'] ?? 0,
-      productId: map['productId'] ?? '',
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      category: map['category'] ?? '',
-      subcategory: map['subcategory'] ?? '',
-      baseSku: map['baseSku'] ?? '',
-      brand: map['brand'] ?? '',
-      price: (map['price'] ?? 0).toDouble(),
-      offerPrice: (map['offerPrice'] ?? 0).toDouble(),
-      rating: (map['rating'] ?? 0).toDouble(),
-      timestamp: map['timestamp'] is Timestamp
-          ? map['timestamp']
-          : Timestamp.fromDate(
-              DateTime.parse(
-                map['timestamp'] ?? DateTime.now().toIso8601String(),
-              ),
-            ),
+      productId: map['productId'],
+      name: map['name'],
+      description: map['description'],
+      category: map['category'],
+      subcategory: map['subcategory'],
+      baseSku: map['baseSku'],
+      brand: map['brand'],
+      price: (map['price'] as num?)?.toDouble(),
+      offerPrice: (map['offerPrice'] as num?)?.toDouble(),
+      stock: map['stock'],
+      rating: (map['rating'] as num?)?.toDouble(),
       images: List<String>.from(map['images'] ?? []),
       sellerId: map['sellerId'],
-      cashOnDelivery: (map['cashOnDelivery'] is bool)
-          ? map['cashOnDelivery']
-          : ((map['cashOnDelivery'] ?? '').toString().toLowerCase() == 'yes'),
-      sizeVariants:
-          (map['sizeVariants'] as List<dynamic>?)
-              ?.map((v) => SizeVariant.fromMap(Map<String, dynamic>.from(v)))
-              .toList() ??
-          [],
+      cashOnDelivery: map['cashOnDelivery'],
+      sizeVariants: (map['sizeVariants'] as List?)
+          ?.map((e) => SizeVariant.fromMap(e))
+          .toList(),
+      timestamp: map['timestamp'],
+      date: map['date'],
+
+      // Fashion
       material: map['material'],
       fit: map['fit'],
       pattern: map['pattern'],
       sleeveType: map['sleeveType'],
       careInstruction: map['careInstruction'],
       sizeOptions: List<String>.from(map['sizeOptions'] ?? []),
-      footwearMaterial: map['footwearMaterial'],
-      footwearType: map['footwearType'],
+      hsnCode: map['hsnCode'],
+      weight: (map['weight'] as num?)?.toDouble(),
+      length: (map['length'] as num?)?.toDouble(),
+      width: (map['width'] as num?)?.toDouble(),
+      height: (map['height'] as num?)?.toDouble(),
+      fitType: map['fitType'],
       gender: map['gender'],
+      neckType: map['neckType'],
+      occasion: map['occasion'],
+      stitchType: map['stitchType'],
+      vendor: map['vendor'],
+      variantSku: map['variantSku'],
+      closureType: map['closureType'],
+      embroideryStyle: map['embroideryStyle'],
+      lining: map['lining'],
       model: map['model'],
+      neckStyle: map['neckStyle'],
+      padType: map['padType'],
+      pockets: map['pockets'],
+      printType: map['printType'],
+      productLength: map['productLength'],
+      productType: map['productType'],
+      riseStyle: map['riseStyle'],
+      sideType: map['sideType'],
+      sleeve: map['sleeve'],
+      sleeveStyle: map['sleeveStyle'],
+      slitType: map['slitType'],
+      specialFeatures: map['specialFeatures'],
+      strapType: map['strapType'],
+      style: map['style'],
+      transparent: map['transparent'],
+      type: map['type'],
+      workType: map['workType'],
+      blouseAvailability: map['blouseAvailability'],
+      patternCoverage: map['patternCoverage'],
+      age: map['age'],
+      ageGroup: map['ageGroup'],
+      waistStyle: map['waistStyle'],
+
+      // Mobile
       mobileColor: map['mobileColor'],
       ram: map['ram'],
       storage: map['storage'],
@@ -480,42 +525,30 @@ class ProductModel {
       os: map['os'],
       connectivity: map['connectivity'],
       warranty: map['warranty'],
-      graphics: map['graphics'],
-      screenSize: map['screenSize'],
-      operatingSystem: map['operatingSystem'],
-      port: map['port'],
-      weight: map['weight'],
+      color: map['color'],
+      designOptions: map['designOptions'],
+
+      // Electronics
       resolution: map['resolution'],
       displayType: map['displayType'],
       smartFeatures: map['smartFeatures'],
       energyRating: map['energyRating'],
       powerConsumption: map['powerConsumption'],
-      dimension: map['dimension'],
-      weightCapacity: map['weightCapacity'],
-      assembly: map['assembly'],
-      style: map['style'],
-      roomType: map['roomType'],
-      weightVolume: map['weightVolume'],
-      quantity: map['quantity'],
-      organic: map['organic'],
-      expiryDate: map['expiryDate'],
-      storageInstruction: map['storageInstruction'],
-      dietaryPreference: map['dietaryPreference'],
-      shadeColor: map['shadeColor'],
-      beautyType: map['beautyType'],
-      ingredients: map['ingredients'],
-      skinHairType: map['skinHairType'],
-      beautyWeightVolume: map['beautyWeightVolume'],
-      beautyExpiryDate: map['beautyExpiryDate'],
-      dermatologicallyTested: map['dermatologicallyTested'],
+      expDate: map['expDate'],
+      mfgDate: map['mfgDate'],
+      highlight: map['highlight'],
+      otherHighlights: map['otherHighlights'],
+
+      // Jewellery
       jewelleryMaterial: map['jewelleryMaterial'],
       purity: map['purity'],
-      jewelleryWeight: map['jewelleryWeight'],
+      jewelleryWeight: (map['jewelleryWeight'] as num?)?.toDouble(),
       jewelleryColor: map['jewelleryColor'],
       jewellerySize: map['jewellerySize'],
       gemstone: map['gemstone'],
       certification: map['certification'],
-      occasion: map['occasion'],
+
+      // Book
       title: map['title'],
       author: map['author'],
       publisher: map['publisher'],
@@ -526,91 +559,51 @@ class ProductModel {
       binding: map['binding'],
       genre: map['genre'],
 
-      vendor: map['vendor'] != null ? map['vendor'] as String : null,
-      variantSku: map['variantSku'] != null
-          ? map['variantSku'] as String
-          : null,
-      closureType: map['closureType'] != null
-          ? map['closureType'] as String
-          : null,
-      embroideryStyle: map['embroideryStyle'] != null
-          ? map['embroideryStyle'] as String
-          : null,
-      lining: map['lining'] != null ? map['lining'] as String : null,
-      neckStyle: map['neckStyle'] != null ? map['neckStyle'] as String : null,
-      padType: map['padType'] != null ? map['padType'] as String : null,
-      pockets: map['pockets'] != null ? map['pockets'] as String : null,
-      printType: map['printType'] != null ? map['printType'] as String : null,
-      productLength: map['productLength'] != null
-          ? map['productLength'] as String
-          : null,
-      productType: map['productType'] != null
-          ? map['productType'] as String
-          : null,
-      riseStyle: map['riseStyle'] != null ? map['riseStyle'] as String : null,
-      sideType: map['sideType'] != null ? map['sideType'] as String : null,
-      sleeve: map['sleeve'] != null ? map['sleeve'] as String : null,
-      sleeveStyle: map['sleeveStyle'] != null
-          ? map['sleeveStyle'] as String
-          : null,
-      slitType: map['slitType'] != null ? map['slitType'] as String : null,
-      specialFeatures: map['specialFeatures'] != null
-          ? map['specialFeatures'] as String
-          : null,
-      strapType: map['strapType'] != null ? map['strapType'] as String : null,
-      transparent: map['transparent'] != null
-          ? map['transparent'] as bool
-          : null,
-      type: map['type'] != null ? map['type'] as String : null,
-      workType: map['workType'] != null ? map['workType'] as String : null,
-      blouseAvailability: map['blouseAvailability'] != null
-          ? map['blouseAvailability'] as bool
-          : null,
-      patternCoverage: map['patternCoverage'] != null
-          ? map['patternCoverage'] as String
-          : null,
-      age: map['age'] != null ? map['age'] as String : null,
-      ageGroup: map['ageGroup'] != null ? map['ageGroup'] as String : null,
-      waistStyle: map['waistStyle'] != null
-          ? map['waistStyle'] as String
-          : null,
-      color: map['color'] != null ? map['color'] as String : null,
-      designOptions: map['designOptions'] != null
-          ? map['designOptions'] as String
-          : null,
-      expDate: map['expDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['expDate'] as int)
-          : null,
-      mfgDate: map['mfgDate'] != null ? map['mfgDate'] as String : null,
-      highlight: map['highlight'] != null ? map['highlight'] as String : null,
-      otherHighlights: map['otherHighlights'] != null
-          ? map['otherHighlights'] as String
-          : null,
-      frameMaterial: map['frameMaterial'] != null
-          ? map['frameMaterial'] as String
-          : null,
-      mountingType: map['mountingType'] != null
-          ? map['mountingType'] as String
-          : null,
-      shoeSize: map['shoeSize'] != null ? map['shoeSize'] as String : null,
-      heelHeight: map['heelHeight'] != null
-          ? map['heelHeight'] as String
-          : null,
-      soleMaterial: map['soleMaterial'] != null
-          ? map['soleMaterial'] as String
-          : null,
-      toeShape: map['toeShape'] != null ? map['toeShape'] as String : null,
+      // Home & Kitchen
+      frameMaterial: map['frameMaterial'],
+      mountingType: map['mountingType'],
+
+      // Beauty
+      shadeColor: map['shadeColor'],
+      beautyType: map['beautyType'],
+      ingredients: List<String>.from(map['ingredients'] ?? []),
+      skinHairType: map['skinHairType'],
+      beautyWeightVolume: map['beautyWeightVolume'],
+      beautyExpiryDate: map['beautyExpiryDate'],
+      dermatologicallyTested: map['dermatologicallyTested'],
+
+      // Furniture
+      dimension: map['dimension'],
+      weightCapacity: map['weightCapacity'],
+      assembly: map['assembly'],
+      roomType: map['roomType'],
+
+      // Grocery
+      weightVolume: map['weightVolume'],
+      quantity: map['quantity'],
+      organic: map['organic'],
+      expiryDate: map['expiryDate'],
+      storageInstruction: map['storageInstruction'],
+      dietaryPreference: map['dietaryPreference'],
+
+      // Laptop
+      graphics: map['graphics'],
+      screenSize: map['screenSize'],
+      operatingSystem: map['operatingSystem'],
+      port: map['port'],
+
+      // Footwear
+      footwearMaterial: map['footwearMaterial'],
+      footwearType: map['footwearType'],
+      shoeSize: map['shoeSize'],
+      heelHeight: map['heelHeight'],
+      soleMaterial: map['soleMaterial'],
+      toeShape: map['toeShape'],
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory ProductModel.fromJson(String source) =>
-      ProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
   //this is the code will help you by getting products attributes by category
   Map<String, dynamic> getDetailsByCategory() {
-    switch (category.toLowerCase()) {
+    switch (category!.toLowerCase()) {
       case 'fashion':
       case 'clothing':
         return {

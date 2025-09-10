@@ -77,7 +77,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     // Check if there is any extra data
     final hasExtras =
         widget.product.warranty != null ||
-        widget.product.sizeVariants.isNotEmpty;
+        widget.product.sizeVariants!.isNotEmpty;
 
     if (!hasExtras) return const SizedBox.shrink(); // hide section if no extras
 
@@ -92,10 +92,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   title: "Warranty",
                   value: widget.product.warranty!,
                 ),
-              if (widget.product.sizeVariants.isNotEmpty)
+              if (widget.product.sizeVariants!.isNotEmpty)
                 ProductDetailRow(
                   title: "Variants",
-                  value: widget.product.sizeVariants.join(", "),
+                  value: widget.product.sizeVariants!.join(", "),
                 ),
             ],
           ),
@@ -155,7 +155,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     value: Padding(
                       padding: const EdgeInsets.all(12.0),
                       child: Text(
-                        widget.product.description,
+                        widget.product.description!,
                         style: TextStyle(color: Colors.grey[700], fontSize: 16),
                       ),
                     ),
@@ -169,20 +169,20 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       children: [
                         ProductDetailRow(
                           title: "Brand",
-                          value: widget.product.brand,
+                          value: widget.product.brand!,
                         ),
 
                         ProductDetailRow(
                           title: "Model",
-                          value: widget.product.baseSku,
+                          value: widget.product.baseSku!,
                         ),
                         ProductDetailRow(
                           title: "Category",
-                          value: widget.product.category,
+                          value: widget.product.category!,
                         ),
                         ProductDetailRow(
                           title: "Subcategory",
-                          value: widget.product.subcategory,
+                          value: widget.product.subcategory!,
                         ),
                       ],
                     ),

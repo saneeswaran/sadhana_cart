@@ -17,7 +17,7 @@ class FootWearCarousel extends StatelessWidget {
     return Stack(
       children: [
         CarouselSlider(
-          items: product.images
+          items: product.images!
               .map(
                 (e) => Container(
                   height: size.height * 0.4,
@@ -62,7 +62,7 @@ class FootWearCarousel extends StatelessWidget {
           top: size.height * 0.37,
           right: size.width * 0.45,
           child: DotsIndicator(
-            dotsCount: product.images.length,
+            dotsCount: product.images!.length,
             animate: true,
             axis: Axis.horizontal,
             animationDuration: const Duration(milliseconds: 200),

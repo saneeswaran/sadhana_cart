@@ -31,7 +31,7 @@ class LaptopTemplate extends StatelessWidget {
             ProductPriceRating(product: product),
             LaptopAdditionalInformation(product: product),
             RatingTile(
-              imageUrl: product.images[0],
+              imageUrl: product.images![0],
               name: "This is the placeholder",
               rating: 4.5,
               review: "This is the placeholder",

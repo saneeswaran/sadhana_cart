@@ -25,7 +25,7 @@ class LaptopAdditionalInformation extends StatelessWidget {
           ),
           const SizedBox(height: 15),
           Text(
-            product.description,
+            product.description!,
             style: const TextStyle(
               color: AppColor.primaryColor,
               fontSize: 16,

@@ -24,7 +24,7 @@ class CartItemTile extends ConsumerWidget {
         physics: const ClampingScrollPhysics(),
         itemBuilder: (context, index) {
           final car = cart[index];
-          final variant = car.sizeVariants[index];
+          final variant = car.sizeVariants?[index];
           //outside container
           return Container(
             margin: const EdgeInsets.all(10),
@@ -49,7 +49,7 @@ class CartItemTile extends ConsumerWidget {
                   width: size.width * 0.3,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: CachedNetworkImageProvider(car.images[0]),
+                      image: CachedNetworkImageProvider(car.images![0]),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.circular(12),
@@ -62,7 +62,7 @@ class CartItemTile extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        car.name,
+                        car.name!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
@@ -84,7 +84,7 @@ class CartItemTile extends ConsumerWidget {
                       //more details
                       const SizedBox(height: 5),
 
-                      variant.color!.isNotEmpty && variant.size.isNotEmpty
+                      variant!.color!.isNotEmpty && variant.size.isNotEmpty
                           ? Row(
                               children: [
                                 Text(

@@ -86,7 +86,7 @@ class FeaturedProductTile extends ConsumerWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          log(product.name);
+                          log(product.name!);
 
                           // Navigate to Product Detail Page
                           Navigator.push(
@@ -109,7 +109,7 @@ class FeaturedProductTile extends ConsumerWidget {
                                 color: Colors.white,
                                 child: Image(
                                   image: CachedNetworkImageProvider(
-                                    data.images[0],
+                                    data.images![0],
                                   ),
                                   height: size.height * 0.25,
                                   width: double.infinity,
@@ -117,7 +117,7 @@ class FeaturedProductTile extends ConsumerWidget {
                                 ),
                               ),
 
-                              if (product.rating > 0)
+                              if (product.rating! > 0)
                                 Positioned(
                                   left: 8,
                                   bottom: 8,
@@ -166,7 +166,7 @@ class FeaturedProductTile extends ConsumerWidget {
                           vertical: 6,
                         ),
                         child: Text(
-                          data.name,
+                          data.name!,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(

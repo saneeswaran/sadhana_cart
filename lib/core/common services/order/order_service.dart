@@ -52,7 +52,8 @@ class OrderService {
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         for (final orderedProduct in products) {
           final productId = orderedProduct.productId;
-          final List<SizeVariant> orderedVariants = orderedProduct.sizeVariants;
+          final List<SizeVariant> orderedVariants =
+              orderedProduct.sizeVariants!;
 
           final productRefDoc = productRef.doc(productId);
           final productSnapshot = await transaction.get(productRefDoc);
@@ -65,8 +66,8 @@ class OrderService {
             productSnapshot.data() as Map<String, dynamic>,
           );
 
-          final currentTotalStock = data.totalStock;
-          List<dynamic> sizeVariants = data.sizeVariants;
+          final currentTotalStock = data.stock;
+          List<dynamic> sizeVariants = data.sizeVariants!;
 
           // Update each size variant stock
           final updatedVariants = sizeVariants.map((variant) {
@@ -100,7 +101,7 @@ class OrderService {
           );
 
           transaction.update(productRefDoc, {
-            'totalStock': currentTotalStock - totalStockToSubtract,
+            'totalStock': currentTotalStock! - totalStockToSubtract,
             'sizeVariants': updatedVariants,
           });
         }
