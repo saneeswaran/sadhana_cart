@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20repo/favorite/favorite_notifier.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/widgets/view_photo.dart';
 
 final carouselController = StateProvider.autoDispose<int>((ref) => 0);
 
@@ -19,7 +21,9 @@ class CustomCarouselSlider extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
     final controller = CarouselSliderController();
-
+    final bool isAlreadyFavorite = ref
+        .read(favoriteProvider.notifier)
+        .checkAlreadyInFavorite(productId: product.productId ?? "");
     return Stack(
       children: [
         Padding(
@@ -27,13 +31,24 @@ class CustomCarouselSlider extends ConsumerWidget {
           child: CarouselSlider(
             items: product.images!
                 .map(
-                  (e) => Container(
-                    height: size.height * 0.4,
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: CachedNetworkImageProvider(e, cacheKey: e),
-                        fit: BoxFit.fitHeight,
+                  (e) => GestureDetector(
+                    onTap: () {
+                      navigateTo(
+                        context: context,
+                        screen: ViewPhoto(
+                          imageUrl:
+                              product.images![ref.watch(carouselController)],
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: size.height * 0.4,
+                      width: size.width,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: CachedNetworkImageProvider(e, cacheKey: e),
+                          fit: BoxFit.fitHeight,
+                        ),
                       ),
                     ),
                   ),
@@ -78,7 +93,10 @@ class CustomCarouselSlider extends ConsumerWidget {
                   shape: const CircleBorder(),
                 ),
                 onPressed: () {},
-                icon: const Icon(Icons.favorite, color: Colors.red),
+                icon: Icon(
+                  isAlreadyFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: isAlreadyFavorite ? Colors.red : Colors.white,
+                ),
               ),
             ],
           ),

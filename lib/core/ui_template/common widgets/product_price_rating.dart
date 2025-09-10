@@ -16,20 +16,16 @@ class ProductPriceRating extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 16,
-            bottom: 10,
-          ),
+          padding: const EdgeInsets.only(top: 16, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: size.width * 0.5,
+                height: size.height * 0.04,
+                width: size.width * 1,
                 child: Text(
                   product.name!,
-                  maxLines: 4,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Colors.black,
@@ -38,36 +34,30 @@ class ProductPriceRating extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(
-                "${Constants.indianCurrency} ${product.price}",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ],
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              StarRating(
-                mainAxisAlignment: MainAxisAlignment.start,
-                rating: product.rating!,
-                color: AppColor.ratingColor,
-                size: 25.0,
-                onRatingChanged: (value) {
-                  log(value.toString());
-                },
-              ),
-              const SizedBox(height: 12),
-              // const Text("(4)"),
-            ],
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            StarRating(
+              mainAxisAlignment: MainAxisAlignment.start,
+              rating: product.rating!,
+              color: AppColor.ratingColor,
+              size: 25.0,
+              onRatingChanged: (value) {
+                log(value.toString());
+              },
+            ),
+            Text(
+              "${Constants.indianCurrency} ${product.price}",
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 12),
+          ],
         ),
       ],
     );
