@@ -1,12 +1,57 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_fetch_result.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
 
 class ProductService {
   static const String products = "products";
   static final CollectionReference productRef = FirebaseFirestore.instance
       .collection(products);
 
+<<<<<<< HEAD
+=======
+  static final FirebaseStorage storage = FirebaseStorage.instance;
+
+  static Future<ProductFetchResult> fetchProductByPagination({
+    required Ref ref,
+    int limit = 10,
+    DocumentSnapshot? startAfter,
+  }) async {
+    try {
+      ref.read(loadingProvider.notifier).state = true;
+
+      Query query = productRef
+          .orderBy("productId", descending: true)
+          .limit(limit);
+      if (startAfter != null) {
+        query = query.startAfterDocument(startAfter);
+      }
+
+      final querySnapshot = await query.get();
+
+      final data = querySnapshot.docs
+          .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+          .toList();
+
+      ref.read(loadingProvider.notifier).state = false;
+
+      return ProductFetchResult(
+        products: data,
+        lastDocument: querySnapshot.docs.isNotEmpty
+            ? querySnapshot.docs.last
+            : null,
+      );
+    } catch (e) {
+      log("ProductService fetch error: $e");
+      ref.read(loadingProvider.notifier).state = false;
+      return ProductFetchResult(products: [], lastDocument: null);
+    }
+  }
+
+>>>>>>> 765a30664c52cb183c2304584bf5a6dcc740c6f6
   static Future<List<ProductModel>> fetchProducts() async {
     try {
       final QuerySnapshot querySnapshot = await productRef.get();
@@ -84,4 +129,6 @@ class ProductService {
     }
     return [];
   }
+
+  //pagination
 }

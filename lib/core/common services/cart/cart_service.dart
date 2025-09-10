@@ -9,10 +9,13 @@ import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
 class CartService {
+  static const String user = 'users';
   static const String cart = 'cart';
-  static final CollectionReference cartRef = FirebaseFirestore.instance
-      .collection(cart);
   static final String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  static final CollectionReference cartRef = FirebaseFirestore.instance
+      .collection(user)
+      .doc(currentUserId)
+      .collection(cart);
 
   //create
   static Future<bool> addToCart({required ProductModel product}) async {

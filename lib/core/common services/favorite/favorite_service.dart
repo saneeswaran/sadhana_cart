@@ -10,9 +10,15 @@ import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
 class FavoriteService {
   static const String favorites = 'favorites';
+  static const String user = 'users';
+  static const String product = 'products';
   static final currentUserId = FirebaseAuth.instance.currentUser!.uid;
   static final CollectionReference favoriteRef = FirebaseFirestore.instance
+      .collection(user)
+      .doc(currentUserId)
       .collection(favorites);
+  static final CollectionReference productRef = FirebaseFirestore.instance
+      .collection(product);
 
   //add
   static Future<bool> addToFavorite({required ProductModel product}) async {
@@ -54,21 +60,22 @@ class FavoriteService {
   }
 
   static Future<bool> deleteFavorite({
-    required FavoriteModel favorite,
+    required String favoriteId,
     required WidgetRef ref,
   }) async {
     try {
-      final DocumentSnapshot documentSnapshot = await favoriteRef
-          .doc(favorite.favoriteId)
+      final QuerySnapshot querySnapshot = await favoriteRef
+          .where('favoriteId', isEqualTo: favoriteId)
+          .where('customerId', isEqualTo: currentUserId)
           .get();
 
-      if (documentSnapshot.exists) {
-        await documentSnapshot.reference.delete();
+      if (querySnapshot.docs.isNotEmpty) {
+        await querySnapshot.docs.first.reference.delete();
         //delete from local
-        await HiveHelper.deleteFavorite(key: favorite.productId);
+        await HiveHelper.deleteFavorite(key: favoriteId);
         ref
             .read(favoriteProvider.notifier)
-            .removeFromFavorite(favorite: favorite);
+            .removeFromFavorite(favProductId: favoriteId);
         return true;
       }
     } catch (e) {
@@ -76,5 +83,37 @@ class FavoriteService {
       return false;
     }
     return false;
+  }
+
+  static Future<Set<ProductModel>> fetchUserFavoriteProducts() async {
+    try {
+      final List<ProductModel> favData = [];
+      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection(user)
+          .doc(currentUserId)
+          .collection(favorites)
+          .get();
+      for (final doc in querySnapshot.docs) {
+        final productId = doc["productId"] as String;
+        final product = await productRef
+            .where("productId", isEqualTo: productId)
+            .get();
+        if (product.docs.isNotEmpty) {
+          final data = product.docs
+              .map(
+                (e) => ProductModel.fromMap(e.data() as Map<String, dynamic>),
+              )
+              .toList();
+          favData.addAll(data);
+          return favData.toSet();
+        } else {
+          return {};
+        }
+      }
+    } catch (e) {
+      log("favorite service error $e");
+      return {};
+    }
+    return {};
   }
 }

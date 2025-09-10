@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/category_constants.dart';
+<<<<<<< HEAD
 import 'package:sadhana_cart/core/ui_template/catagories/category_list_page.dart';
+=======
+import 'package:sadhana_cart/core/ui_template/category_list_page.dart';
+>>>>>>> 765a30664c52cb183c2304584bf5a6dcc740c6f6
 
 void navigateTo({required BuildContext context, required Widget screen}) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => screen));

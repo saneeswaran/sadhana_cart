@@ -1,6 +1,10 @@
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
 
 class AppImages {
+  //cart
+  static const String emptyCart = "assets/images/empty_cart.png";
+  //favorite
+  static const String emptyFavorite = "assets/images/no-favorites.png";
   //images
   static const String onboard = "assets/images/onboard.png";
   static const String onboard1 = "assets/images/onboard1.png";

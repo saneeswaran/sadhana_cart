@@ -6,8 +6,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20services/product/product_service.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+<<<<<<< HEAD
 import 'package:sadhana_cart/core/ui_template/catagories/product_details_page.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+=======
+>>>>>>> 765a30664c52cb183c2304584bf5a6dcc740c6f6
 
 class FeaturedProductTile extends ConsumerWidget {
   const FeaturedProductTile({super.key});

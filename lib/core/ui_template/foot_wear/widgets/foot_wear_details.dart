@@ -46,61 +46,58 @@ class FootWearDetails extends StatelessWidget {
                       final selecIndex = ref.watch(footwearColorSelection);
                       return Expanded(
                         child: Wrap(
-                          children: List.generate(
-                            product.colorOptions?.length ?? 0,
-                            (index) {
-                              final isSelected = index == selecIndex;
-                              final colorName = product.colorOptions![index];
-                              final color = getColorFromDatabase(colorName);
-                              final isWhite = color == AppColors.white.color;
+                          children: List.generate(product.sizeVariants.length, (
+                            index,
+                          ) {
+                            final isSelected = index == selecIndex;
+                            final colorName = product.sizeVariants[index].color;
+                            final color = getColorFromDatabase(colorName!);
+                            final isWhite = color == AppColors.white.color;
 
-                              return GestureDetector(
-                                onTap: () =>
-                                    ref
-                                            .read(
-                                              footwearColorSelection.notifier,
-                                            )
-                                            .state =
-                                        index,
+                            return GestureDetector(
+                              onTap: () =>
+                                  ref
+                                          .read(footwearColorSelection.notifier)
+                                          .state =
+                                      index,
+                              child: Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.transparent,
+                                  border: isSelected
+                                      ? Border.all(
+                                          color: AppColor.primaryColor,
+                                          width: 2,
+                                        )
+                                      : null,
+                                ),
                                 child: Container(
-                                  height: 50,
-                                  width: 50,
+                                  height: 40,
+                                  width: 40,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 5,
+                                    vertical: 5,
+                                  ),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.transparent,
-                                    border: isSelected
-                                        ? Border.all(
-                                            color: AppColor.primaryColor,
-                                            width: 2,
-                                          )
+                                    color: color,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                    border: isWhite
+                                        ? Border.all(color: Colors.grey)
                                         : null,
                                   ),
-                                  child: Container(
-                                    height: 40,
-                                    width: 40,
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 5,
-                                      vertical: 5,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: color,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.shade300,
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                      border: isWhite
-                                          ? Border.all(color: Colors.grey)
-                                          : null,
-                                    ),
-                                  ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          }),
                         ),
                       );
                     },
@@ -132,54 +129,51 @@ class FootWearDetails extends StatelessWidget {
                       const SizedBox(width: 20),
                       Expanded(
                         child: Wrap(
-                          children: List.generate(
-                            product.colorOptions?.length ?? 0,
-                            (index) {
-                              final sizeItem = product.colorOptions![index];
-                              final firstPart = sizeItem.split(',').first;
-                              final isSelected = index == selectSize;
-                              return GestureDetector(
-                                onTap: () {
-                                  ref
-                                          .read(footWearSizeSelection.notifier)
-                                          .state =
-                                      index;
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 5,
-                                    vertical: 5,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? AppColor.primaryColor
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.circular(5),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        blurRadius: 5,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      firstPart,
-                                      style: TextStyle(
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                          children: List.generate(product.sizeVariants.length, (
+                            index,
+                          ) {
+                            final sizeItem = product.sizeVariants[index].size;
+                            final firstPart = sizeItem.split(" ")[0];
+                            final isSelected = index == selectSize;
+                            return GestureDetector(
+                              onTap: () {
+                                ref.read(footWearSizeSelection.notifier).state =
+                                    index;
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 40,
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? AppColor.primaryColor
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.shade300,
+                                      blurRadius: 5,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    firstPart,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ),
-                              );
-                            },
-                          ),
+                              ),
+                            );
+                          }),
                         ),
                       ),
                     ],

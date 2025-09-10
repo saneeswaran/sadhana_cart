@@ -5,7 +5,6 @@ import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
 import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
 import 'package:sadhana_cart/core/common%20model/notification/notification_model.dart';
-import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/search%20field/search_field_model.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
 
@@ -75,18 +74,6 @@ class HiveHelper {
     final box = Hive.box<SubcategoryModel>(subcategoryBox);
     return box.values.toList();
   }
-
-  //products
-  static Future<void> addProducts({required ProductModel product}) async {
-    final box = Hive.box<ProductModel>(productBox);
-    await box.put(product.productId, product);
-  }
-
-  static List<ProductModel> getProducts() {
-    final box = Hive.box<ProductModel>(productBox);
-    return box.values.toList();
-  }
-
   //cart
 
   static Future<void> addCart({required CartModel cart}) async {

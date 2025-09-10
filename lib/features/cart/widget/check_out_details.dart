@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
 class CheckOutDetails extends StatelessWidget {
@@ -12,33 +14,40 @@ class CheckOutDetails extends StatelessWidget {
       width: size.width * 1,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 2),
-            _customRowText(
-              title: "Product Price",
-              value: "${Constants.indianCurrency} 1000",
-              valueColor: Colors.black,
-            ),
-            const SizedBox(height: 10),
-            Divider(height: 1, color: Colors.grey.shade300),
-            const SizedBox(height: 5),
-            _customRowText(
-              title: "Shipping",
-              value: "Freeship",
-              valueColor: Colors.black,
-            ),
-            const SizedBox(height: 10),
-            Divider(height: 1, color: Colors.grey.shade300),
-            const SizedBox(height: 8),
-            _customRowText(
-              title: "subtotal",
-              value: "${Constants.indianCurrency} 1000",
-              valueColor: Colors.black,
-            ),
-            const SizedBox(height: 10),
-            Divider(height: 1, color: Colors.grey.shade300),
-          ],
+        child: Consumer(
+          builder: (context, ref, child) {
+            final totalAmount = ref
+                .watch(cartProvider.notifier)
+                .getCartTotalAmount();
+            return Column(
+              children: [
+                const SizedBox(height: 2),
+                _customRowText(
+                  title: "Product Price",
+                  value: "${Constants.indianCurrency} $totalAmount",
+                  valueColor: Colors.black,
+                ),
+                const SizedBox(height: 10),
+                Divider(height: 1, color: Colors.grey.shade300),
+                const SizedBox(height: 5),
+                _customRowText(
+                  title: "Shipping",
+                  value: "Freeship",
+                  valueColor: Colors.black,
+                ),
+                const SizedBox(height: 10),
+                Divider(height: 1, color: Colors.grey.shade300),
+                const SizedBox(height: 8),
+                _customRowText(
+                  title: "subtotal",
+                  value: "${Constants.indianCurrency} $totalAmount",
+                  valueColor: Colors.black,
+                ),
+                const SizedBox(height: 10),
+                Divider(height: 1, color: Colors.grey.shade300),
+              ],
+            );
+          },
         ),
       ),
     );
