@@ -11,6 +11,11 @@ final favoriteProvider =
       (ref) => FavoriteNotifier(ref)..initialize(),
     );
 
+final fetchCurrentuserFavoriteProductProvider =
+    FutureProvider<Set<ProductModel>>((ref) async {
+      return await FavoriteService.fetchUserFavoriteProducts();
+    });
+
 class FavoriteNotifier extends StateNotifier<Set<FavoriteModel>> {
   final Ref ref;
   FavoriteNotifier(this.ref) : super({});
