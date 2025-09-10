@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
-<<<<<<< HEAD
 // Category Model
 class CategoryModel {
   final String categoryId;
@@ -288,9 +287,6 @@ final List<CategoryModel> categories = [
 
 // Dummy data
 final List<ProductModel> productModel = [
-=======
-final List<ProductModel> sampleProducts = [
->>>>>>> d410030057e57b16a3de0c1b7dd5880db907a8d2
   ProductModel(
     productId: 'P001',
     name: 'Cotton T-Shirt',
@@ -309,9 +305,7 @@ final List<ProductModel> sampleProducts = [
     ],
     sellerId: 'SELLER001',
     cashOnDelivery: true,
-<<<<<<< HEAD
-=======
-    colorOptions: ['Red', 'Blue', 'Black'],
+
     material: 'Cotton',
     fit: 'Regular',
     pattern: 'Solid',
@@ -440,6 +434,5 @@ final List<ProductModel> sampleProducts = [
     careInstruction: 'Wipe with clean cloth',
     sizeOptions: null,
     sizeVariants: [],
->>>>>>> d410030057e57b16a3de0c1b7dd5880db907a8d2
   ),
 ];

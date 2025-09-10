@@ -40,7 +40,7 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
   // final int _limit = 10;
 
   void initializeProducts() async {
-    state = sampleProducts;
+    // state = sampleProducts;
     // _lastDocument = null;
     // _hasMore = true;
     // await fetchNextProducts();
