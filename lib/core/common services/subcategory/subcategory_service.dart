@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
@@ -42,27 +41,6 @@ class SubcategoryService {
             .map(
               (e) => SubcategoryModel.fromMap(e.data() as Map<String, dynamic>),
             )
-            .toList();
-        return data;
-      } else {
-        return [];
-      }
-    } catch (e) {
-      log("subcategory service error $e");
-      return [];
-    }
-  }
-
-  static Future<List<ProductModel>> fetchSubcategoryProducts({
-    required String subcategory,
-  }) async {
-    try {
-      final QuerySnapshot querySnapshot = await subcategoryRef
-          .where("subcategory", isEqualTo: subcategory)
-          .get();
-      if (querySnapshot.docs.isNotEmpty) {
-        final data = querySnapshot.docs
-            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
             .toList();
         return data;
       } else {

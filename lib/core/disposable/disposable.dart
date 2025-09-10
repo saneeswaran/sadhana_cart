@@ -74,3 +74,10 @@ final orderStepperPageProvider = StateProvider<int>((ref) => 0);
 final orderAcceptTerms = StateProvider<bool>((ref) => false);
 
 final orderStatusIndexProvider = StateProvider<int>((ref) => 0);
+
+//clothing details
+final clothingSizeProvider = StateProvider<int>((ref) => 0);
+
+final clothingColorProvider = StateProvider<int>((ref) => 0);
+
+final clothingIndexProvider = StateProvider<int>((ref) => 0);

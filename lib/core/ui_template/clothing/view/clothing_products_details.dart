@@ -1,18 +1,19 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating/flutter_rating.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
-import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/colors/app_color_enum.dart';
+import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
-import 'package:sadhana_cart/core/constants/constants.dart';
-import 'package:sadhana_cart/core/widgets/color_list_tile.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/ui_template/common widgets/product_price_rating.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
+import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
-import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
-import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
+import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing details/rating_tile.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
   final ProductModel product;
+
   const ClothingProductsDetails({super.key, required this.product});
 
   @override
@@ -35,166 +36,187 @@ class ClothingProductsDetails extends StatelessWidget {
             const SizedBox(height: 20),
             CustomCarouselSlider(product: product),
             Container(
-              padding: const EdgeInsets.all(10),
-              width: size.width * 1,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 7,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              width: size.width,
               child: Column(
                 children: [
-                  ListTile(
-                    title: Text(
-                      product.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: StarRating(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      rating: product.rating,
-                      color: AppColor.ratingColor,
-                      size: 25.0,
-                      onRatingChanged: (value) => log(value.toString()),
-                    ),
-                    trailing: Text(
-                      "${Constants.indianCurrency} ${product.price}",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  ProductPriceRating(product: product),
                   const Divider(color: AppColor.lightGrey, thickness: 1.2),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Expanded(
-                          child: ColorListTile(
-                            text: "Color",
-                            widget: Text(
-                              product.brand,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final selecIndex = ref.watch(clothingColorProvider);
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Color :",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: List.generate(
+                                product.colorOptions?.length ?? 0,
+                                (index) {
+                                  final isSelected = index == selecIndex;
+                                  final colorName =
+                                      product.colorOptions![index];
+                                  final color = getColorFromDatabase(colorName);
+                                  final isWhite =
+                                      color == AppColors.white.color;
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      ref
+                                              .read(
+                                                clothingColorProvider.notifier,
+                                              )
+                                              .state =
+                                          index;
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.transparent,
+                                        border: isSelected
+                                            ? Border.all(
+                                                color: AppColor.primaryColor,
+                                                width: 2,
+                                              )
+                                            : null,
+                                      ),
+                                      child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        margin: const EdgeInsets.all(5),
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: color,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade300,
+                                              blurRadius: 5,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                          border: isWhite
+                                              ? Border.all(color: Colors.grey)
+                                              : null,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(color: AppColor.lightGrey, thickness: 1.2),
-                  CustomTileDropdown(
-                    title: "Description",
-                    value: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        product.description,
-                        textAlign: TextAlign.justify,
-                      ),
-                    ),
-                  ),
-                  const Divider(color: AppColor.lightGrey, thickness: 1.2),
-
-                  //review tile
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Reviews",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(
-                          "4.9",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        "OUT OF 5",
-                        style: TextStyle(
-                          color: Colors.grey.shade400,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 90),
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              StarRating(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                color: AppColor.switchTileColor,
-                                size: 30,
-                                rating: 5,
-                              ),
-                              Text(
-                                "84 Ratings",
-                                style: TextStyle(
-                                  color: Colors.grey.shade300,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  ListView.builder(
-                    itemCount: 5,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return const RatingTile(
-                        imageUrl: AppImages.noProfile,
-                        name: "sathish",
-                        rating: 4.9,
-                        review: "This product is really good",
                       );
                     },
                   ),
                 ],
               ),
+            ),
+
+            const CustomDivider(),
+            const SizedBox(height: 20),
+
+            /// Sizes
+            Consumer(
+              builder: (context, ref, child) {
+                final selectSize = ref.watch(clothingSizeProvider);
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Size :",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: List.generate(
+                            product.sizeOptions?.length ?? 0,
+                            (index) {
+                              final sizeItem = product.sizeOptions![index];
+                              final isSelected = index == selectSize;
+                              return GestureDetector(
+                                onTap: () {
+                                  ref
+                                          .read(clothingSizeProvider.notifier)
+                                          .state =
+                                      index;
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? AppColor.primaryColor
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(5),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Text(
+                                    sizeItem,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.black,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+
+            const SizedBox(height: 20),
+
+            /// Reviews
+            ListView.builder(
+              itemCount: 5,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return const RatingTile(
+                  imageUrl: AppImages.noProfile,
+                  name: "Sathish",
+                  rating: 4.9,
+                  review: "This product is really good",
+                );
+              },
             ),
           ],
         ),
