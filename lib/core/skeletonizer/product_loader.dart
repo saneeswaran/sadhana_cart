@@ -21,7 +21,6 @@ class ProductLoader extends StatelessWidget {
                   width: size.width * 0.45,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey[300],
                   ),
                 ),
               ),

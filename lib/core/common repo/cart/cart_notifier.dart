@@ -10,6 +10,14 @@ final cartProvider = StateNotifierProvider<CartNotifier, Set<CartModel>>(
   (ref) => CartNotifier(ref)..initialize(),
 );
 
+final cartProductListProvider = Provider<List<ProductModel>>((ref) {
+  final cart = ref.watch(cartProvider);
+  final product = ref.watch(productProvider);
+
+  final productInCart = cart.map((e) => e.productId).toList();
+  return product.where((e) => productInCart.contains(e.productId)).toList();
+});
+
 class CartNotifier extends StateNotifier<Set<CartModel>> {
   final Ref ref;
   CartNotifier(this.ref) : super({});

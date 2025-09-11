@@ -49,19 +49,19 @@ final List<Widget> bottomPages = [
       ),
     ),
   ),
-  CartPageMobile(
-    appBar: AppBar(
-      backgroundColor: AppColor.pureWhite,
-      centerTitle: true,
-      title: const Text(
-        "Your Cart",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
+  const CartItemTile(
+    // appBar: AppBar(
+    //   backgroundColor: AppColor.pureWhite,
+    //   centerTitle: true,
+    //   title: const Text(
+    //     "Your Cart",
+    //     style: TextStyle(
+    //       color: Colors.black,
+    //       fontSize: 18,
+    //       fontWeight: FontWeight.bold,
+    //     ),
+    //   ),
+    // ),
   ),
   const ProfilePageMobile(),
 ];
