@@ -9,6 +9,7 @@ import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rat
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_main_page.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
   final ProductModel product;
@@ -41,6 +42,12 @@ class ClothingProductsDetails extends StatelessWidget {
                 ),
                 onPressed: () {
                   log(product.toString());
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentMainPage(product: product),
+                    ),
+                  );
                 },
               ),
             ),

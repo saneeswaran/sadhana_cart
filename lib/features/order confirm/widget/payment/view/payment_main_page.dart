@@ -1,0 +1,327 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
+import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
+import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
+
+enum PaymentMethod { cash, online }
+
+class PaymentMainPage extends ConsumerStatefulWidget {
+  final ProductModel product;
+  const PaymentMainPage({super.key, required this.product});
+
+  @override
+  ConsumerState<PaymentMainPage> createState() => _PaymentMainPageState();
+}
+
+class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
+  int currentStep = 0;
+  PaymentMethod? _selectedMethod;
+
+  final PageController _pageController = PageController();
+
+  void _goToStep(int step) {
+    setState(() {
+      currentStep = step;
+    });
+    _pageController.animateToPage(
+      step,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch addresses safely after first frame
+    Future.microtask(() {
+      ref.read(addressprovider.notifier).updateAddress();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final product = widget.product;
+
+    // Watch address state
+    final addressState = ref.watch(addressprovider);
+    final AddressModel? address = addressState.addresses.isNotEmpty
+        ? addressState.addresses.first
+        : null;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Checkout"),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+      ),
+      body: Column(
+        children: [
+          // Step indicator
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundColor: currentStep == 0
+                            ? Colors.blue
+                            : Colors.grey,
+                        child: const Text(
+                          "1",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text("Step 1"),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        radius: 15,
+                        backgroundColor: currentStep == 1
+                            ? Colors.blue
+                            : Colors.grey,
+                        child: const Text(
+                          "2",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      const Text("Step 2"),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Expanded(
+            child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _pageController,
+              children: [
+                // Step 1: Product + User Details
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      // Product Tile
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              height: 90,
+                              width: 60,
+                              color: Colors.grey.shade300,
+                              child:
+                                  product.images != null &&
+                                      product.images!.isNotEmpty
+                                  ? Image.network(
+                                      product.images![0],
+                                      fit: BoxFit.fitHeight,
+                                    )
+                                  : null,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product.name ?? "Product Name",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "\$${product.price ?? 0}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+
+                      // User details
+                      Container(
+                        width: size.width,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: addressState.isLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : address != null
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.person_outlined,
+                                        color: Colors.grey[600],
+                                      ),
+                                      Text(
+                                        " ${address.name}",
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.phone_outlined,
+                                        color: Colors.grey[600],
+                                      ),
+                                      Text(
+                                        " ${address.phoneNumber}",
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.location_on_outlined,
+                                        color: Colors.grey[600],
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          "${address.streetName},${address.city},${address.state},${address.pinCode}"
+                                              .replaceAll(
+                                                ',',
+                                                ',\u200B',
+                                              ), // zero-width space after commas
+                                          style: const TextStyle(fontSize: 16),
+                                          softWrap: true,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            : const Text("No address found"),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Step 2: Payment Method
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Select Payment Method",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      PaymentOptionTile(
+                        title: "Cash On Delivery",
+                        description: "Pay when you receive your product",
+                        price: "\$${product.price ?? 0}",
+                        selected: _selectedMethod == PaymentMethod.cash,
+                        onTap: () {
+                          setState(() {
+                            _selectedMethod = PaymentMethod.cash;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      PaymentOptionTile(
+                        title: "Online Payment",
+                        description: "Pay now using card or UPI",
+                        price: "\$${product.price ?? 0}",
+                        selected: _selectedMethod == PaymentMethod.online,
+                        onTap: () {
+                          setState(() {
+                            _selectedMethod = PaymentMethod.online;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Navigation buttons
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                if (currentStep == 1)
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => _goToStep(0),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 50),
+                      ),
+                      child: const Text("Back"),
+                    ),
+                  ),
+                if (currentStep == 1) const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (currentStep == 0) {
+                        _goToStep(1);
+                      } else {
+                        if (_selectedMethod != null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Payment Selected: ${_selectedMethod == PaymentMethod.cash ? "Cash On Delivery" : "Online Payment"}",
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                    child: Text(currentStep == 0 ? "Next" : "Confirm Payment"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
