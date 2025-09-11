@@ -26,7 +26,7 @@ class PaymentController extends StateNotifier<PaymentState> {
     state = state.copyWith(isLoading: true);
     amount = amount * 100;
     var options = {
-      'key': 'demokey',
+      'key': 'rzp_test_RCgP4dyI1pibjj',
       'amount': amount, // in paise
       'name': 'Sadhana Cart',
       'description': 'Order Payment',
