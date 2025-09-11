@@ -34,7 +34,7 @@ class FavoriteService {
         customerId: currentUserId,
       );
       await favoriteRef.doc(docRef.id).set(favoriteModel.toMap());
-      await HiveHelper.addFavorites(favorite: favoriteModel);
+      // await HiveHelper.addFavorites(favorite: favoriteModel);
       //updated notifier
       ref.read(favoriteProvider.notifier).addToFavorite(product: product);
       ref

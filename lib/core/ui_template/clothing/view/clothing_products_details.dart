@@ -30,10 +30,8 @@ class ClothingProductsDetails extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
             CustomCarouselSlider(product: product),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+            SizedBox(
               width: size.width,
               child: Column(
                 children: [

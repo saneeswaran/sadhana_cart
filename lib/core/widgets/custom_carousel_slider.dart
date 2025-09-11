@@ -15,167 +15,145 @@ import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/view_photo.dart';
 
-class CustomCarouselSlider extends StatelessWidget {
+class CustomCarouselSlider extends ConsumerWidget {
   final ProductModel product;
   const CustomCarouselSlider({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
     final controller = CarouselSliderController();
+    final currentIndex = ref.watch(carouselController);
 
     return Stack(
       children: [
         /// Image Carousel
         Padding(
           padding: const EdgeInsets.only(top: 55),
-          child: Consumer(
-            builder: (context, ref, child) {
-              final index = ref.watch(carouselController);
-              return CarouselSlider(
-                items: product.images!
-                    .map(
-                      (e) => GestureDetector(
-                        onTap: () {
-                          navigateTo(
-                            context: context,
-                            screen: ViewPhoto(imageUrl: product.images![index]),
-                          );
-                        },
-                        child: Container(
-                          height: size.height * 0.4,
-                          width: size.width,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(e, cacheKey: e),
-                              fit: BoxFit.fitHeight,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                    .toList(),
-                carouselController: controller,
-                options: CarouselOptions(
-                  height: size.height * 0.4,
-                  autoPlay: true,
-                  autoPlayInterval: const Duration(seconds: 4),
-                  autoPlayAnimationDuration: const Duration(milliseconds: 800),
-                  enlargeCenterPage: true,
-                  viewportFraction: 1,
-                  aspectRatio: 16 / 9,
-                  scrollDirection: Axis.horizontal,
-                  enableInfiniteScroll: true,
-                  pauseAutoPlayOnTouch: true,
-                  scrollPhysics: const BouncingScrollPhysics(),
-                  onPageChanged: (index, reason) {
-                    ref.read(carouselController.notifier).state = index;
-                  },
+          child: CarouselSlider.builder(
+            itemCount: product.images?.length ?? 0,
+            carouselController: controller,
+            itemBuilder: (context, index, realIdx) {
+              final imageUrl = product.images![index];
+
+              return GestureDetector(
+                onTap: () {
+                  navigateTo(
+                    context: context,
+                    screen: ViewPhoto(imageUrl: imageUrl),
+                  );
+                },
+                child: Container(
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(imageUrl),
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               );
             },
+            options: CarouselOptions(
+              height: size.height * 0.45,
+              autoPlay: true,
+              autoPlayInterval: const Duration(seconds: 4),
+              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+              enlargeCenterPage: true,
+              viewportFraction: 1,
+              enableInfiniteScroll: true,
+              pauseAutoPlayOnTouch: true,
+              scrollPhysics: const BouncingScrollPhysics(),
+              onPageChanged: (index, reason) {
+                ref.read(carouselController.notifier).state = index;
+              },
+            ),
           ),
         ),
 
+        /// Back & Favorite Buttons
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const CircleBorder(),
-                  ),
-                  onPressed: () => navigateBack(context: context),
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    color: Colors.black,
-                  ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  shape: const CircleBorder(),
                 ),
+                onPressed: () => navigateBack(context: context),
+                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
+              ),
+              Consumer(
+                builder: (context, ref, child) {
+                  final favSet = ref.watch(favoriteProvider);
+                  final isFavorite = favSet.any(
+                    (e) => e.productId == product.productId,
+                  );
+                  final favModel = ref.watch(favoriteModelProvider);
+                  final matchedFavorite = favModel.firstWhereOrNull(
+                    (e) => e.productId == product.productId,
+                  );
+                  final String? existsFavoriteId = matchedFavorite?.favoriteId;
 
-                SizedBox(
-                  width: 48,
-                  height: 48,
-                  child: Consumer(
-                    builder: (context, ref, child) {
-                      final favSet = ref.watch(favoriteProvider);
-                      final bool isFavorite = favSet.any(
-                        (e) => e.productId == product.productId,
-                      );
-                      final favModel = ref.watch(favoriteModelProvider);
-                      final matchedFavorite = favModel.firstWhereOrNull(
-                        (e) => e.productId == product.productId,
-                      );
-                      final String? existsFavoriteId =
-                          matchedFavorite?.favoriteId;
-
-                      return IconButton(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: const CircleBorder(),
-                        ),
-                        onPressed: () async {
-                          try {
-                            if (!isFavorite) {
-                              await FavoriteService.addToFavorite(
-                                product: product,
-                                ref: ref,
-                              );
-                            } else if (existsFavoriteId != null) {
-                              await FavoriteService.deleteFavorite(
-                                favoriteId: existsFavoriteId,
-                                product: product,
-                                ref: ref,
-                              );
-                            }
-                          } catch (e) {
-                            log("Error toggling favorite: $e");
-                          }
-                        },
-                        icon: Icon(
-                          isFavorite ? Icons.favorite : Icons.favorite_border,
-                          color: isFavorite ? Colors.red : Colors.black,
-                        ),
-                      );
+                  return IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: const CircleBorder(),
+                    ),
+                    onPressed: () async {
+                      try {
+                        if (!isFavorite) {
+                          await FavoriteService.addToFavorite(
+                            product: product,
+                            ref: ref,
+                          );
+                        } else if (existsFavoriteId != null) {
+                          await FavoriteService.deleteFavorite(
+                            favoriteId: existsFavoriteId,
+                            product: product,
+                            ref: ref,
+                          );
+                        }
+                      } catch (e) {
+                        log("Error toggling favorite: $e");
+                      }
                     },
-                  ),
-                ),
-              ],
-            ),
+                    icon: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.black,
+                    ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
 
         /// Dot Indicator
         Positioned(
-          top: size.height * 0.37,
-          right: size.width * 0.45,
-          child: Consumer(
-            builder: (context, ref, child) {
-              final dot = ref.watch(carouselController);
-              return DotsIndicator(
-                dotsCount: product.images!.length,
-                axis: Axis.horizontal,
-                animationDuration: const Duration(milliseconds: 200),
-                position: dot.toDouble(),
-                onTap: (value) {
-                  ref.read(carouselController.notifier).state = value;
-                  controller.animateToPage(value);
-                  log("Dot tapped: $value");
-                },
-                decorator: DotsDecorator(
-                  size: const Size.square(8.0),
-                  activeSize: const Size(18.0, 8.0),
-                  color: Colors.grey.shade400,
-                  activeColor: AppColor.dartPrimaryColor,
-                  activeShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
+          bottom: 20,
+          left: 0,
+          right: 0,
+          child: Center(
+            child: DotsIndicator(
+              dotsCount: product.images?.length ?? 0,
+              position: currentIndex.toDouble(),
+              onTap: (index) {
+                ref.read(carouselController.notifier).state = index;
+                // controller.animateToPage(index);
+              },
+              decorator: DotsDecorator(
+                size: const Size.square(8.0),
+                activeSize: const Size(18.0, 8.0),
+                color: Colors.grey.shade400,
+                activeColor: AppColor.dartPrimaryColor,
+                activeShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0),
                 ),
-              );
-            },
+              ),
+            ),
           ),
         ),
       ],

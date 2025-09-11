@@ -7,16 +7,12 @@ final favoriteProvider =
       (ref) => FavoriteNotifier()..initialize(),
     );
 
-final fetchCurrentuserFavoriteProductProvider =
-    FutureProvider.autoDispose<Set<ProductModel>>((ref) async {
-      return await FavoriteService.fetchUserFavoriteProducts();
-    });
-
 class FavoriteNotifier extends StateNotifier<Set<ProductModel>> {
   FavoriteNotifier() : super({});
 
-  Future<Set<ProductModel>> initialize() async {
-    return await FavoriteService.fetchUserFavoriteProducts();
+  Future<void> initialize() async {
+    final favorites = await FavoriteService.fetchUserFavoriteProducts();
+    state = favorites;
   }
 
   void addToFavorite({required ProductModel product}) {
@@ -27,7 +23,7 @@ class FavoriteNotifier extends StateNotifier<Set<ProductModel>> {
     state = state.where((e) => e.productId != product.productId).toSet();
   }
 
-  bool checkAlreadyAddedToFavorites({required String productId}) {
-    return state.any((e) => e.productId != productId);
+  bool isFavorite(String productId) {
+    return state.any((e) => e.productId == productId);
   }
 }
