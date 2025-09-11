@@ -82,7 +82,6 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
             .toList();
 
         state = [...state, ...products];
-        log(state.toString());
         _lastDocument = snapshot.docs.last;
 
         if (products.length < _limit) {

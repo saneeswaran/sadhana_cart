@@ -8,7 +8,7 @@ final favoriteProvider =
     );
 
 final fetchCurrentuserFavoriteProductProvider =
-    FutureProvider<Set<ProductModel>>((ref) async {
+    FutureProvider.autoDispose<Set<ProductModel>>((ref) async {
       return await FavoriteService.fetchUserFavoriteProducts();
     });
 

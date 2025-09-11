@@ -95,6 +95,7 @@ class CustomCarouselSlider extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
+
                 SizedBox(
                   width: 48,
                   height: 48,
