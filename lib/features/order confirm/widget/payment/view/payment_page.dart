@@ -3,15 +3,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/checkout_total_amount_container.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/custom_payment_method.dart';
 import 'package:sadhana_cart/features/profile/widget/payment/view%20model/list_wallet_page.dart';
 
-class PaymentPage extends StatelessWidget {
+class PaymentPage extends ConsumerWidget {
   const PaymentPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paymentState = ref.watch(paymentProvider);
+    final paymentController = ref.read(paymentProvider.notifier);
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -43,27 +47,27 @@ class PaymentPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 30),
+
+              // Payment methods row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: List.generate(paymentMethodTitle.length, (index) {
-                  return Consumer(
-                    builder: (context, ref, child) {
-                      return GestureDetector(
-                        onTap: () {
-                          ref.read(orderStepperPageProvider.notifier).state =
-                              index;
-                        },
-                        child: CustomPaymentMethod(
-                          image: paymentMethodImage[index],
-                          index: index,
-                          title: paymentMethodTitle[index],
-                        ),
-                      );
+                  return GestureDetector(
+                    onTap: () {
+                      ref.read(orderStepperPageProvider.notifier).state = index;
                     },
+                    child: CustomPaymentMethod(
+                      image: paymentMethodImage[index],
+                      index: index,
+                      title: paymentMethodTitle[index],
+                    ),
                   );
                 }),
               ),
+
               const SizedBox(height: 20),
+
+              // Wallet list or conditional UI
               Consumer(
                 builder: (context, ref, child) {
                   final index = ref.watch(orderStepperPageProvider);
@@ -76,9 +80,15 @@ class PaymentPage extends StatelessWidget {
                   }
                 },
               ),
+
               const SizedBox(height: 20),
+
+              // Checkout total
               const CheckoutTotalAmountContainer(),
+
               const SizedBox(height: 20),
+
+              // Terms & conditions checkbox
               Row(
                 children: [
                   const SizedBox(width: 20),
@@ -100,6 +110,51 @@ class PaymentPage extends StatelessWidget {
                   ),
                 ],
               ),
+
+              const SizedBox(height: 30),
+
+              // Payment button & state handling
+              Center(
+                child: paymentState.isLoading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: () {
+                          if (ref.read(orderAcceptTerms)) {
+                            // Amount in paise, example: ₹500 = 50000
+                            paymentController.startPayment(amount: 1);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  "Please accept Terms & Conditions",
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: const Text("Pay Now"),
+                      ),
+              ),
+
+              // Show success or error message
+              if (paymentState.success)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "Payment Success! ID: ${paymentState.paymentId}",
+                    style: const TextStyle(color: Colors.green, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              if (paymentState.error != null)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "Payment Failed: ${paymentState.error}",
+                    style: const TextStyle(color: Colors.red, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
             ],
           ),
         ),
