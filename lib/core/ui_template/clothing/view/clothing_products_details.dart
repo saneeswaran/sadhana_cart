@@ -6,6 +6,7 @@ import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/skeletonizer/rating_tile_loader.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
 import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rating.dart';
@@ -14,6 +15,7 @@ import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_rating_widget.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_main_page.dart';
 import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
@@ -47,6 +49,10 @@ class ClothingProductsDetails extends StatelessWidget {
                 ),
                 onPressed: () {
                   log(product.toString());
+                  navigateTo(
+                    context: context,
+                    screen: PaymentMainPage(product: product),
+                  );
                 },
               ),
             ),
