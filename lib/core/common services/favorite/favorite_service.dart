@@ -90,32 +90,36 @@ class FavoriteService {
   static Future<Set<ProductModel>> fetchUserFavoriteProducts() async {
     try {
       final List<ProductModel> favData = [];
-      final QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+
+      final QuerySnapshot favSnapshot = await FirebaseFirestore.instance
           .collection(user)
           .doc(currentUserId)
           .collection(favorites)
           .get();
-      for (final doc in querySnapshot.docs) {
-        final productId = doc["productId"] as String;
-        final product = await productRef
-            .where("productId", isEqualTo: productId)
-            .get();
-        if (product.docs.isNotEmpty) {
-          final data = product.docs
-              .map(
-                (e) => ProductModel.fromMap(e.data() as Map<String, dynamic>),
-              )
-              .toList();
-          favData.addAll(data);
-          return favData.toSet();
-        } else {
-          return {};
+
+      final List<String> productIds = favSnapshot.docs
+          .map((doc) => doc["productId"] as String)
+          .toList();
+
+      final List<Future<QuerySnapshot>> futures = productIds.map((productId) {
+        return productRef.where("productId", isEqualTo: productId).get();
+      }).toList();
+
+      final List<QuerySnapshot> results = await Future.wait(futures);
+
+      for (final snapshot in results) {
+        if (snapshot.docs.isNotEmpty) {
+          final products = snapshot.docs.map(
+            (doc) => ProductModel.fromMap(doc.data() as Map<String, dynamic>),
+          );
+          favData.addAll(products);
         }
       }
+
+      return favData.toSet();
     } catch (e) {
-      log("favorite service error $e");
+      log("favorite service error: $e");
       return {};
     }
-    return {};
   }
 }

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:collection/collection.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -78,62 +79,71 @@ class CustomCarouselSlider extends StatelessWidget {
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                style: IconButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  shape: const CircleBorder(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  style: IconButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                  ),
+                  onPressed: () => navigateBack(context: context),
+                  icon: const Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.black,
+                  ),
                 ),
-                onPressed: () => navigateBack(context: context),
-                icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black),
-              ),
+                SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final favSet = ref.watch(favoriteProvider);
+                      final bool isFavorite = favSet.any(
+                        (e) => e.productId == product.productId,
+                      );
+                      final favModel = ref.watch(favoriteModelProvider);
+                      final matchedFavorite = favModel.firstWhereOrNull(
+                        (e) => e.productId == product.productId,
+                      );
+                      final String? existsFavoriteId =
+                          matchedFavorite?.favoriteId;
 
-              Consumer(
-                builder: (context, ref, child) {
-                  final favSet = ref.watch(favoriteProvider);
-                  final bool isFavorite = favSet.any(
-                    (e) => e.productId == product.productId,
-                  );
-                  final favoriteId = ref
-                      .watch(favoriteModelProvider.notifier)
-                      .checkTheProductIsInFavorite(product.productId!);
-                  return IconButton(
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: const CircleBorder(),
-                    ),
-                    onPressed: () async {
-                      try {
-                        log("fav check $isFavorite");
-                        log("favmodel check $favSet");
-                        if (!isFavorite) {
-                          log("running on add");
-                          await FavoriteService.addToFavorite(
-                            product: product,
-                            ref: ref,
-                          );
-                        } else {
-                          log("running on delete");
-                          await FavoriteService.deleteFavorite(
-                            favoriteId: favoriteId,
-                            product: product,
-                            ref: ref,
-                          );
-                        }
-                      } catch (e) {
-                        log("Error adding favorite: $e");
-                      }
+                      return IconButton(
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: const CircleBorder(),
+                        ),
+                        onPressed: () async {
+                          try {
+                            if (!isFavorite) {
+                              await FavoriteService.addToFavorite(
+                                product: product,
+                                ref: ref,
+                              );
+                            } else if (existsFavoriteId != null) {
+                              await FavoriteService.deleteFavorite(
+                                favoriteId: existsFavoriteId,
+                                product: product,
+                                ref: ref,
+                              );
+                            }
+                          } catch (e) {
+                            log("Error toggling favorite: $e");
+                          }
+                        },
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: isFavorite ? Colors.red : Colors.black,
+                        ),
+                      );
                     },
-                    icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? Colors.red : Colors.black,
-                    ),
-                  );
-                },
-              ),
-            ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
 

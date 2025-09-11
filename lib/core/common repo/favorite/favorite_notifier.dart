@@ -16,8 +16,7 @@ class FavoriteNotifier extends StateNotifier<Set<ProductModel>> {
   FavoriteNotifier() : super({});
 
   Future<Set<ProductModel>> initialize() async {
-    state = await FavoriteService.fetchUserFavoriteProducts();
-    return state;
+    return await FavoriteService.fetchUserFavoriteProducts();
   }
 
   void addToFavorite({required ProductModel product}) {

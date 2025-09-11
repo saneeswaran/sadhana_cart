@@ -18,6 +18,14 @@ class FavoriteProductTile extends ConsumerStatefulWidget {
 
 class _FavoriteProductTileState extends ConsumerState<FavoriteProductTile> {
   @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(fetchCurrentuserFavoriteProductProvider);
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final fav = ref.watch(fetchCurrentuserFavoriteProductProvider);
