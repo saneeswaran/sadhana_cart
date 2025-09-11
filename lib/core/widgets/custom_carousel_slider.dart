@@ -96,18 +96,18 @@ class CustomCarouselSlider extends StatelessWidget {
                   final bool isFavorite = favSet.any(
                     (e) => e.productId == product.productId,
                   );
+                  final favoriteId = ref
+                      .watch(favoriteModelProvider.notifier)
+                      .checkTheProductIsInFavorite(product.productId!);
                   return IconButton(
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.white,
                       shape: const CircleBorder(),
                     ),
                     onPressed: () async {
-                      final fav = ref
-                          .watch(favoriteModelProvider.notifier)
-                          .getFavoriteModel(product.productId!);
                       try {
                         log("fav check $isFavorite");
-                        log("favmodel check $fav");
+                        log("favmodel check $favSet");
                         if (!isFavorite) {
                           log("running on add");
                           await FavoriteService.addToFavorite(
@@ -117,7 +117,7 @@ class CustomCarouselSlider extends StatelessWidget {
                         } else {
                           log("running on delete");
                           await FavoriteService.deleteFavorite(
-                            favoriteId: fav!.favoriteId,
+                            favoriteId: favoriteId,
                             product: product,
                             ref: ref,
                           );

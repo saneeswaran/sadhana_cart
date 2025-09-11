@@ -20,7 +20,7 @@ class FavoritePageMobile extends StatelessWidget {
       ),
       body: const Padding(
         padding: EdgeInsets.all(16),
-        child: Column(children: [FavoriteProductTile()]),
+        child: Column(children: [Expanded(child: FavoriteProductTile())]),
       ),
     );
   }

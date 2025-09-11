@@ -25,4 +25,7 @@ class FavModelNotifier extends StateNotifier<Set<FavoriteModel>> {
   void removeFromFavorite({required String favoriteId}) {
     state = state.where((e) => e.favoriteId != favoriteId).toSet();
   }
+
+  String checkTheProductIsInFavorite(String productId) =>
+      state.firstWhere((element) => element.productId == productId).favoriteId;
 }
