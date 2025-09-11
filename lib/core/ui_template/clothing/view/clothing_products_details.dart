@@ -1,13 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
-import 'package:sadhana_cart/core/colors/app_color_enum.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rating.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_page.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
   final ProductModel product;
@@ -20,12 +21,30 @@ class ClothingProductsDetails extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: CustomElevatedButton(
-          child: const Text(
-            "Add to Cart",
-            style: customElevatedButtonTextStyle,
-          ),
-          onPressed: () {},
+        child: Row(
+          children: [
+            Expanded(
+              child: CustomElevatedButton(
+                child: const Text(
+                  "Add to Cart",
+                  style: customElevatedButtonTextStyle,
+                ),
+                onPressed: () {},
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: CustomElevatedButton(
+                child: const Text(
+                  "Buy now",
+                  style: customElevatedButtonTextStyle,
+                ),
+                onPressed: () {
+                  log(product.toString());
+                },
+              ),
+            ),
+          ],
         ),
       ),
       body: SingleChildScrollView(
@@ -34,94 +53,7 @@ class ClothingProductsDetails extends StatelessWidget {
             CustomCarouselSlider(product: product),
             SizedBox(
               width: size.width,
-              child: Column(
-                children: [
-                  //   ProductPriceRating(product: product),
-                  const Divider(color: AppColor.lightGrey, thickness: 1.2),
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final selecIndex = ref.watch(clothingColorProvider);
-                      return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Color :",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: List.generate(
-                                product.sizeVariants?.length ?? 0,
-                                (index) {
-                                  final isSelected = index == selecIndex;
-                                  final colorName =
-                                      product.sizeVariants?[index].color;
-                                  final color = getColorFromDatabase(
-                                    colorName ?? "black",
-                                  );
-                                  final isWhite =
-                                      color == AppColors.white.color;
-
-                                  return GestureDetector(
-                                    onTap: () {
-                                      ref
-                                              .read(
-                                                clothingColorProvider.notifier,
-                                              )
-                                              .state =
-                                          index;
-                                    },
-                                    child: Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.transparent,
-                                        border: isSelected
-                                            ? Border.all(
-                                                color: AppColor.primaryColor,
-                                                width: 2,
-                                              )
-                                            : null,
-                                      ),
-                                      child: Container(
-                                        height: 40,
-                                        width: 40,
-                                        margin: const EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: color,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.shade300,
-                                              blurRadius: 5,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                          border: isWhite
-                                              ? Border.all(color: Colors.grey)
-                                              : null,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
+              child: Column(children: [ProductPriceRating(product: product)]),
             ),
 
             const CustomDivider(),
@@ -130,7 +62,7 @@ class ClothingProductsDetails extends StatelessWidget {
             /// Sizes
             Consumer(
               builder: (context, ref, child) {
-                final selectSize = ref.watch(clothingSizeProvider);
+                final selectedSizeIndex = ref.watch(clothingSizeProvider);
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -138,7 +70,7 @@ class ClothingProductsDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text(
-                        "Size :",
+                        "Size:",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -151,10 +83,11 @@ class ClothingProductsDetails extends StatelessWidget {
                           spacing: 8,
                           runSpacing: 8,
                           children: List.generate(
-                            product.sizeOptions?.length ?? 0,
+                            product.sizeVariants?.length ?? 0,
                             (index) {
-                              final sizeItem = product.sizeOptions?[index];
-                              final isSelected = index == selectSize;
+                              final sizeItem = product.sizeVariants![index];
+                              final isSelected = index == selectedSizeIndex;
+
                               return GestureDetector(
                                 onTap: () {
                                   ref
@@ -164,27 +97,33 @@ class ClothingProductsDetails extends StatelessWidget {
                                 },
                                 child: Container(
                                   height: 40,
-                                  width: 40,
+                                  width: 60,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? AppColor.primaryColor
                                         : Colors.white,
                                     borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? AppColor.primaryColor
+                                          : Colors.grey.shade300,
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.grey.shade300,
-                                        blurRadius: 5,
+                                        color: Colors.grey.shade200,
+                                        blurRadius: 4,
                                         offset: const Offset(0, 2),
                                       ),
                                     ],
                                   ),
                                   child: Text(
-                                    sizeItem ?? "",
+                                    sizeItem.size,
+                                    textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: isSelected
                                           ? Colors.white
-                                          : Colors.black,
+                                          : Colors.black87,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -196,18 +135,6 @@ class ClothingProductsDetails extends StatelessWidget {
                       ),
                     ],
                   ),
-                );
-              },
-            ),
-            CustomElevatedButton(
-              child: const Text(
-                "Buy Now",
-                style: customElevatedButtonTextStyle,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PaymentPage()),
                 );
               },
             ),

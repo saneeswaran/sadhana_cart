@@ -133,7 +133,7 @@ class CustomCarouselSlider extends ConsumerWidget {
 
         /// Dot Indicator
         Positioned(
-          bottom: 20,
+          bottom: 5,
           left: 0,
           right: 0,
           child: Center(

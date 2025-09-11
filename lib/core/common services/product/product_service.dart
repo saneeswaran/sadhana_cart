@@ -131,7 +131,10 @@ class ProductService {
 
   static Future<List<ProductModel>> getFeatureProducts() async {
     try {
-      final QuerySnapshot querySnapshot = await productRef.get();
+      final QuerySnapshot querySnapshot = await productRef
+          .limit(10)
+          .orderBy('productId')
+          .get();
       if (querySnapshot.docs.isNotEmpty) {
         return querySnapshot.docs
             .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))

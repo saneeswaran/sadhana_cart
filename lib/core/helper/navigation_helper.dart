@@ -35,46 +35,13 @@ void navigateToProductDesignBasedOnCategory({
 }) {
   final categoryLowerCase = categoryName.toLowerCase().replaceAll(' ', '_');
 
-  // if (categoryLowerCase == CategoryConstants.electronics.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: CategoryListPage(
-  //       title: CategoryConstants.electronics,
-  //       products: products,
-  //     ),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.books.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: CategoryListPage(
-  //       title: CategoryConstants.books,
-  //       products: products,
-  //     ),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.home.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: CategoryListPage(
-  //       title: CategoryConstants.home,
-  //       products: products,
-  //     ),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.accessories.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: CategoryListPage(
-  //       title: CategoryConstants.accessories,
-  //       products: products,
-  //     ),
-  //   );
-  // } else {
-  //   // default fallback
-  //   navigateTo(
-  //     context: context,
-  //     screen: CategoryListPage(title: categoryName, products: products),
-  //   );
+  final clothingList = CategoryConstants.clothingCategory;
 
-  if (categoryLowerCase == CategoryConstants.fashion.toLowerCase()) {
+  final isClothing = clothingList.any(
+    (clothing) => categoryName.toLowerCase().contains(clothing.toLowerCase()),
+  );
+
+  if (isClothing) {
     navigateTo(
       context: context,
       screen: ClothingProductsDetails(product: product),

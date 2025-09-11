@@ -466,9 +466,12 @@ class ProductModel {
       images: List<String>.from(map['images'] ?? []),
       sellerId: map['sellerId'],
       cashOnDelivery: map['cashOnDelivery'],
-      sizeVariants: (map['sizeVariants'] as List?)
-          ?.map((e) => SizeVariant.fromMap(e))
-          .toList(),
+      sizeVariants: map['sizeVariants'] is List
+          ? (map['sizeVariants'] as List)
+                .map((e) => SizeVariant.fromMap(e))
+                .toList()
+          : null,
+
       timestamp: map['timestamp'],
       date: map['date'],
 
