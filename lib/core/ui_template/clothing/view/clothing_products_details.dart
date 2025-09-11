@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rating.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
@@ -42,11 +43,9 @@ class ClothingProductsDetails extends StatelessWidget {
                 ),
                 onPressed: () {
                   log(product.toString());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PaymentMainPage(product: product),
-                    ),
+                  navigateTo(
+                    context: context,
+                    screen: PaymentMainPage(product: product),
                   );
                 },
               ),
