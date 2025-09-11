@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
+import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
+import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
@@ -45,6 +50,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final product = widget.product;
+    final paymentController = ref.read(paymentProvider.notifier);
 
     // Watch address state
     final addressState = ref.watch(addressprovider);
@@ -60,6 +66,46 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
+      bottomNavigationBar: Expanded(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: CustomElevatedButton(
+            child: Text(
+              currentStep == 0 ? "Next" : "Confirm Payment",
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+            onPressed: () {
+              if (currentStep == 0) {
+                _goToStep(1); // Move to payment step
+              } else {
+                if (_selectedMethod != null) {
+                  if (_selectedMethod == PaymentMethod.cash) {
+                    // Cash on Delivery selected
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Payment Selected: Cash On Delivery"),
+                      ),
+                    );
+                  } else if (_selectedMethod == PaymentMethod.online) {
+                    // Online Payment selected
+                    final acceptedTerms = ref.read(orderAcceptTerms);
+                    if (acceptedTerms) {
+                      // Amount in paise, example ₹1 = 100 paise
+                      paymentController.startPayment(amount: 100);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Please accept Terms & Conditions"),
+                        ),
+                      );
+                    }
+                  }
+                }
+              }
+            },
+          ),
+        ),
+      ),
       body: Column(
         children: [
           // Step indicator
@@ -70,14 +116,17 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                 Expanded(
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor: currentStep == 0
-                            ? Colors.blue
-                            : Colors.grey,
-                        child: const Text(
-                          "1",
-                          style: TextStyle(color: Colors.white),
+                      InkWell(
+                        onTap: () => _goToStep(0),
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor: currentStep == 0
+                              ? Colors.blue
+                              : Colors.grey,
+                          child: const Text(
+                            "1",
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -116,6 +165,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // Product Tile
                       Container(
@@ -153,7 +203,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    "\$${product.price ?? 0}",
+                                    "₹ ${product.price ?? 0}",
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -230,6 +280,26 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                               )
                             : const Text("No address found"),
                       ),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Edit Address",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            Icon(
+                              Icons.edit_location_alt_outlined,
+                              color: Colors.blue,
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -251,7 +321,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                       PaymentOptionTile(
                         title: "Cash On Delivery",
                         description: "Pay when you receive your product",
-                        price: "\$${product.price ?? 0}",
+                        price: "₹${product.price ?? 0}",
                         selected: _selectedMethod == PaymentMethod.cash,
                         onTap: () {
                           setState(() {
@@ -263,7 +333,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                       PaymentOptionTile(
                         title: "Online Payment",
                         description: "Pay now using card or UPI",
-                        price: "\$${product.price ?? 0}",
+                        price: "₹${product.price ?? 0}",
                         selected: _selectedMethod == PaymentMethod.online,
                         onTap: () {
                           setState(() {
@@ -271,15 +341,47 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                           });
                         },
                       ),
+                      Row(
+                        children: [
+                          const SizedBox(width: 20),
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final value = ref.watch(orderAcceptTerms);
+                              return CustomCheckBox(
+                                value: value,
+                                onChanged: (newValue) {
+                                  ref.read(orderAcceptTerms.notifier).state =
+                                      newValue!;
+                                },
+                              );
+                            },
+                          ),
+                          const Text(
+                            "I agree to",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          CustomTextButton(
+                            text: "Terms and Conditions",
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
 
-          // Navigation buttons
-          Padding(
+
+/*
+
+Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
@@ -295,7 +397,11 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                   ),
                 if (currentStep == 1) const SizedBox(width: 16),
                 Expanded(
-                  child: ElevatedButton(
+                  child: CustomElevatedButton(
+                    child: Text(
+                      currentStep == 0 ? "Next" : "Confirm Payment",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
                     onPressed: () {
                       if (currentStep == 0) {
                         _goToStep(1);
@@ -311,17 +417,9 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                         }
                       }
                     },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    child: Text(currentStep == 0 ? "Next" : "Confirm Payment"),
                   ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
-}
+          */
