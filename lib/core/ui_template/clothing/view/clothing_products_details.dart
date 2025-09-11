@@ -4,7 +4,6 @@ import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/colors/app_color_enum.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
-import 'package:sadhana_cart/core/ui_template/common widgets/product_price_rating.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
@@ -38,7 +37,7 @@ class ClothingProductsDetails extends StatelessWidget {
               width: size.width,
               child: Column(
                 children: [
-                  ProductPriceRating(product: product),
+                  //   ProductPriceRating(product: product),
                   const Divider(color: AppColor.lightGrey, thickness: 1.2),
                   Consumer(
                     builder: (context, ref, child) {

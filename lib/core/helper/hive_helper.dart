@@ -5,6 +5,7 @@ import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
 import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
 import 'package:sadhana_cart/core/common%20model/notification/notification_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/search%20field/search_field_model.dart';
 import 'package:sadhana_cart/core/common%20model/subcategory/subcategory_model.dart';
 
@@ -97,8 +98,8 @@ class HiveHelper {
     await box.put(favorite.productId, favorite);
   }
 
-  static Set<FavoriteModel> getFavorite() {
-    final box = Hive.box<FavoriteModel>(favoriteBox);
+  static Set<ProductModel> getFavorite() {
+    final box = Hive.box<ProductModel>(favoriteBox);
     return box.values.toSet();
   }
 

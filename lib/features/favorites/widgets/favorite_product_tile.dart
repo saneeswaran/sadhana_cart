@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/favorite/favorite_notifier.dart';
 import 'package:sadhana_cart/core/common%20services/favorite/favorite_service.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
@@ -70,6 +71,7 @@ class _FavoriteProductTileState extends ConsumerState<FavoriteProductTile> {
                               context: context,
                               ref: ref,
                               favoriteId: favorite.productId!,
+                              product: favorite,
                             );
                           },
                           icon: const Icon(Icons.favorite, color: Colors.red),
@@ -120,10 +122,12 @@ class _FavoriteProductTileState extends ConsumerState<FavoriteProductTile> {
     required String favoriteId,
     required WidgetRef ref,
     required BuildContext context,
+    required ProductModel product,
   }) async {
     final bool isSuccess = await FavoriteService.deleteFavorite(
       favoriteId: favoriteId,
       ref: ref,
+      product: product,
     );
     if (isSuccess && context.mounted) {
       successSnackBar(message: "Removed from favorites", context: context);

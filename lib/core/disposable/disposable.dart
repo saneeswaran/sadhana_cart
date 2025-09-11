@@ -81,3 +81,5 @@ final clothingSizeProvider = StateProvider<int>((ref) => 0);
 final clothingColorProvider = StateProvider<int>((ref) => 0);
 
 final clothingIndexProvider = StateProvider<int>((ref) => 0);
+
+final carouselController = StateProvider.autoDispose<int>((ref) => 0);

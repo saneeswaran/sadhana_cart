@@ -39,4 +39,8 @@ class FavoriteModel extends HiveObject {
 
   factory FavoriteModel.fromJson(String source) =>
       FavoriteModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() =>
+      'FavoriteModel(favoriteId: $favoriteId, productId: $productId, customerId: $customerId)';
 }
