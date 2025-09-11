@@ -37,6 +37,13 @@ final getFutureproductProvider = FutureProvider<List<ProductModel>>((
   return await ProductService.getFeatureProducts();
 });
 
+// Top Rated products
+final topRatedProductsProvider = FutureProvider<List<ProductModel>>((
+  ref,
+) async {
+  return await ProductService.getTopRatingProducts();
+});
+
 class ProductNotifier extends StateNotifier<List<ProductModel>> {
   final Ref ref;
   ProductNotifier(this.ref) : super([]);

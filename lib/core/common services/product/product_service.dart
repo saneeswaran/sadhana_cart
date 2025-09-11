@@ -145,4 +145,28 @@ class ProductService {
       return [];
     }
   }
+
+  // Recommanded products (Based on the category)
+  static Future<List<ProductModel>> getTopRatingProducts({
+    int limit = 6,
+  }) async {
+    try {
+      final QuerySnapshot querySnapshot = await productRef
+          .orderBy("rating", descending: true) // highest rating first
+          .limit(limit) // only top 6 by default
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs
+            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .toList();
+      } else {
+        log("No top-rated products found");
+        return [];
+      }
+    } catch (e) {
+      log("ProductService getTopRatedProducts error: $e");
+      return [];
+    }
+  }
 }
