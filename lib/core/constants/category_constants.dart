@@ -15,7 +15,9 @@ class CategoryConstants {
   //just for safety purpose
   static List<String> clothingCategory = [
     "clothing",
-    " dress",
+    "dress",
+    "Womens",
+    "Womens Dress",
     "wears",
     'dress',
     'frock',

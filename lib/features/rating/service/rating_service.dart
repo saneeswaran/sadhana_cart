@@ -10,6 +10,11 @@ class RatingService {
   static final CollectionReference ratingRef = FirebaseFirestore.instance
       .collection(rating);
 
+  static final CollectionReference productRef = FirebaseFirestore.instance
+      .collection("products");
+  static final CollectionReference userRef = FirebaseFirestore.instance
+      .collection("users");
+
   static final currentUser = FirebaseAuth.instance.currentUser!.uid;
 
   static Future<bool> addRating({
@@ -21,10 +26,22 @@ class RatingService {
     try {
       final docRef = ratingRef.doc();
 
+      // Get user profile image
+      final DocumentSnapshot userSnapshot = await userRef
+          .doc(currentUser)
+          .get();
+
+      if (!userSnapshot.exists) return false;
+
+      final String imageUrl = userSnapshot.get("profileImage");
+      if (imageUrl.isEmpty) return false;
+
+      // Create RatingModel
       final RatingModel ratingModel = RatingModel(
         ratingId: docRef.id,
         userId: currentUser,
         userName: userName,
+        image: imageUrl,
         productId: productId,
         rating: rating,
         comment: comment,
@@ -32,6 +49,25 @@ class RatingService {
       );
 
       await docRef.set(ratingModel.toMap());
+
+      final querySnapshot = await ratingRef
+          .where("productId", isEqualTo: productId)
+          .get();
+
+      final allRatings = querySnapshot.docs.map((e) {
+        final data = e.data();
+        return RatingModel.fromMap(data as Map<String, dynamic>);
+      }).toList();
+
+      double totalRating = 0;
+      for (var rate in allRatings) {
+        totalRating += rate.rating;
+      }
+
+      double avgRating = totalRating / allRatings.length;
+
+      await productRef.doc(productId).update({"rating": avgRating});
+
       return true;
     } catch (e) {
       log("rating service error $e");
@@ -77,6 +113,7 @@ class RatingService {
     required String userName,
     required double rating,
     required String comment,
+    required String imageUrl,
   }) async {
     try {
       final QuerySnapshot querySnapshot = await ratingRef
@@ -89,6 +126,7 @@ class RatingService {
           ratingId: querySnapshot.docs.first.id,
           userId: currentUser,
           userName: userName,
+          image: imageUrl,
           productId: productId,
           rating: rating,
           comment: comment,

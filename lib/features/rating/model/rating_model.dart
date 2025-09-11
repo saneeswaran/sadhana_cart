@@ -8,6 +8,7 @@ class RatingModel {
   final String userId;
   final String userName;
   final String productId;
+  final String image;
   final double rating;
   final String comment;
   final Timestamp createdAt;
@@ -16,6 +17,7 @@ class RatingModel {
     required this.userId,
     required this.userName,
     required this.productId,
+    required this.image,
     required this.rating,
     required this.comment,
     required this.createdAt,
@@ -27,6 +29,7 @@ class RatingModel {
       'userId': userId,
       'userName': userName,
       'productId': productId,
+      'image': image,
       'rating': rating,
       'comment': comment,
       'createdAt': createdAt,
@@ -39,6 +42,7 @@ class RatingModel {
       userId: map['userId'] as String,
       userName: map['userName'] as String,
       productId: map['productId'] as String,
+      image: map['image'] as String,
       rating: map['rating'] as double,
       comment: map['comment'] as String,
       createdAt: map['createdAt'] as Timestamp,

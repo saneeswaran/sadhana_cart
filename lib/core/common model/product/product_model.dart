@@ -613,6 +613,32 @@ class ProductModel {
     switch (category!.toLowerCase()) {
       case 'fashion':
       case 'clothing':
+      case 'menswear':
+      case 'womenswear':
+      case 'kidswear':
+      case "dress":
+      case "Womens":
+      case "Womens Tops":
+      case "Womens Dress":
+      case "wears":
+      case 'frock':
+      case 'gown':
+      case 'lehenga':
+      case 'kurti':
+      case 'tops':
+      case 'tshirt':
+      case 'salwar':
+      case 'ethnic':
+      case 'skirt':
+      case 'jumpsuit':
+      case 'outfit':
+      case 'partywear':
+      case 'casualwear':
+      case 'formalwear':
+      case 'casual':
+      case 'formal':
+      case 'casuals':
+      case 'formals':
         return {
           'material': material,
           'fit': fit,

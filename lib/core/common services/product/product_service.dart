@@ -155,8 +155,8 @@ class ProductService {
   }) async {
     try {
       final QuerySnapshot querySnapshot = await productRef
-          .orderBy("rating", descending: true) // highest rating first
-          .limit(limit) // only top 6 by default
+          .orderBy("rating", descending: true)
+          .limit(limit)
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {

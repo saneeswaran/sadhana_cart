@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating/flutter_rating.dart';
-import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -14,14 +12,14 @@ class RatingTileLoader extends StatelessWidget {
       child: SizedBox(
         height: size.height * 0.14,
         width: size.width * 1,
-        child: Column(
+        child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              leading: const CircleAvatar(
+              leading: CircleAvatar(
                 backgroundImage: AssetImage(AppImages.noProfile),
               ),
-              title: const Text(
+              title: Text(
                 "This is the placeholder",
                 style: TextStyle(
                   color: Colors.black,
@@ -29,14 +27,8 @@ class RatingTileLoader extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              subtitle: StarRating(
-                mainAxisAlignment: MainAxisAlignment.start,
-                color: AppColor.ratingColor,
-                size: 20,
-                rating: 4.5,
-              ),
             ),
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(left: 60.0),
               child: Text(
                 "This is the review placeholder",

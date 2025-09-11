@@ -9,9 +9,7 @@ final ratingProvider = StateNotifierProvider<RatingNotifier, RatingState>(
 
 final specificProductrating = FutureProvider.autoDispose
     .family<List<RatingModel>, String>((ref, productId) async {
-      return ref
-          .read(ratingProvider.notifier)
-          .fetchProductRating(productId: productId);
+      return await RatingService.fetchRating(productId: productId);
     });
 
 class RatingNotifier extends StateNotifier<RatingState> {

@@ -4,11 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
+import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/skeletonizer/rating_tile_loader.dart';
+import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
 import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rating.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
+import 'package:sadhana_cart/core/widgets/custom_rating_widget.dart';
+import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
+import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
   final ProductModel product;
@@ -139,22 +145,96 @@ class ClothingProductsDetails extends StatelessWidget {
               },
             ),
 
-            const SizedBox(height: 20),
-
-            /// Reviews
-            // ListView.builder(
-            //   itemCount: 5,
-            //   shrinkWrap: true,
-            //   physics: const NeverScrollableScrollPhysics(),
-            //   itemBuilder: (context, index) {
-            //     return const RatingTile(
-            //       imageUrl: AppImages.noProfile,
-            //       name: "Sathish",
-            //       rating: 4.9,
-            //       review: "This product is really good",
+            // const SizedBox(height: 20),
+            // Builder(
+            //   builder: (context) {
+            //     final data = product.getDetailsByCategory();
+            //     return CustomTileDropdown(
+            //       title: "Description",
+            //       value: data.isNotEmpty
+            //           ? Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               children: data.entries.map((entry) {
+            //                 return ProductDetailRow(
+            //                   title: entry.key,
+            //                   value: entry.value?.toString() ?? 'N/A',
+            //                 );
+            //               }).toList(),
+            //             )
+            //           : GestureDetector(
+            //               onTap: () {
+            //                 log("no description $data");
+            //               },
+            //               child: const Text("No Description"),
+            //             ),
             //     );
             //   },
             // ),
+            //  ProductDetailPage(product: product),
+            const SizedBox(height: 20),
+
+            Consumer(
+              builder: (context, ref, child) {
+                final ratingAsync = ref.watch(
+                  specificProductrating(product.productId!),
+                );
+
+                return ratingAsync.when(
+                  loading: () {
+                    return const RatingTileLoader();
+                  },
+                  error: (error, stack) {
+                    return Center(child: Text("Error: ${error.toString()}"));
+                  },
+                  data: (ratingList) {
+                    if (ratingList.isEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "0 Ratings",
+                              style: TextStyle(
+                                color: AppColor.primaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            CustomTextButton(
+                              text: "Write a Review",
+                              onPressed: () {
+                                showRatingDialog(
+                                  context: context,
+                                  onSubmit: (rating, review) {},
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: ratingList.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final rating = ratingList[index];
+                        return RatingTile(
+                          imageUrl: rating.image.isEmpty
+                              ? AppImages.noProfile
+                              : rating.image,
+                          name: rating.userName,
+                          rating: rating.rating,
+                          review: rating.comment,
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),

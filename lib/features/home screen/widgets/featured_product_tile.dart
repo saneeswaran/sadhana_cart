@@ -126,7 +126,7 @@ class FeaturedProductTile extends ConsumerWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
+                          horizontal: 10,
                           vertical: 6,
                         ),
                         child: Text(
@@ -141,7 +141,7 @@ class FeaturedProductTile extends ConsumerWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
                           "${Constants.indianCurrency} ${product.price}",
                           maxLines: 1,
