@@ -10,19 +10,25 @@ import 'package:sadhana_cart/core/common%20repo/order/order_notifier.dart';
 import 'package:sadhana_cart/core/enums/order_status_enums.dart';
 
 class OrderService {
-  static const String orderCollection = 'orders';
+  static const String userCollection = 'users';
   static const String productCollection = 'products';
+
+  static final String currentUser = FirebaseAuth.instance.currentUser!.uid;
+
+  // Path: /users/{currentUserId}/orders
   static final CollectionReference orderRef = FirebaseFirestore.instance
-      .collection(orderCollection);
+      .collection(userCollection)
+      .doc(currentUser)
+      .collection('orders');
 
   static final CollectionReference productRef = FirebaseFirestore.instance
       .collection(productCollection);
-  static final currentUser = FirebaseAuth.instance.currentUser!.uid;
 
+  /// Adds a new order and updates product stock
   static Future<bool> addOrder({
     required double totalAmount,
-    required String address,
     required int phoneNumber,
+    required String address,
     required double latitude,
     required double longitude,
     required String orderDate,
@@ -32,6 +38,9 @@ class OrderService {
     required WidgetRef ref,
   }) async {
     try {
+      log("Starting addOrder for user: $currentUser");
+      log("Total Amount: $totalAmount, Products Count: ${products.length}");
+
       final orderDoc = orderRef.doc();
 
       final OrderModel orderModel = OrderModel(
@@ -50,15 +59,21 @@ class OrderService {
       );
 
       await FirebaseFirestore.instance.runTransaction((transaction) async {
+        log("Running Firestore transaction for order: ${orderDoc.id}");
+
         for (final orderedProduct in products) {
           final productId = orderedProduct.productId;
-          final List<SizeVariant> orderedVariants =
-              orderedProduct.sizeVariants!;
+
+          if (productId == null || productId.isEmpty) {
+            log("Invalid product ID in order.");
+            throw Exception("Invalid product ID in order.");
+          }
 
           final productRefDoc = productRef.doc(productId);
           final productSnapshot = await transaction.get(productRefDoc);
 
           if (!productSnapshot.exists) {
+            log("Product not found in Firestore: $productId");
             throw Exception("Product not found: $productId");
           }
 
@@ -66,10 +81,13 @@ class OrderService {
             productSnapshot.data() as Map<String, dynamic>,
           );
 
-          final currentTotalStock = data.stock;
-          List<dynamic> sizeVariants = data.sizeVariants!;
+          log("Updating stock for product: $productId");
 
-          // Update each size variant stock
+          final currentTotalStock = data.stock ?? 0;
+          final List<dynamic> sizeVariants = data.sizeVariants ?? [];
+          final List<SizeVariant> orderedVariants =
+              orderedProduct.sizeVariants ?? [];
+
           final updatedVariants = sizeVariants.map((variant) {
             final variantSize = variant['size'];
             final variantColor = variant['color'];
@@ -78,41 +96,56 @@ class OrderService {
               (ordered) =>
                   ordered.size == variantSize &&
                   (ordered.color ?? '') == (variantColor ?? ''),
+              orElse: () =>
+                  SizeVariant(size: variantSize, color: variantColor, stock: 0),
             );
 
             final currentStock = variant['stock'] ?? 0;
             final stockToSubtract = matchingOrderedVariant.stock;
-
             final newStock = (currentStock as int) - stockToSubtract;
 
             if (newStock < 0) {
+              log(
+                "Insufficient stock for product $productId, size ${matchingOrderedVariant.size}",
+              );
               throw Exception(
                 "Insufficient stock for product $productId, size ${matchingOrderedVariant.size}",
               );
             }
 
-            return {...variant, 'stock': newStock};
+            return {
+              'size': variantSize,
+              'color': variantColor,
+              'stock': newStock,
+            };
           }).toList();
 
-          // Decrease total stock by sum of all variant quantities in this product
           final totalStockToSubtract = orderedVariants.fold<int>(
             0,
-            (int sum, v) => sum + v.stock,
+            (sum, v) => sum + v.stock,
           );
 
           transaction.update(productRefDoc, {
-            'totalStock': currentTotalStock! - totalStockToSubtract,
+            'totalStock': currentTotalStock - totalStockToSubtract,
             'sizeVariants': updatedVariants,
           });
+
+          log(
+            "Stock updated for product: $productId, New Total Stock: ${currentTotalStock - totalStockToSubtract}",
+          );
         }
 
-        // Add order to Firestore
+        // Save order document
         transaction.set(orderDoc, orderModel.toMap());
+        log("Order written to Firestore document: ${orderDoc.id}");
       });
 
-      // Update provider outside the transaction
+      // Update local provider
       ref.read(orderProvider.notifier).addOrder(order: orderModel);
 
+      log(
+        "Order placed successfully for user: $currentUser, Order ID: ${orderDoc.id}",
+      );
       return true;
     } catch (e, stack) {
       log("Order Service Error: $e");
@@ -121,22 +154,23 @@ class OrderService {
     }
   }
 
+  /// Fetch orders of current user
   static Future<List<OrderModel>> fetchCustomerOrderDetails() async {
     try {
-      final QuerySnapshot querySnapshot = await orderRef
-          .where("userId", isEqualTo: currentUser)
-          .get();
+      log("Fetching orders for user: $currentUser");
+      final QuerySnapshot querySnapshot = await orderRef.get();
+
       if (querySnapshot.docs.isNotEmpty) {
-        final data = querySnapshot.docs
+        log("Found ${querySnapshot.docs.length} orders for user: $currentUser");
+        return querySnapshot.docs
             .map((e) => OrderModel.fromMap(e.data() as Map<String, dynamic>))
             .toList();
-        return data;
       } else {
-        log("order not found");
+        log("No orders found for user: $currentUser");
         return [];
       }
     } catch (e) {
-      log("order service error $e");
+      log("Order Service fetch error: $e");
       return [];
     }
   }

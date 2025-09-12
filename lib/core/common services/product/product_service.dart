@@ -177,8 +177,11 @@ class ProductService {
     required String query,
   }) async {
     try {
-      final QuerySnapshot querySnapshot = await productRef
-          .where("name", isGreaterThanOrEqualTo: query)
+      final lowerQuery = query.toLowerCase();
+
+      final querySnapshot = await productRef
+          .where("name_lower", isGreaterThanOrEqualTo: lowerQuery)
+          .where("name_lower", isLessThanOrEqualTo: "$lowerQuery\uf8ff")
           .get();
 
       if (querySnapshot.docs.isNotEmpty) {
@@ -186,7 +189,7 @@ class ProductService {
             .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
             .toList();
       } else {
-        log("product not found");
+        log("No products found for query: $query");
         return [];
       }
     } catch (e) {

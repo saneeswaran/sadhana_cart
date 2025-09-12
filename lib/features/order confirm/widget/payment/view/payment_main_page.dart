@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_state.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_success_page.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/update_location_page.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
@@ -42,17 +46,84 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
   @override
   void initState() {
     super.initState();
-    // Fetch addresses safely after first frame
+    // Fetch addresses
     Future.microtask(() {
       ref.read(addressprovider.notifier).updateAddress();
     });
+  }
+
+  Future<void> _handlePayment() async {
+    final addressState = ref.read(addressprovider);
+    final AddressModel? address = addressState.addresses.isNotEmpty
+        ? addressState.addresses.last
+        : null;
+
+    if (address == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please add an address first.")),
+      );
+      return;
+    }
+
+    if (_selectedMethod == PaymentMethod.cash) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Payment Selected: Cash On Delivery")),
+      );
+
+      // Add order to Firestore
+      final success = await OrderService.addOrder(
+        totalAmount: widget.product.price ?? 0,
+        address:
+            "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
+        phoneNumber: address.phoneNumber ?? 0,
+        latitude: address.lattitude,
+        longitude: address.longitude,
+        orderDate: DateTime.now().toString(),
+        quantity: 1,
+        products: [widget.product],
+        createdAt: Timestamp.now(),
+        ref: ref,
+      );
+
+      if (success) {
+        debugPrint("✅ Order placed successfully (Cash On Delivery)");
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Order placed successfully!")),
+        );
+      } else {
+        debugPrint("❌ Failed to place order (Cash On Delivery)");
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Failed to place order.")));
+      }
+
+      navigateToReplacement(
+        context: context,
+        screen: const PaymentSuccessPage(),
+      );
+    } else if (_selectedMethod == PaymentMethod.online) {
+      final acceptedTerms = ref.read(orderAcceptTerms);
+      if (!acceptedTerms) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please accept Terms & Conditions")),
+        );
+        return;
+      }
+
+      final paymentController = ref.read(paymentProvider.notifier);
+      paymentController.startPayment(
+        amount: (widget.product.price ?? 0).toInt(),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final product = widget.product;
-    final paymentController = ref.read(paymentProvider.notifier);
+    // final paymentController = ref.read(paymentProvider.notifier);
 
     // Watch address state
     final addressState = ref.watch(addressprovider);
@@ -77,326 +148,376 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
           ),
           onPressed: () {
             if (currentStep == 0) {
-              _goToStep(1); // Move to payment step
+              _goToStep(1);
             } else {
               if (_selectedMethod != null) {
-                if (_selectedMethod == PaymentMethod.cash) {
-                  // Cash on Delivery selected
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Payment Selected: Cash On Delivery"),
-                    ),
-                  );
-                } else if (_selectedMethod == PaymentMethod.online) {
-                  // Online Payment selected
-                  final acceptedTerms = ref.read(orderAcceptTerms);
-                  if (acceptedTerms) {
-                    // Amount in paise, example ₹1 = 100 paise
-                    paymentController.startPayment(amount: 100);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Please accept Terms & Conditions"),
-                      ),
-                    );
-                  }
-                }
+                _handlePayment();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Please select a payment method"),
+                  ),
+                );
               }
             }
           },
         ),
       ),
-      body: Column(
-        children: [
-          // Step indicator
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () => _goToStep(0),
-                        child: CircleAvatar(
-                          radius: 15,
-                          backgroundColor: currentStep == 0
-                              ? Colors.blue
-                              : Colors.grey,
-                          child: const Text(
-                            "1",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text("Step 1"),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundColor: currentStep == 1
-                            ? Colors.blue
-                            : Colors.grey,
-                        child: const Text(
-                          "2",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text("Step 2"),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+      body: Consumer(
+        builder: (context, ref, _) {
+          ref.listen<PaymentState>(paymentProvider, (previous, next) async {
+            if (next.success) {
+              debugPrint("Online Payment Success!");
 
-          Expanded(
-            child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _pageController,
-              children: [
-                // Step 1: Product + User Details
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Product Tile
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 90,
-                              width: 60,
-                              color: Colors.grey.shade300,
-                              child:
-                                  product.images != null &&
-                                      product.images!.isNotEmpty
-                                  ? Image.network(
-                                      product.images![0],
-                                      fit: BoxFit.fitHeight,
-                                    )
-                                  : null,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    product.name ?? "Product Name",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    "₹ ${product.price ?? 0}",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+              // Prepare order details
+              final addressState = ref.read(addressprovider);
+              final AddressModel? address = addressState.addresses.isNotEmpty
+                  ? addressState.addresses.last
+                  : null;
+
+              if (address != null) {
+                final success = await OrderService.addOrder(
+                  totalAmount: widget.product.price ?? 0,
+                  address:
+                      "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
+                  phoneNumber: address.phoneNumber ?? 0,
+                  latitude: address.lattitude,
+                  longitude: address.longitude,
+                  orderDate: DateTime.now().toString(),
+                  quantity: 1, // change if multiple quantities are supported
+                  products: [widget.product],
+                  createdAt: Timestamp.now(),
+                  ref: ref,
+                );
+
+                if (success) {
+                  debugPrint(
+                    "✅ Order placed successfully for product: ${widget.product.name}",
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Order placed successfully!")),
+                  );
+                } else {
+                  debugPrint(
+                    "❌ Failed to place order for product: ${widget.product.name}",
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Failed to place order.")),
+                  );
+                }
+              }
+
+              navigateToReplacement(
+                context: context,
+                screen: const PaymentSuccessPage(),
+              );
+            }
+          });
+          return Column(
+            children: [
+              // Step indicator
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        children: [
+                          InkWell(
+                            onTap: () => _goToStep(0),
+                            child: CircleAvatar(
+                              radius: 15,
+                              backgroundColor: currentStep == 0
+                                  ? Colors.blue
+                                  : Colors.grey,
+                              child: const Text(
+                                "1",
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text("Step 1"),
+                        ],
                       ),
-                      const SizedBox(height: 20),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 15,
+                            backgroundColor: currentStep == 1
+                                ? Colors.blue
+                                : Colors.grey,
+                            child: const Text(
+                              "2",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text("Step 2"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-                      // User details
-                      Container(
-                        width: size.width,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: addressState.isLoading
-                            ? const Center(child: CircularProgressIndicator())
-                            : address != null
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.person_outlined,
-                                        color: Colors.grey[600],
-                                      ),
-                                      Text(
-                                        " ${address.name}",
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 14),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.phone_outlined,
-                                        color: Colors.grey[600],
-                                      ),
-                                      Text(
-                                        " ${address.phoneNumber}",
-                                        style: const TextStyle(fontSize: 16),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 14),
-                                  Row(
+              Expanded(
+                child: PageView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _pageController,
+                  children: [
+                    // Step 1: Product + User Details
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Product Tile
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 90,
+                                  width: 60,
+                                  color: Colors.grey.shade300,
+                                  child:
+                                      product.images != null &&
+                                          product.images!.isNotEmpty
+                                      ? Image.network(
+                                          product.images![0],
+                                          fit: BoxFit.fitHeight,
+                                        )
+                                      : null,
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Icon(
-                                        Icons.location_city,
-                                        color: Colors.grey[600],
+                                      Text(
+                                        product.name ?? "Product Name",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                      Flexible(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              address.title ?? "",
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                            Text(
-                                              "${address.streetName},${address.city},${address.state},${address.pinCode}"
-                                                  .replaceAll(
-                                                    ',',
-                                                    ',\u200B',
-                                                  ), // zero-width space after commas
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                              ),
-                                              softWrap: true,
-                                            ),
-                                          ],
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        "₹ ${product.price ?? 0}",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ],
-                              )
-                            : const Text("No address found"),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          navigateTo(
-                            context: context,
-                            screen: const UpdateLocationPage(),
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey.shade300),
-                            borderRadius: BorderRadius.circular(8),
+                                ),
+                              ],
+                            ),
                           ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Edit Address",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              Icon(
-                                Icons.edit_location_alt_outlined,
-                                color: Colors.blue,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                          const SizedBox(height: 20),
 
-                // Step 2: Payment Method
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Select Payment Method",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      PaymentOptionTile(
-                        title: "Cash On Delivery",
-                        description: "Pay when you receive your product",
-                        price: "₹${product.price ?? 0}",
-                        selected: _selectedMethod == PaymentMethod.cash,
-                        onTap: () {
-                          setState(() {
-                            _selectedMethod = PaymentMethod.cash;
-                          });
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                      PaymentOptionTile(
-                        title: "Online Payment",
-                        description: "Pay now using card or UPI",
-                        price: "₹${product.price ?? 0}",
-                        selected: _selectedMethod == PaymentMethod.online,
-                        onTap: () {
-                          setState(() {
-                            _selectedMethod = PaymentMethod.online;
-                          });
-                        },
-                      ),
-                      Row(
-                        children: [
-                          const SizedBox(width: 20),
-                          Consumer(
-                            builder: (context, ref, child) {
-                              final value = ref.watch(orderAcceptTerms);
-                              return CustomCheckBox(
-                                value: value,
-                                onChanged: (newValue) {
-                                  ref.read(orderAcceptTerms.notifier).state =
-                                      newValue!;
-                                },
+                          // User details
+                          Container(
+                            width: size.width,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey.shade300),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: addressState.isLoading
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : address != null
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.person_outlined,
+                                            color: Colors.grey[600],
+                                          ),
+                                          Text(
+                                            " ${address.name}",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 14),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.phone_outlined,
+                                            color: Colors.grey[600],
+                                          ),
+                                          Text(
+                                            " ${address.phoneNumber}",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 14),
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.location_city,
+                                            color: Colors.grey[600],
+                                          ),
+                                          Flexible(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  address.title ?? "",
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                Text(
+                                                  "${address.streetName},${address.city},${address.state},${address.pinCode}"
+                                                      .replaceAll(
+                                                        ',',
+                                                        ',\u200B',
+                                                      ),
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                  ),
+                                                  softWrap: true,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  )
+                                : const Text("No address found"),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              navigateTo(
+                                context: context,
+                                screen: const UpdateLocationPage(),
                               );
                             },
-                          ),
-                          const Text(
-                            "I agree to",
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          CustomTextButton(
-                            text: "Terms and Conditions",
-                            onPressed: () {},
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Edit Address",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                  Icon(
+                                    Icons.edit_location_alt_outlined,
+                                    color: Colors.blue,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+
+                    // Step 2: Payment Method
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Select Payment Method",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          PaymentOptionTile(
+                            title: "Cash On Delivery",
+                            description: "Pay when you receive your product",
+                            price: "₹${product.price ?? 0}",
+                            selected: _selectedMethod == PaymentMethod.cash,
+                            onTap: () {
+                              setState(() {
+                                _selectedMethod = PaymentMethod.cash;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          PaymentOptionTile(
+                            title: "Online Payment",
+                            description: "Pay now using card or UPI",
+                            price: "₹${product.price ?? 0}",
+                            selected: _selectedMethod == PaymentMethod.online,
+                            onTap: () {
+                              setState(() {
+                                _selectedMethod = PaymentMethod.online;
+                              });
+                            },
+                          ),
+                          Row(
+                            children: [
+                              const SizedBox(width: 20),
+                              Consumer(
+                                builder: (context, ref, child) {
+                                  final value = ref.watch(orderAcceptTerms);
+                                  return CustomCheckBox(
+                                    value: value,
+                                    onChanged: (newValue) {
+                                      ref
+                                              .read(orderAcceptTerms.notifier)
+                                              .state =
+                                          newValue!;
+                                    },
+                                  );
+                                },
+                              ),
+                              const Text(
+                                "I agree to",
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              CustomTextButton(
+                                text: "Terms and Conditions",
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
