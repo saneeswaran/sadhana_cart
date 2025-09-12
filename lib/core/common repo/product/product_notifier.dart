@@ -44,6 +44,21 @@ final topRatedProductsProvider = FutureProvider<List<ProductModel>>((
   return await ProductService.getTopRatingProducts();
 });
 
+//search page notifiers
+
+final productByQueryProvider = FutureProvider.autoDispose
+    .family<List<ProductModel>, String>((ref, query) async {
+      return await ProductService.getProductByQuery(query: query);
+    });
+
+final productByMinMaxAmountProvider = FutureProvider.autoDispose
+    .family<List<ProductModel>, Map<String, dynamic>>((ref, map) async {
+      return await ProductService.getProductsByMoneyFilter(
+        min: map["price"],
+        max: map["price"],
+      );
+    });
+
 class ProductNotifier extends StateNotifier<List<ProductModel>> {
   final Ref ref;
   ProductNotifier(this.ref) : super([]);

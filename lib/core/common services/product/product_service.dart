@@ -172,4 +172,50 @@ class ProductService {
       return [];
     }
   }
+
+  static Future<List<ProductModel>> getProductByQuery({
+    required String query,
+  }) async {
+    try {
+      final QuerySnapshot querySnapshot = await productRef
+          .where("name", isGreaterThanOrEqualTo: query)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs
+            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .toList();
+      } else {
+        log("product not found");
+        return [];
+      }
+    } catch (e) {
+      log("ProductService fetch error: $e");
+      return [];
+    }
+  }
+
+  static Future<List<ProductModel>> getProductsByMoneyFilter({
+    required int min,
+    required int max,
+  }) async {
+    try {
+      final QuerySnapshot querySnapshot = await productRef
+          .where("price", isGreaterThanOrEqualTo: min)
+          .where("price", isLessThanOrEqualTo: max)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot.docs
+            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+            .toList();
+      } else {
+        log("product not found");
+        return [];
+      }
+    } catch (e) {
+      log("ProductService fetch error: $e");
+      return [];
+    }
+  }
 }
