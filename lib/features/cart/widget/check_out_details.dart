@@ -3,52 +3,50 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
-class CheckOutDetails extends StatelessWidget {
+class CheckOutDetails extends ConsumerWidget {
   const CheckOutDetails({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return SizedBox(
-      height: size.height * 0.3,
-      width: size.width * 1,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            final totalAmount = ref
-                .watch(cartProvider.notifier)
-                .getCartTotalAmount();
-            return Column(
-              children: [
-                const SizedBox(height: 2),
-                _customRowText(
-                  title: "Product Price",
-                  value: "${Constants.indianCurrency} $totalAmount",
-                  valueColor: Colors.black,
-                ),
-                const SizedBox(height: 10),
-                Divider(height: 1, color: Colors.grey.shade300),
-                const SizedBox(height: 5),
-                _customRowText(
-                  title: "Shipping",
-                  value: "Freeship",
-                  valueColor: Colors.black,
-                ),
-                const SizedBox(height: 10),
-                Divider(height: 1, color: Colors.grey.shade300),
-                const SizedBox(height: 8),
-                _customRowText(
-                  title: "subtotal",
-                  value: "${Constants.indianCurrency} $totalAmount",
-                  valueColor: Colors.black,
-                ),
-                const SizedBox(height: 10),
-                Divider(height: 1, color: Colors.grey.shade300),
-              ],
-            );
-          },
-        ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final totalAmount = ref
+        .watch(cartProvider.notifier)
+        .getCartTotalAmount(ref);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 8),
+
+          _customRowText(
+            title: "Product Price",
+            value:
+                "${Constants.indianCurrency} ${totalAmount.toStringAsFixed(2)}",
+            valueColor: Colors.black,
+          ),
+          const SizedBox(height: 8),
+          Divider(height: 1, color: Colors.grey.shade300),
+          const SizedBox(height: 8),
+
+          _customRowText(
+            title: "Shipping",
+            value: "Freeship",
+            valueColor: Colors.black,
+          ),
+          const SizedBox(height: 8),
+          Divider(height: 1, color: Colors.grey.shade300),
+          const SizedBox(height: 8),
+
+          _customRowText(
+            title: "Subtotal",
+            value:
+                "${Constants.indianCurrency} ${totalAmount.toStringAsFixed(2)}",
+            valueColor: Colors.black,
+          ),
+          const SizedBox(height: 8),
+          Divider(height: 1, color: Colors.grey.shade300),
+        ],
       ),
     );
   }
@@ -66,8 +64,8 @@ class CheckOutDetails extends StatelessWidget {
           title,
           style: TextStyle(
             color: titleColor,
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
           ),
         ),
         Text(

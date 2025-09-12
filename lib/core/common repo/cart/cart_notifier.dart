@@ -55,26 +55,27 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     return products.where((p) => productIds.contains(p.productId)).toSet();
   }
 
-  void increaseQuantity({required int maxStock}) {
-    for (final cart in state) {
-      if (cart.quantity < maxStock) {
-        final updated = cart.copyWith(quantity: cart.quantity + 1);
-        state = {...state, updated};
-      }
+  void increaseQuantity({required CartModel cart, required int maxStock}) {
+    if (cart.quantity < maxStock) {
+      final updatedCart = cart.copyWith(quantity: cart.quantity + 1);
+      state = {
+        for (final c in state)
+          if (c.productId == cart.productId) updatedCart else c,
+      };
     }
   }
 
-  void decreaseQuantity() {
-    for (final cart in state) {
-      if (cart.quantity == 1) return;
-      if (cart.quantity > 1) {
-        final updated = cart.copyWith(quantity: cart.quantity - 1);
-        state = {...state, updated};
-      }
+  void decreaseQuantity({required CartModel cart}) {
+    if (cart.quantity > 1) {
+      final updatedCart = cart.copyWith(quantity: cart.quantity - 1);
+      state = {
+        for (final c in state)
+          if (c.productId == cart.productId) updatedCart else c,
+      };
     }
   }
 
-  double getCartTotalAmount() {
+  double getCartTotalAmount(WidgetRef ref) {
     final products = ref.read(productProvider);
     double total = 0.0;
 
