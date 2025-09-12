@@ -23,7 +23,6 @@ class SizeVariant extends HiveObject {
     this.skuSuffix,
   });
 
-  // Convert to Map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'size': size,
@@ -33,7 +32,6 @@ class SizeVariant extends HiveObject {
     };
   }
 
-  // Create from Map
   factory SizeVariant.fromMap(Map<String, dynamic> map) {
     return SizeVariant(
       size: map['size'] ?? '',

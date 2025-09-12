@@ -33,8 +33,39 @@ class OrderModel {
     required this.products,
   });
 
+  OrderModel copyWith({
+    String? userId,
+    double? totalAmount,
+    String? address,
+    int? phoneNumber,
+    double? latitude,
+    double? longitude,
+    String? orderStatus,
+    String? orderDate,
+    String? orderId,
+    Timestamp? createdAt,
+    List<ProductModel>? products,
+    int? quantity,
+  }) {
+    return OrderModel(
+      quantity: quantity ?? this.quantity,
+      userId: userId ?? this.userId,
+      totalAmount: totalAmount ?? this.totalAmount,
+      address: address ?? this.address,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      orderStatus: orderStatus ?? this.orderStatus,
+      orderDate: orderDate ?? this.orderDate,
+      orderId: orderId ?? this.orderId,
+      createdAt: createdAt ?? this.createdAt,
+      products: products ?? this.products,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'quantity': quantity,
       'userId': userId,
       'totalAmount': totalAmount,
       'address': address,
@@ -74,34 +105,4 @@ class OrderModel {
 
   factory OrderModel.fromJson(String source) =>
       OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
-  OrderModel copyWith({
-    String? userId,
-    double? totalAmount,
-    String? address,
-    int? phoneNumber,
-    double? latitude,
-    double? longitude,
-    String? orderStatus,
-    String? orderDate,
-    String? orderId,
-    Timestamp? createdAt,
-    List<ProductModel>? products,
-    int? quantity,
-  }) {
-    return OrderModel(
-      quantity: quantity ?? this.quantity,
-      userId: userId ?? this.userId,
-      totalAmount: totalAmount ?? this.totalAmount,
-      address: address ?? this.address,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      orderStatus: orderStatus ?? this.orderStatus,
-      orderDate: orderDate ?? this.orderDate,
-      orderId: orderId ?? this.orderId,
-      createdAt: createdAt ?? this.createdAt,
-      products: products ?? this.products,
-    );
-  }
 }

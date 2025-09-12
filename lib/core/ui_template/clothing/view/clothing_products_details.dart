@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
@@ -15,6 +16,7 @@ import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_rating_widget.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_main_page.dart';
 import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
 
@@ -32,12 +34,54 @@ class ClothingProductsDetails extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              child: CustomElevatedButton(
-                child: const Text(
-                  "Add to Cart",
-                  style: customElevatedButtonTextStyle,
-                ),
-                onPressed: () {},
+              child: Consumer(
+                builder: (context, ref, child) {
+                  final cartItems = ref.watch(cartProvider);
+                  final cartNotifier = ref.read(cartProvider.notifier);
+
+                  final bool isAlreadyInCart = cartItems.any(
+                    (c) => c.productId == product.productId,
+                  );
+
+                  final selectedSize = ref.watch(clothingSizeProvider);
+                  final selected = product.sizeVariants![selectedSize].size;
+                  return CustomElevatedButton(
+                    child: Text(
+                      isAlreadyInCart ? "Remove" : "Add to Cart",
+                      style: customElevatedButtonTextStyle,
+                    ),
+                    onPressed: () async {
+                      if (!isAlreadyInCart) {
+                        await cartNotifier.addToCart(
+                          product: product,
+                          size: selected,
+                        );
+
+                        if (context.mounted) {
+                          showCustomSnackbar(
+                            context: context,
+                            message: "Added to cart",
+                            type: ToastType.success,
+                          );
+                        }
+                      } else {
+                        final cartItem = cartItems.firstWhere(
+                          (c) => c.productId == product.productId,
+                        );
+
+                        await cartNotifier.removeFromCart(cart: cartItem);
+
+                        if (context.mounted) {
+                          showCustomSnackbar(
+                            context: context,
+                            message: "Removed from cart",
+                            type: ToastType.success,
+                          );
+                        }
+                      }
+                    },
+                  );
+                },
               ),
             ),
             const SizedBox(width: 10),
@@ -150,33 +194,6 @@ class ClothingProductsDetails extends StatelessWidget {
                 );
               },
             ),
-
-            // const SizedBox(height: 20),
-            // Builder(
-            //   builder: (context) {
-            //     final data = product.getDetailsByCategory();
-            //     return CustomTileDropdown(
-            //       title: "Description",
-            //       value: data.isNotEmpty
-            //           ? Column(
-            //               crossAxisAlignment: CrossAxisAlignment.start,
-            //               children: data.entries.map((entry) {
-            //                 return ProductDetailRow(
-            //                   title: entry.key,
-            //                   value: entry.value?.toString() ?? 'N/A',
-            //                 );
-            //               }).toList(),
-            //             )
-            //           : GestureDetector(
-            //               onTap: () {
-            //                 log("no description $data");
-            //               },
-            //               child: const Text("No Description"),
-            //             ),
-            //     );
-            //   },
-            // ),
-            //  ProductDetailPage(product: product),
             const SizedBox(height: 20),
 
             Consumer(

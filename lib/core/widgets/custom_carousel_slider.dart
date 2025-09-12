@@ -13,6 +13,7 @@ import 'package:sadhana_cart/core/common%20repo/favorite/favorite_notifier.dart'
 import 'package:sadhana_cart/core/common%20services/favorite/favorite_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/core/widgets/view_photo.dart';
 
 class CustomCarouselSlider extends ConsumerWidget {
@@ -109,12 +110,26 @@ class CustomCarouselSlider extends ConsumerWidget {
                             product: product,
                             ref: ref,
                           );
+                          if (context.mounted) {
+                            showCustomSnackbar(
+                              context: context,
+                              message: "Added to favorite",
+                              type: ToastType.success,
+                            );
+                          }
                         } else if (existsFavoriteId != null) {
                           await FavoriteService.deleteFavorite(
                             favoriteId: existsFavoriteId,
                             product: product,
                             ref: ref,
                           );
+                          if (context.mounted) {
+                            showCustomSnackbar(
+                              context: context,
+                              message: "Removed from favorite",
+                              type: ToastType.success,
+                            );
+                          }
                         }
                       } catch (e) {
                         log("Error toggling favorite: $e");

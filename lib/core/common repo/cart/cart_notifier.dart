@@ -6,66 +6,87 @@ import 'package:sadhana_cart/core/common%20services/cart/cart_service.dart';
 import 'package:sadhana_cart/core/helper/connection_helper.dart';
 import 'package:sadhana_cart/core/helper/hive_helper.dart';
 
-final cartProvider = StateNotifierProvider<CartNotifier, Set<CartModel>>(
-  (ref) => CartNotifier(ref)..initialize(),
-);
-
-final cartProductListProvider = Provider<List<ProductModel>>((ref) {
-  final cart = ref.watch(cartProvider);
-  final product = ref.watch(productProvider);
-
-  final productInCart = cart.map((e) => e.productId).toList();
-  return product.where((e) => productInCart.contains(e.productId)).toList();
-});
-
 class CartNotifier extends StateNotifier<Set<CartModel>> {
   final Ref ref;
-  CartNotifier(this.ref) : super({});
+  CartNotifier(this.ref) : super({}) {
+    initialize();
+  }
 
-  void initialize() async {
+  Future<void> initialize() async {
     final bool isInternet = await ConnectionHelper.checkInternetConnection();
     if (isInternet) {
-      state = await CartService.fetchCart();
+      final fetched = await CartService.fetchCart();
+      state = {...fetched};
     } else {
       state = HiveHelper.getCart();
     }
   }
 
-  Set<ProductModel> getCartProducts() {
-    final products = ref.watch(productProvider);
-    final productIdsInCart = state.map((cart) => cart.productId).toSet();
+  Future<void> addToCart({
+    required ProductModel product,
+    required String size,
+  }) async {
+    final bool success = await CartService.addToCart(
+      product: product,
+      size: size,
+    );
 
-    return products
-        .where((product) => productIdsInCart.contains(product.productId))
-        .toSet();
-  }
-
-  Future<void> addToCart({required ProductModel product}) async {
-    final bool isAdded = await CartService.addToCart(product: product);
-
-    if (isAdded) {
-      final updatedCart = await CartService.fetchCart();
-      state = {...updatedCart};
-    } else {
-      final updatedCart = await CartService.fetchCart();
-      state = {...updatedCart};
+    if (success) {
+      final updated = await CartService.fetchCart();
+      state = {...updated};
     }
   }
 
-  void removeFromCart({required CartModel cart}) {
-    state = state.where((e) => e.productId != cart.productId).toSet();
+  Future<void> removeFromCart({required CartModel cart}) async {
+    final bool success = await CartService.deleteCart(cart: cart);
+
+    if (success) {
+      final updated = await CartService.fetchCart();
+      state = {...updated};
+    } else {
+      state = state.where((e) => e.productId != cart.productId).toSet();
+    }
+  }
+
+  Set<ProductModel> getCartProducts() {
+    final products = ref.read(productProvider);
+    final productIds = state.map((c) => c.productId).toSet();
+
+    return products.where((p) => productIds.contains(p.productId)).toSet();
   }
 
   double getCartTotalAmount() {
-    final products = ref.watch(productProvider);
+    final products = ref.read(productProvider);
     double total = 0.0;
 
     for (final cart in state) {
-      final product = products.firstWhere((p) => p.productId == cart.productId);
-
-      total += product.offerPrice! * cart.quantity;
+      final product = products.firstWhere(
+        (p) => p.productId == cart.productId,
+        orElse: () => ProductModel(
+          productId: cart.productId,
+          name: "Unknown",
+          offerPrice: 0,
+        ),
+      );
+      total += (product.offerPrice ?? 0) * cart.quantity;
     }
 
     return total;
   }
 }
+
+final cartProvider = StateNotifierProvider<CartNotifier, Set<CartModel>>((ref) {
+  return CartNotifier(ref);
+});
+
+final cartProductListProvider = Provider<List<ProductModel>>((ref) {
+  final cartItems = ref.watch(cartProvider);
+  final products = ref.watch(productProvider);
+
+  final ids = cartItems.map((c) => c.productId).toSet();
+  return products.where((p) => ids.contains(p.productId)).toList();
+});
+
+final getCurrentUserCartProducts = StreamProvider<List<ProductModel>>(
+  (ref) => CartService.getCurrentUserCartProducts(),
+);
