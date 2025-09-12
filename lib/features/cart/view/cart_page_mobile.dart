@@ -26,7 +26,7 @@ class CartPageMobile extends ConsumerWidget {
             return const Center(child: Text("Your cart is empty"));
           }
           return Column(
-            children: [
+            children: <Widget>[
               ListView.builder(
                 itemCount: cartItems.length,
                 shrinkWrap: true,
@@ -164,7 +164,7 @@ class CartPageMobile extends ConsumerWidget {
               const Spacer(),
               Column(
                 children: [
-                  const CheckOutDetails(),
+                  CheckOutDetails(cartItems),
                   const SizedBox(height: 20),
                   CustomElevatedButton(
                     child: const Text(

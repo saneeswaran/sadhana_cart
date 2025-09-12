@@ -75,36 +75,24 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     }
   }
 
-  double getCartTotalAmount(WidgetRef ref) {
-    final products = ref.read(productProvider);
+  double getCartTotalAmount({required List<ProductModel> products}) {
     double total = 0.0;
 
     for (final cart in state) {
-      final product = products.firstWhere(
-        (p) => p.productId == cart.productId,
-        orElse: () => ProductModel(
-          productId: cart.productId,
-          name: "Unknown",
-          offerPrice: 0,
-        ),
+      final cartProduct = products.firstWhere(
+        (product) => product.productId == cart.productId,
       );
-      total += (product.offerPrice ?? 0) * cart.quantity;
+      final product = cartProduct;
+      final price = product.offerPrice ?? 0.0;
+      final qty = cart.quantity;
+      total += price * qty;
     }
-
     return total;
   }
 }
 
 final cartProvider = StateNotifierProvider<CartNotifier, Set<CartModel>>((ref) {
   return CartNotifier(ref)..initialize();
-});
-
-final cartProductListProvider = Provider<List<ProductModel>>((ref) {
-  final cartItems = ref.watch(cartProvider);
-  final products = ref.watch(productProvider);
-
-  final ids = cartItems.map((c) => c.productId).toSet();
-  return products.where((p) => ids.contains(p.productId)).toList();
 });
 
 final getCurrentUserCartProducts = StreamProvider<List<ProductModel>>(

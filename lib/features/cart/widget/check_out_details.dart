@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
 class CheckOutDetails extends ConsumerWidget {
-  const CheckOutDetails({super.key});
+  final List<ProductModel> products;
+  const CheckOutDetails(this.products, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final totalAmount = ref
         .watch(cartProvider.notifier)
-        .getCartTotalAmount(ref);
+        .getCartTotalAmount(products: products);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
