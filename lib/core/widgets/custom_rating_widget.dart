@@ -108,7 +108,10 @@ Future<void> showRatingDialog({
                         onPressed: () {
                           if (!isLoading) Navigator.pop(context);
                         },
-                        child: const Text('Cancel'),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                       const SizedBox(width: 10),
                       SizedBox(
