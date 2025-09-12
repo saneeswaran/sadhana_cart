@@ -24,7 +24,7 @@ class CustomTileDropdown extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      children: [value],
+      children: [Padding(padding: const EdgeInsets.all(10.0), child: value)],
     );
   }
 }

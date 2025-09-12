@@ -24,20 +24,27 @@ class RatingService {
     required String comment,
   }) async {
     try {
+      final String currentUser = FirebaseAuth.instance.currentUser?.uid ?? '';
+      if (currentUser.isEmpty) {
+        log("User is not logged in");
+        return false;
+      }
+
       final docRef = ratingRef.doc();
+      final userDoc = await userRef.doc(currentUser).get();
 
-      // Get user profile image
-      final DocumentSnapshot userSnapshot = await userRef
-          .doc(currentUser)
-          .get();
+      if (!userDoc.exists) {
+        log("User document not found for userId: $currentUser");
+        return false;
+      }
 
-      if (!userSnapshot.exists) return false;
+      final String imageUrl = userDoc.get("profileImage");
+      if (imageUrl.isEmpty) {
+        log("Profile image is missing for userId: $currentUser");
+        return false;
+      }
 
-      final String imageUrl = userSnapshot.get("profileImage");
-      if (imageUrl.isEmpty) return false;
-
-      // Create RatingModel
-      final RatingModel ratingModel = RatingModel(
+      final ratingModel = RatingModel(
         ratingId: docRef.id,
         userId: currentUser,
         userName: userName,
@@ -50,6 +57,7 @@ class RatingService {
 
       await docRef.set(ratingModel.toMap());
 
+      // Calculate average rating
       final querySnapshot = await ratingRef
           .where("productId", isEqualTo: productId)
           .get();
@@ -59,12 +67,12 @@ class RatingService {
         return RatingModel.fromMap(data as Map<String, dynamic>);
       }).toList();
 
-      double totalRating = 0;
-      for (var rate in allRatings) {
-        totalRating += rate.rating;
-      }
+      final double totalRating = allRatings.fold(
+        0,
+        (double sum, item) => sum + item.rating,
+      );
 
-      double avgRating = totalRating / allRatings.length;
+      final double avgRating = totalRating / allRatings.length;
 
       await productRef.doc(productId).update({"rating": avgRating});
 
