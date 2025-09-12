@@ -61,7 +61,8 @@ class _OrderPageViewState extends State<OrderPageView> {
                 curve: Curves.easeInOut,
               );
             } else {
-              successSnackBar(
+              showCustomSnackbar(
+                type: ToastType.success,
                 message: "Order placed successfully",
                 context: context,
               );

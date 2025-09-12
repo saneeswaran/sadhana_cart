@@ -86,7 +86,8 @@ class FavoriteProductTile extends ConsumerWidget {
                                 );
 
                             if (isSuccess && context.mounted) {
-                              successSnackBar(
+                              showCustomSnackbar(
+                                type: ToastType.success,
                                 message: "Removed from favorites",
                                 context: context,
                               );

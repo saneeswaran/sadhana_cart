@@ -2,67 +2,69 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cherry_toast/resources/arrays.dart';
 import 'package:flutter/material.dart';
 
-void successSnackBar({
-  required String message,
-  required BuildContext context,
-  bool displayIcon = false,
-}) {
-  CherryToast.success(
-    animationType: AnimationType.fromTop,
-    animationDuration: const Duration(milliseconds: 500),
-    displayIcon: displayIcon,
-    title: Text(
-      message,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-      ),
-    ),
-  ).show(context);
-}
+TextStyle _snackbarTextStyle = const TextStyle(
+  color: Colors.black87,
+  fontSize: 15,
+  fontWeight: FontWeight.w500,
+);
 
-void informationSnackBar({
+void showCustomSnackbar({
   required BuildContext context,
   required String message,
-  required Text? action,
-  required String title,
-  bool displayIcon = false,
-}) {
-  CherryToast.info(
-    animationType: AnimationType.fromTop,
-    animationDuration: const Duration(milliseconds: 500),
-    action: action,
-    displayIcon: displayIcon,
-    title: Text(
-      title,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-      ),
-    ),
-  ).show(context);
-}
-
-void failedSnackbar({
-  required BuildContext context,
-  required String text,
+  String? subtitle,
+  required ToastType type,
+  bool displayIcon = true,
   Text? action,
-  bool displayIcon = false,
 }) {
-  CherryToast.error(
-    animationType: AnimationType.fromTop,
-    animationDuration: const Duration(milliseconds: 500),
-    action: action,
-    displayIcon: displayIcon,
-    title: Text(
-      text,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 16,
-        fontWeight: FontWeight.w400,
-      ),
-    ),
-  ).show(context);
+  CherryToast toast;
+
+  final titleWidget = Text(message, style: _snackbarTextStyle);
+  final subtitleWidget = subtitle != null
+      ? Text(
+          subtitle,
+          style: _snackbarTextStyle.copyWith(
+            fontSize: 13,
+            color: Colors.black54,
+          ),
+        )
+      : null;
+
+  switch (type) {
+    case ToastType.success:
+      toast = CherryToast.success(
+        title: titleWidget,
+        description: subtitleWidget,
+        action: action,
+        displayIcon: displayIcon,
+        animationType: AnimationType.fromTop,
+        animationDuration: const Duration(milliseconds: 400),
+      );
+      break;
+
+    case ToastType.error:
+      toast = CherryToast.error(
+        title: titleWidget,
+        description: subtitleWidget,
+        action: action,
+        displayIcon: displayIcon,
+        animationType: AnimationType.fromTop,
+        animationDuration: const Duration(milliseconds: 400),
+      );
+      break;
+
+    case ToastType.info:
+      toast = CherryToast.info(
+        title: titleWidget,
+        description: subtitleWidget,
+        action: action,
+        displayIcon: displayIcon,
+        animationType: AnimationType.fromTop,
+        animationDuration: const Duration(milliseconds: 400),
+      );
+      break;
+  }
+
+  toast.show(context);
 }
+
+enum ToastType { success, error, info }

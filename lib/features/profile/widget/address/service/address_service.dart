@@ -56,7 +56,8 @@ class AddressService {
       ref.read(addressprovider.notifier).addAddress(address: addressModel);
       //store in local storage
       if (context.mounted) {
-        successSnackBar(
+        showCustomSnackbar(
+          type: ToastType.success,
           message: "Address added successfully",
           context: context,
         );
@@ -66,7 +67,11 @@ class AddressService {
     } catch (e) {
       ref.read(loadingProvider.notifier).state = false;
       if (context.mounted) {
-        failedSnackbar(context: context, text: "Failed to add address");
+        showCustomSnackbar(
+          context: context,
+          message: "Something went wrong",
+          type: ToastType.error,
+        );
       }
       log("address service error $e");
       return false;
@@ -107,7 +112,11 @@ class AddressService {
         ref.read(addressprovider.notifier).deleteAddress(address: document);
         ref.read(addressDeleteLoader.notifier).state = false;
         if (context.mounted) {
-          successSnackBar(message: "Address deleted", context: context);
+          showCustomSnackbar(
+            message: "Address deleted",
+            context: context,
+            type: ToastType.success,
+          );
         }
         return true;
       }
@@ -115,7 +124,11 @@ class AddressService {
       log("address service error $e");
       ref.read(addressDeleteLoader.notifier).state = false;
       if (context.mounted) {
-        failedSnackbar(context: context, text: "Failed to delete address");
+        showCustomSnackbar(
+          context: context,
+          message: "Failed to delete address",
+          type: ToastType.error,
+        );
       }
       return false;
     }
@@ -163,7 +176,8 @@ class AddressService {
         ref.read(addressprovider.notifier).updateAddress();
         ref.read(loadingProvider.notifier).state = false;
         if (context.mounted) {
-          successSnackBar(
+          showCustomSnackbar(
+            type: ToastType.success,
             message: "Address Updated Successfully",
             context: context,
           );
@@ -174,7 +188,11 @@ class AddressService {
       ref.read(loadingProvider.notifier).state = false;
       log("address service error $e");
       if (context.mounted) {
-        failedSnackbar(context: context, text: "Failed to update address");
+        showCustomSnackbar(
+          context: context,
+          message: "Failed to update address",
+          type: ToastType.error,
+        );
       }
       return false;
     }

@@ -126,7 +126,8 @@ class CustomerService {
       await documentSnapshot.reference.update(cleanedData);
 
       if (context.mounted) {
-        successSnackBar(
+        showCustomSnackbar(
+          type: ToastType.success,
           message: "Profile updated successfully",
           context: context,
         );
@@ -136,7 +137,11 @@ class CustomerService {
     } catch (e) {
       ref.read(loadingProvider.notifier).state = false;
       if (context.mounted) {
-        failedSnackbar(text: "Failed to update profile", context: context);
+        showCustomSnackbar(
+          context: context,
+          message: "Failed to update profile",
+          type: ToastType.error,
+        );
       }
       log("customer profile service error: $e");
       return false;

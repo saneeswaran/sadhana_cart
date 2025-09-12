@@ -6,7 +6,8 @@ import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
 class CartPageMobile extends ConsumerWidget {
-  const CartPageMobile({super.key});
+  final PreferredSizeWidget? appBar;
+  const CartPageMobile({super.key, this.appBar});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,106 +19,109 @@ class CartPageMobile extends ConsumerWidget {
       return const Center(child: Text("Your cart is empty"));
     }
 
-    return ListView.builder(
-      itemCount: cartProducts.length,
-      shrinkWrap: true,
-      physics: const ClampingScrollPhysics(),
-      itemBuilder: (context, index) {
-        final product = cartProducts[index];
-        final cartModel = cartItems.firstWhere(
-          (c) => c.productId == product.productId,
-        );
-        final variant = product.sizeVariants?.isNotEmpty == true
-            ? product.sizeVariants!.first
-            : null;
+    return Scaffold(
+      appBar: appBar,
+      body: ListView.builder(
+        itemCount: cartProducts.length,
+        shrinkWrap: true,
+        physics: const ClampingScrollPhysics(),
+        itemBuilder: (context, index) {
+          final product = cartProducts[index];
+          final cartModel = cartItems.firstWhere(
+            (c) => c.productId == product.productId,
+          );
+          final variant = product.sizeVariants?.isNotEmpty == true
+              ? product.sizeVariants!.first
+              : null;
 
-        return Container(
-          margin: const EdgeInsets.all(10),
-          height: size.height * 0.17,
-          width: size.width,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade300,
-                blurRadius: 5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-              // Product image
-              Container(
-                height: size.height * 0.17,
-                width: size.width * 0.3,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(product.images!.first),
-                    fit: BoxFit.cover,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
+          return Container(
+            margin: const EdgeInsets.all(10),
+            height: size.height * 0.17,
+            width: size.width,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade300,
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
                 ),
-              ),
-              // Product details
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        product.name ?? '',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "${Constants.indianCurrency} ${product.offerPrice?.toStringAsFixed(2) ?? '--'}",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      variant != null
-                          ? Row(
-                              children: [
-                                Text(
-                                  "Size: ${variant.size}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                Text(
-                                  "Color: ${variant.color}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ],
-                            )
-                          : const SizedBox.shrink(),
-                      const SizedBox(height: 10),
-                      _quantityContainer(
-                        size: size,
-                        quantity: cartModel.quantity,
-                      ),
-                    ],
+              ],
+            ),
+            child: Row(
+              children: [
+                // Product image
+                Container(
+                  height: size.height * 0.17,
+                  width: size.width * 0.3,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(product.images!.first),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+                // Product details
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product.name ?? '',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "${Constants.indianCurrency} ${product.offerPrice?.toStringAsFixed(2) ?? '--'}",
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        variant != null
+                            ? Row(
+                                children: [
+                                  Text(
+                                    "Size: ${variant.size}",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  Text(
+                                    "Color: ${variant.color}",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : const SizedBox.shrink(),
+                        const SizedBox(height: 10),
+                        _quantityContainer(
+                          size: size,
+                          quantity: cartModel.quantity,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 

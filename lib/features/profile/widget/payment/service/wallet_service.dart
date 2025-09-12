@@ -45,7 +45,11 @@ class WalletService {
       );
       await docRef.set(walletModel.toMap());
       if (context.mounted) {
-        successSnackBar(message: "Wallet added successfully", context: context);
+        showCustomSnackbar(
+          message: "Wallet added successfully",
+          context: context,
+          type: ToastType.success,
+        );
       }
       ref.read(walletStateProvider.notifier).addWallet(wallet: walletModel);
       ref.read(walletLoader.notifier).state = false;
@@ -53,7 +57,11 @@ class WalletService {
     } catch (e) {
       ref.read(walletLoader.notifier).state = false;
       if (context.mounted) {
-        failedSnackbar(context: context, text: "Failed to add wallet");
+        showCustomSnackbar(
+          context: context,
+          message: "Failed to add wallet",
+          type: ToastType.error,
+        );
       }
       log("wallet service error $e");
       return false;
