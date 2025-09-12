@@ -122,7 +122,7 @@ class OrderService {
 
           final totalStockToSubtract = orderedVariants.fold<int>(
             0,
-            (sum, v) => sum + v.stock,
+            (int sum, v) => sum + v.stock,
           );
 
           transaction.update(productRefDoc, {

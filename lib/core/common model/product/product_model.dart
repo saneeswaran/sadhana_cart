@@ -29,7 +29,7 @@ class ProductModel {
   final double? rating;
   final List<String>? images;
   final String? sellerId;
-  final String? cashOnDelivery;
+  final bool? cashOnDelivery;
   final List<SizeVariant>? sizeVariants;
   final String? timestamp;
   final String? date;
@@ -611,6 +611,8 @@ class ProductModel {
   //this is the code will help you by getting products attributes by category
   Map<String, dynamic> getDetailsByCategory() {
     switch (category!.toLowerCase()) {
+      case "Brassiere":
+      case "Mens Bottom Wear":
       case 'fashion':
       case 'clothing':
       case 'menswear':

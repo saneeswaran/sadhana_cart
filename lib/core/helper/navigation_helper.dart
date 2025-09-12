@@ -1,16 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/category_constants.dart';
 import 'package:sadhana_cart/core/ui_template/accessories/view/accessories_screen.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/view/clothing_products_details.dart';
-import 'package:sadhana_cart/core/ui_template/foot_wear/view/foot_wear_design.dart'
-    show FootWearDesign;
-import 'package:sadhana_cart/core/ui_template/head%20phones/view/head_phone_template.dart';
-import 'package:sadhana_cart/core/ui_template/laptop/view/laptop_template.dart';
-import 'package:sadhana_cart/core/ui_template/mobile/view/mobile_template.dart';
-import 'package:sadhana_cart/core/ui_template/personal%20care/view/personal_care_page.dart';
 
 void navigateTo({required BuildContext context, required Widget screen}) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
@@ -35,7 +27,7 @@ void navigateToProductDesignBasedOnCategory({
   required String categoryName,
   required ProductModel product,
 }) {
-  final categoryLowerCase = categoryName.toLowerCase().replaceAll(' ', '_');
+  // final categoryLowerCase = categoryName.toLowerCase().replaceAll(' ', '_');
 
   final clothingList = CategoryConstants.clothingCategory;
 
@@ -48,40 +40,46 @@ void navigateToProductDesignBasedOnCategory({
       context: context,
       screen: ClothingProductsDetails(product: product),
     );
-  } else if (categoryName == CategoryConstants.footwear.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: FootWearDesign(product: product),
-    );
-  } else if (categoryLowerCase.toLowerCase() ==
-      CategoryConstants.mobile.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: MobileTemplate(product: product),
-    );
-  } else if (categoryLowerCase.toLowerCase() ==
-      CategoryConstants.laptop.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: LaptopTemplate(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.headphone.toLowerCase()) {
-    log('Category tapped: $categoryLowerCase');
-    navigateTo(
-      context: context,
-      screen: HeadPhoneTemplate(product: product),
-    );
-  } else if (categoryName.toLowerCase() ==
-      CategoryConstants.accessories.toLowerCase()) {
+  } else {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName.toLowerCase() ==
-      CategoryConstants.personalCare.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: PersonalCarePage(product: product),
-    );
   }
+  // } else if (categoryName == CategoryConstants.footwear.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: FootWearDesign(product: product),
+  //   );
+  // } else if (categoryLowerCase.toLowerCase() ==
+  //     CategoryConstants.mobile.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: MobileTemplate(product: product),
+  //   );
+  // } else if (categoryLowerCase.toLowerCase() ==
+  //     CategoryConstants.laptop.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: LaptopTemplate(product: product),
+  //   );
+  // } else if (categoryLowerCase == CategoryConstants.headphone.toLowerCase()) {
+  //   log('Category tapped: $categoryLowerCase');
+  //   navigateTo(
+  //     context: context,
+  //     screen: HeadPhoneTemplate(product: product),
+  //   );
+  // } else if (categoryName.toLowerCase() ==
+  //     CategoryConstants.accessories.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryName.toLowerCase() ==
+  //     CategoryConstants.personalCare.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: PersonalCarePage(product: product),
+  //   );
+  // }
 }

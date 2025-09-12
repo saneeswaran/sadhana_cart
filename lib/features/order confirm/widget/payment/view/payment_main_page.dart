@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +10,7 @@ import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_state.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_success_page.dart';
@@ -86,13 +89,13 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       );
 
       if (success) {
-        debugPrint("✅ Order placed successfully (Cash On Delivery)");
+        log("Order placed successfully (Cash On Delivery)");
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Order placed successfully!")),
         );
       } else {
-        debugPrint("❌ Failed to place order (Cash On Delivery)");
+        log(" Failed to place order (Cash On Delivery)");
         if (!mounted) return;
         ScaffoldMessenger.of(
           context,
@@ -184,34 +187,44 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                   latitude: address.lattitude,
                   longitude: address.longitude,
                   orderDate: DateTime.now().toString(),
-                  quantity: 1, // change if multiple quantities are supported
+                  quantity: 1,
                   products: [widget.product],
                   createdAt: Timestamp.now(),
                   ref: ref,
                 );
 
                 if (success) {
-                  debugPrint(
-                    "✅ Order placed successfully for product: ${widget.product.name}",
+                  log(
+                    "Order placed successfully for product: ${widget.product.name}",
                   );
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Order placed successfully!")),
-                  );
+                  if (context.mounted) {
+                    showCustomSnackbar(
+                      context: context,
+                      message: "Order placed successfully",
+                      type: ToastType.success,
+                    );
+                  }
                 } else {
-                  debugPrint(
-                    "❌ Failed to place order for product: ${widget.product.name}",
+                  log(
+                    "Failed to place order for product: ${widget.product.name}",
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Failed to place order.")),
-                  );
+                  if (context.mounted) {
+                    showCustomSnackbar(
+                      context: context,
+                      message: "Failed to place order",
+                      type: ToastType.error,
+                    );
+                  }
                 }
               }
 
-              navigateToReplacement(
-                context: context,
-                screen: const PaymentSuccessPage(),
-              );
+              if (context.mounted) {
+                navigateToReplacement(
+                  context: context,
+                  screen: const PaymentSuccessPage(),
+                );
+              }
             }
           });
           return Column(

@@ -23,8 +23,8 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
   bool isLoading = false;
 
   // Price filter
-  double _minPrice = 0;
-  double _maxPrice = 5000;
+  final double _minPrice = 0;
+  final double _maxPrice = 5000;
   RangeValues _currentRange = const RangeValues(0, 5000);
 
   Timer? _debounce;
