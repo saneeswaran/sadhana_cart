@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
@@ -41,6 +40,12 @@ class CartPageMobile extends ConsumerWidget {
                 ),
               );
               final sizes = cartModel.size;
+
+              //getting stock
+              final selectedVariant = cart.sizeVariants?.firstWhere(
+                (e) => e.size == cartModel.size,
+              );
+              final maxStock = selectedVariant?.stock ?? 0;
               return Container(
                 margin: const EdgeInsets.all(10),
                 height: size.height * 0.19,
@@ -117,6 +122,7 @@ class CartPageMobile extends ConsumerWidget {
                                 _quantityContainer(
                                   size: size,
                                   quantity: cartModel.quantity,
+                                  maxStock: maxStock,
                                   cart: cartModel,
                                   ref: ref,
                                 ),
@@ -130,7 +136,7 @@ class CartPageMobile extends ConsumerWidget {
                                     );
                                   },
                                   icon: const Icon(Icons.delete),
-                                  color: Colors.red,
+                                  color: Colors.black,
                                 ),
                               ],
                             ),
@@ -155,6 +161,7 @@ class CartPageMobile extends ConsumerWidget {
     required int quantity,
     required CartModel cart,
     required WidgetRef ref,
+    required int maxStock,
   }) {
     const Color iconColor = Colors.grey;
 
@@ -165,43 +172,40 @@ class CartPageMobile extends ConsumerWidget {
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: iconColor, width: 1.4),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          IconButton(
-            onPressed: () {
-              // CartService.updateCartQuantity(
-              //   cart: cart,
-              //   quantity: cart.quantity - 1,
-              //   ref: ref,
-              // );
-            },
-            icon: const Icon(Icons.remove, size: 18),
-            color: iconColor,
-            constraints: const BoxConstraints(),
-            padding: EdgeInsets.zero,
-          ),
-          Text(
-            quantity.toString(),
-            style: const TextStyle(
-              color: iconColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              // CartService.updateCartQuantity(
-              //   cart: cart,
-              //   quantity: cart.quantity + 1,
-              //   ref: ref,
-              // );
-            },
-            icon: const Icon(Icons.add, size: 18),
-            color: iconColor,
-            constraints: const BoxConstraints(),
-            padding: EdgeInsets.zero,
-          ),
-        ],
+      child: Consumer(
+        builder: (context, ref, child) {
+          final cartNotifier = ref.watch(cartProvider.notifier);
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
+                onPressed: () {
+                  cartNotifier.decreaseQuantity();
+                },
+                icon: const Icon(Icons.remove, size: 18),
+                color: iconColor,
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+              ),
+              Text(
+                quantity.toString(),
+                style: const TextStyle(
+                  color: iconColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  cartNotifier.increaseQuantity(maxStock: maxStock);
+                },
+                icon: const Icon(Icons.add, size: 18),
+                color: iconColor,
+                constraints: const BoxConstraints(),
+                padding: EdgeInsets.zero,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

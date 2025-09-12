@@ -55,6 +55,25 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     return products.where((p) => productIds.contains(p.productId)).toSet();
   }
 
+  void increaseQuantity({required int maxStock}) {
+    for (final cart in state) {
+      if (cart.quantity < maxStock) {
+        final updated = cart.copyWith(quantity: cart.quantity + 1);
+        state = {...state, updated};
+      }
+    }
+  }
+
+  void decreaseQuantity() {
+    for (final cart in state) {
+      if (cart.quantity == 1) return;
+      if (cart.quantity > 1) {
+        final updated = cart.copyWith(quantity: cart.quantity - 1);
+        state = {...state, updated};
+      }
+    }
+  }
+
   double getCartTotalAmount() {
     final products = ref.read(productProvider);
     double total = 0.0;
