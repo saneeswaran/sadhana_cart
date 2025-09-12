@@ -76,7 +76,9 @@ final orderAcceptTerms = StateProvider<bool>((ref) => false);
 final orderStatusIndexProvider = StateProvider<int>((ref) => 0);
 
 //clothing details
-final clothingSizeProvider = StateProvider<int>((ref) => 0);
+//used autodispose because so many product using same provider so it will be disposed
+//if i didn't dispose it properly.. when you click adding to cart for another product it will use the data of previous product
+final clothingSizeProvider = StateProvider.autoDispose<int>((ref) => 0);
 
 final clothingColorProvider = StateProvider<int>((ref) => 0);
 

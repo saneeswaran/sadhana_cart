@@ -38,13 +38,13 @@ class ClothingProductsDetails extends StatelessWidget {
                 builder: (context, ref, child) {
                   final cartItems = ref.watch(cartProvider);
                   final cartNotifier = ref.read(cartProvider.notifier);
-
                   final bool isAlreadyInCart = cartItems.any(
                     (c) => c.productId == product.productId,
                   );
 
                   final selectedSize = ref.watch(clothingSizeProvider);
-                  final selected = product.sizeVariants![selectedSize].size;
+                  final selected =
+                      product.sizeVariants?[selectedSize].size ?? "L";
                   return CustomElevatedButton(
                     child: Text(
                       isAlreadyInCart ? "Remove" : "Add to Cart",
@@ -141,7 +141,7 @@ class ClothingProductsDetails extends StatelessWidget {
                           children: List.generate(
                             product.sizeVariants?.length ?? 0,
                             (index) {
-                              final sizeItem = product.sizeVariants![index];
+                              final sizeItem = product.sizeVariants?[index];
                               final isSelected = index == selectedSizeIndex;
 
                               return GestureDetector(
@@ -174,7 +174,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                     ],
                                   ),
                                   child: Text(
-                                    sizeItem.size,
+                                    sizeItem!.size,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: isSelected

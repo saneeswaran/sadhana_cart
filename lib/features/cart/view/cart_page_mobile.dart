@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
-import 'package:sadhana_cart/core/widgets/loader.dart';
+import 'package:sadhana_cart/core/skeletonizer/cart_loader.dart';
 
 class CartPageMobile extends ConsumerWidget {
   final PreferredSizeWidget? appBar;
@@ -14,6 +14,13 @@ class CartPageMobile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
     final cartAsync = ref.watch(getCurrentUserCartProducts);
+    final carts = ref.watch(cartProvider);
+
+    final cartValue = cartAsync.value;
+
+    if (cartValue?.isEmpty ?? true) {
+      return const Center(child: Text("Cart is empty"));
+    }
     return Scaffold(
       appBar: appBar,
       body: cartAsync.when(
@@ -24,6 +31,11 @@ class CartPageMobile extends ConsumerWidget {
             physics: const ClampingScrollPhysics(),
             itemBuilder: (context, index) {
               final cart = cartItems[index];
+              //to show the size variants
+              final cardId = carts.firstWhere(
+                (e) => e.productId == cart.productId,
+              );
+              final sizes = cardId.size!;
               return Container(
                 margin: const EdgeInsets.all(10),
                 height: size.height * 0.17,
@@ -85,24 +97,12 @@ class CartPageMobile extends ConsumerWidget {
                             ),
                             const SizedBox(height: 5),
                             cart.sizeVariants != null
-                                ? Row(
-                                    children: [
-                                      Text(
-                                        "Size: ${cart.sizeVariants?[index].size}",
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Text(
-                                        "Color: ${cart.sizeVariants![index].color}",
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
+                                ? Text(
+                                    "Size: $sizes",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
                                   )
                                 : const SizedBox.shrink(),
                             const Spacer(),
@@ -123,7 +123,7 @@ class CartPageMobile extends ConsumerWidget {
           );
         },
         error: (e, s) => Center(child: Text(e.toString())),
-        loading: () => const Loader(),
+        loading: () => const CartLoader(),
       ),
     );
   }

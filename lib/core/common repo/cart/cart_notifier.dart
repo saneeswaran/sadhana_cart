@@ -76,7 +76,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
 }
 
 final cartProvider = StateNotifierProvider<CartNotifier, Set<CartModel>>((ref) {
-  return CartNotifier(ref);
+  return CartNotifier(ref)..initialize();
 });
 
 final cartProductListProvider = Provider<List<ProductModel>>((ref) {
