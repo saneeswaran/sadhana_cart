@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/update_location_page.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
@@ -55,7 +57,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
     // Watch address state
     final addressState = ref.watch(addressprovider);
     final AddressModel? address = addressState.addresses.isNotEmpty
-        ? addressState.addresses.first
+        ? addressState.addresses.last
         : null;
 
     return Scaffold(
@@ -66,44 +68,42 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         foregroundColor: Colors.black,
         elevation: 0,
       ),
-      bottomNavigationBar: Expanded(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: CustomElevatedButton(
-            child: Text(
-              currentStep == 0 ? "Next" : "Confirm Payment",
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            onPressed: () {
-              if (currentStep == 0) {
-                _goToStep(1); // Move to payment step
-              } else {
-                if (_selectedMethod != null) {
-                  if (_selectedMethod == PaymentMethod.cash) {
-                    // Cash on Delivery selected
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: CustomElevatedButton(
+          child: Text(
+            currentStep == 0 ? "Next" : "Confirm Payment",
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ),
+          onPressed: () {
+            if (currentStep == 0) {
+              _goToStep(1); // Move to payment step
+            } else {
+              if (_selectedMethod != null) {
+                if (_selectedMethod == PaymentMethod.cash) {
+                  // Cash on Delivery selected
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Payment Selected: Cash On Delivery"),
+                    ),
+                  );
+                } else if (_selectedMethod == PaymentMethod.online) {
+                  // Online Payment selected
+                  final acceptedTerms = ref.read(orderAcceptTerms);
+                  if (acceptedTerms) {
+                    // Amount in paise, example ₹1 = 100 paise
+                    paymentController.startPayment(amount: 100);
+                  } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Payment Selected: Cash On Delivery"),
+                        content: Text("Please accept Terms & Conditions"),
                       ),
                     );
-                  } else if (_selectedMethod == PaymentMethod.online) {
-                    // Online Payment selected
-                    final acceptedTerms = ref.read(orderAcceptTerms);
-                    if (acceptedTerms) {
-                      // Amount in paise, example ₹1 = 100 paise
-                      paymentController.startPayment(amount: 100);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please accept Terms & Conditions"),
-                        ),
-                      );
-                    }
                   }
                 }
               }
-            },
-          ),
+            }
+          },
         ),
       ),
       body: Column(
@@ -243,7 +243,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 14),
                                   Row(
                                     children: [
                                       Icon(
@@ -256,22 +256,38 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 10),
+                                  const SizedBox(height: 14),
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Icon(
-                                        Icons.location_on_outlined,
+                                        Icons.location_city,
                                         color: Colors.grey[600],
                                       ),
                                       Flexible(
-                                        child: Text(
-                                          "${address.streetName},${address.city},${address.state},${address.pinCode}"
-                                              .replaceAll(
-                                                ',',
-                                                ',\u200B',
-                                              ), // zero-width space after commas
-                                          style: const TextStyle(fontSize: 16),
-                                          softWrap: true,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              address.title ?? "",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${address.streetName},${address.city},${address.state},${address.pinCode}"
+                                                  .replaceAll(
+                                                    ',',
+                                                    ',\u200B',
+                                                  ), // zero-width space after commas
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                              ),
+                                              softWrap: true,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -280,24 +296,32 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                               )
                             : const Text("No address found"),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Edit Address",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                            Icon(
-                              Icons.edit_location_alt_outlined,
-                              color: Colors.blue,
-                            ),
-                          ],
+                      GestureDetector(
+                        onTap: () {
+                          navigateTo(
+                            context: context,
+                            screen: const UpdateLocationPage(),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Edit Address",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              Icon(
+                                Icons.edit_location_alt_outlined,
+                                color: Colors.blue,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -377,49 +401,3 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
     );
   }
 }
-
-
-/*
-
-Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                if (currentStep == 1)
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => _goToStep(0),
-                      style: OutlinedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                      ),
-                      child: const Text("Back"),
-                    ),
-                  ),
-                if (currentStep == 1) const SizedBox(width: 16),
-                Expanded(
-                  child: CustomElevatedButton(
-                    child: Text(
-                      currentStep == 0 ? "Next" : "Confirm Payment",
-                      style: TextStyle(color: Colors.white, fontSize: 16),
-                    ),
-                    onPressed: () {
-                      if (currentStep == 0) {
-                        _goToStep(1);
-                      } else {
-                        if (_selectedMethod != null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Payment Selected: ${_selectedMethod == PaymentMethod.cash ? "Cash On Delivery" : "Online Payment"}",
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          */
