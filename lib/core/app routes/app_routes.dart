@@ -15,7 +15,7 @@ class AppRoutes {
     '/sign-up': (_) => const SignUpMobile(),
     '/forgot-password': (_) => const ForgotPasswordMobile(),
     '/bottom-nav': (_) => const BottomNavBarMobile(),
-    // '/cart': (_) => const CartPageMobile(),
+    '/cart': (_) => const CartPageMobile(),
     '/favourites': (_) => const FavoritePageMobile(),
     'notifications': (_) => const NotificationPageMobile(),
     '/search': (_) => const SearchProductMobile(),

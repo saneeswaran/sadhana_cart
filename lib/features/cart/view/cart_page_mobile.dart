@@ -5,8 +5,8 @@ import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
-class CartItemTile extends ConsumerWidget {
-  const CartItemTile({super.key});
+class CartPageMobile extends ConsumerWidget {
+  const CartPageMobile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

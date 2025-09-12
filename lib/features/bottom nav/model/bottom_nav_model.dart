@@ -49,7 +49,7 @@ final List<Widget> bottomPages = [
       ),
     ),
   ),
-  const CartItemTile(
+  const CartPageMobile(
     // appBar: AppBar(
     //   backgroundColor: AppColor.pureWhite,
     //   centerTitle: true,
