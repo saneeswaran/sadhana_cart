@@ -11,6 +11,8 @@ class AppImages {
   static const String onboard2 = "assets/images/onboard2.png";
   static const String onboard3 = "assets/images/onboard3.png";
 
+  static const String appLogo = "assets/images/logo.png";
+
   //order status
   static const String orderCompleted = "assets/order/order_completed.png";
   static const String orderPending = "assets/order/order_pending.png";

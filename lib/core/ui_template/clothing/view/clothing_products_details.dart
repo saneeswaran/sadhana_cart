@@ -154,6 +154,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                           .state =
                                       index;
                                   log(productData.toString());
+                                  log(product.productId!);
                                 },
                                 child: Container(
                                   height: 40,
