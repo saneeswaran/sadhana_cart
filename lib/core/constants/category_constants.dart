@@ -11,6 +11,7 @@ class CategoryConstants {
   static const String toys = 'Toys';
   static const String laptop = 'Laptop';
   static const String headphone = 'HeadPhone';
+  static const String personalCare = "Personal Care";
 
   //just for safety purpose
   static List<String> clothingCategory = [
@@ -39,5 +40,6 @@ class CategoryConstants {
     'casuals',
     'formals',
     'casual',
+    "Fashion",
   ];
 }

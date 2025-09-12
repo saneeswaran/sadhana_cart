@@ -26,7 +26,7 @@ class CartPageMobile extends ConsumerWidget {
             return const Center(child: Text("Your cart is empty"));
           }
           return Column(
-            children: <Widget>[
+            children: [
               ListView.builder(
                 itemCount: cartItems.length,
                 shrinkWrap: true,
@@ -200,47 +200,41 @@ class CartPageMobile extends ConsumerWidget {
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: iconColor, width: 1.4),
       ),
-      child: Consumer(
-        builder: (context, ref, child) {
-          final cartNotifier = ref.watch(cartProvider.notifier);
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: IconButton(
-                  onPressed: () {
-                    cartNotifier.decreaseQuantity(cart: cart);
-                  },
-                  icon: const Icon(Icons.remove, size: 18),
-                  color: iconColor,
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                ),
-              ),
-              Text(
-                "$quantity",
-                style: const TextStyle(
-                  color: iconColor,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Expanded(
-                child: IconButton(
-                  onPressed: () {
-                    cartNotifier.increaseQuantity(
-                      maxStock: maxStock,
-                      cart: cart,
-                    );
-                  },
-                  icon: const Icon(Icons.add, size: 18),
-                  color: iconColor,
-                  constraints: const BoxConstraints(),
-                  padding: EdgeInsets.zero,
-                ),
-              ),
-            ],
-          );
-        },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: IconButton(
+              onPressed: () {
+                ref.read(cartProvider.notifier).decreaseQuantity(cart: cart);
+              },
+              icon: const Icon(Icons.remove, size: 18),
+              color: iconColor,
+              constraints: const BoxConstraints(),
+              padding: EdgeInsets.zero,
+            ),
+          ),
+          Text(
+            "$quantity",
+            style: const TextStyle(
+              color: iconColor,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          Expanded(
+            child: IconButton(
+              onPressed: () {
+                ref
+                    .read(cartProvider.notifier)
+                    .increaseQuantity(maxStock: maxStock, cart: cart);
+              },
+              icon: const Icon(Icons.add, size: 18),
+              color: iconColor,
+              constraints: const BoxConstraints(),
+              padding: EdgeInsets.zero,
+            ),
+          ),
+        ],
       ),
     );
   }
