@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
@@ -15,16 +16,13 @@ class CartPageMobile extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     final cartAsync = ref.watch(getCurrentUserCartProducts);
     final carts = ref.watch(cartProvider);
-
-    final cartValue = cartAsync.value;
-
-    if (cartValue?.isEmpty ?? true) {
-      return const Center(child: Text("Cart is empty"));
-    }
     return Scaffold(
       appBar: appBar,
       body: cartAsync.when(
         data: (cartItems) {
+          if (cartItems.isEmpty) {
+            return const Center(child: Text("Your cart is empty"));
+          }
           return ListView.builder(
             itemCount: cartItems.length,
             shrinkWrap: true,
@@ -32,13 +30,20 @@ class CartPageMobile extends ConsumerWidget {
             itemBuilder: (context, index) {
               final cart = cartItems[index];
               //to show the size variants
-              final cardId = carts.firstWhere(
+              final cartModel = carts.firstWhere(
                 (e) => e.productId == cart.productId,
+                orElse: () => CartModel(
+                  cartId: '',
+                  customerId: '',
+                  productId: '',
+                  quantity: 0,
+                  size: '',
+                ),
               );
-              final sizes = cardId.size!;
+              final sizes = cartModel.size;
               return Container(
                 margin: const EdgeInsets.all(10),
-                height: size.height * 0.17,
+                height: size.height * 0.19,
                 width: size.width,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -106,12 +111,29 @@ class CartPageMobile extends ConsumerWidget {
                                   )
                                 : const SizedBox.shrink(),
                             const Spacer(),
-                            // _quantityContainer(
-                            //   size: size,
-                            //   quantity: cartModel.quantity,
-                            //   cart: cartModel,
-                            //   ref: ref,
-                            // ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                _quantityContainer(
+                                  size: size,
+                                  quantity: cartModel.quantity,
+                                  cart: cartModel,
+                                  ref: ref,
+                                ),
+                                IconButton(
+                                  onPressed: () async {
+                                    final cartNotifier = ref.read(
+                                      cartProvider.notifier,
+                                    );
+                                    await cartNotifier.removeFromCart(
+                                      cart: cartModel,
+                                    );
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                  color: Colors.red,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

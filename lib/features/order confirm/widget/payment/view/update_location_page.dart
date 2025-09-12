@@ -47,17 +47,17 @@ class _UpdateLocationPageState extends ConsumerState<UpdateLocationPage> {
       streetName: streetController.text.trim(),
       city: cityController.text.trim(),
       state: stateController.text.trim(),
-      title: selectedTitle ?? "Other", // Use dropdown value
+      title: selectedTitle ?? "Other",
       pinCode: int.parse(zipCodeController.text.trim()),
       phoneNumber: int.parse(phoneNumberController.text.trim()),
-      icon: Icons.location_on_outlined, // Default icon
+      icon: Icons.location_on_outlined,
       ref: ref,
-      lattitude: 0.0, // Replace with actual GPS if needed
-      longitude: 0.0, // Replace with actual GPS if needed
+      lattitude: 0.0,
+      longitude: 0.0,
     );
 
-    if (success) {
-      Navigator.pop(context); // Go back after adding
+    if (success && mounted) {
+      Navigator.pop(context);
     }
   }
 

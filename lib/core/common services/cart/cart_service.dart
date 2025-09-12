@@ -102,6 +102,10 @@ class CartService {
     return false;
   }
 
+  //here we used stream to get realtime update's because we are not using riverpod to fetch again and again
+  //check which is have same products.. blaa.. blaa.. blaa... so we simple used stream to get realtime update
+  //also we are comparing the details here because of while fetching we are getting only product model instead of cart model
+  //but we are stored the size's into cart model so we are comparing the product id then displaying what are the size's customer added to database
   static Stream<List<ProductModel>> getCurrentUserCartProducts() async* {
     try {
       await for (final cartSnapshot in cartRef.snapshots()) {
