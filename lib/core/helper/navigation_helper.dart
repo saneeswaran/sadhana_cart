@@ -73,9 +73,15 @@ void navigateToProductDesignBasedOnCategory({
     );
   } else if (categoryName.toLowerCase() ==
       CategoryConstants.accessories.toLowerCase()) {
-    navigateTo(context: context, screen: const AccessoriesScreen());
+    navigateTo(
+      context: context,
+      screen: AccessoriesScreen(product: product),
+    );
   } else if (categoryName.toLowerCase() ==
       CategoryConstants.personalCare.toLowerCase()) {
-    navigateTo(context: context, screen: const PersonalCarePage());
+    navigateTo(
+      context: context,
+      screen: PersonalCarePage(product: product),
+    );
   }
 }

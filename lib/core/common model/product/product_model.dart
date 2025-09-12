@@ -610,7 +610,7 @@ class ProductModel {
   }
   //this is the code will help you by getting products attributes by category
   Map<String, dynamic> getDetailsByCategory() {
-    switch (category ?? "".toLowerCase()) {
+    switch (category!.toLowerCase()) {
       case 'fashion':
       case 'clothing':
       case 'menswear':
@@ -792,6 +792,8 @@ class ProductModel {
         };
 
       case 'beauty':
+      case "beauty & personal care":
+      case "Personal Care":
         return {
           'shadeColor': shadeColor,
           'beautyType': beautyType,

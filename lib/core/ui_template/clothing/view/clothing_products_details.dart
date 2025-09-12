@@ -16,8 +16,10 @@ import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_rating_widget.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
+import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_main_page.dart';
+import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
 import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
@@ -28,6 +30,7 @@ class ClothingProductsDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final Map<String, dynamic> productData = product.getDetailsByCategory();
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
@@ -150,6 +153,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                           .read(clothingSizeProvider.notifier)
                                           .state =
                                       index;
+                                  log(productData.toString());
                                 },
                                 child: Container(
                                   height: 40,
@@ -195,9 +199,18 @@ class ClothingProductsDetails extends StatelessWidget {
               },
             ),
             const SizedBox(height: 20),
+            const CustomDivider(),
+            CustomTileDropdown(
+              title: "Description",
+              value: Text(product.description!),
+            ),
+            const SizedBox(height: 20),
 
             Consumer(
               builder: (context, ref, child) {
+                final userName = ref.read(
+                  userProvider.select((value) => value?.name ?? ""),
+                );
                 final ratingAsync = ref.watch(
                   specificProductrating(product.productId!),
                 );
@@ -229,7 +242,8 @@ class ClothingProductsDetails extends StatelessWidget {
                               onPressed: () {
                                 showRatingDialog(
                                   context: context,
-                                  onSubmit: (rating, review) {},
+                                  productId: product.productId!,
+                                  userName: userName,
                                 );
                               },
                             ),
