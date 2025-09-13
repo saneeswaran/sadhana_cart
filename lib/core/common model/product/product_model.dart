@@ -29,7 +29,7 @@ class ProductModel {
   final double? rating;
   final List<String>? images;
   final String? sellerId;
-  final bool? cashOnDelivery;
+  final String? cashOnDelivery;
   final List<SizeVariant>? sizeVariants;
   final String? timestamp;
   final String? date;

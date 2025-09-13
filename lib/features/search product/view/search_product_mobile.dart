@@ -47,21 +47,14 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       final queryText = controller.text.trim();
 
-      if (queryText.isEmpty) {
-        setState(() {
-          displayedProducts = [];
-        });
-        return;
-      }
-
-      setState(() {
-        isLoading = true;
-      });
+      setState(() => isLoading = true);
 
       try {
+        // Fetch filtered products matching the search query
         final results = await ProductService.getProductByQuery(
           query: queryText,
         );
+
         setState(() {
           displayedProducts = results;
         });
@@ -71,17 +64,13 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
           displayedProducts = [];
         });
       } finally {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() => isLoading = false);
       }
     });
   }
 
   void toggleRightDrawer() {
-    setState(() {
-      isRightDrawerOpen = !isRightDrawerOpen;
-    });
+    setState(() => isRightDrawerOpen = !isRightDrawerOpen);
   }
 
   @override
@@ -99,6 +88,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
+                // Search bar and filter button
                 Row(
                   children: [
                     Expanded(
@@ -131,6 +121,8 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                   ],
                 ),
                 const SizedBox(height: 20),
+
+                // Show loading or empty states
                 if (isLoading)
                   const Expanded(
                     child: Center(child: CircularProgressIndicator()),
@@ -140,7 +132,9 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                     child: Center(child: Text("No products found")),
                   )
                 else
+                  // GridView showing only filtered products
                   Expanded(
+                    flex: 3,
                     child: GridView.builder(
                       itemCount: itemsToShow.length,
                       gridDelegate:
@@ -153,22 +147,40 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                       itemBuilder: (context, index) {
                         final product = itemsToShow[index];
                         return Card(
+                          elevation: 3,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Product Image
                               product.images != null &&
                                       product.images!.isNotEmpty
-                                  ? Image.network(
-                                      product.images![0],
+                                  ? ClipRRect(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10),
+                                      ),
+                                      child: Image.network(
+                                        product.images![0],
+                                        height: 120,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : Container(
                                       height: 120,
                                       width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : const SizedBox(height: 120),
+                                      color: Colors.grey.shade200,
+                                      child: const Icon(Icons.image, size: 50),
+                                    ),
+
+                              // Product Name
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  product.name ?? "",
+                                  product.name ?? "No Name",
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -176,12 +188,14 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                                   ),
                                 ),
                               ),
+
+                              // Product Price
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
+                                  horizontal: 8.0,
                                 ),
                                 child: Text(
-                                  "₹${product.price ?? 0}",
+                                  "₹${product.price?.toStringAsFixed(0) ?? 0}",
                                   style: const TextStyle(color: Colors.green),
                                 ),
                               ),
@@ -194,7 +208,8 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
               ],
             ),
           ),
-          // Right drawer overlay
+
+          // Right drawer overlay (Filter Panel)
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             top: 0,
