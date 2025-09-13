@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -76,7 +75,7 @@ class OrderModel {
       'orderDate': orderDate,
       'orderId': orderId,
       'createdAt': createdAt,
-      'products': products.map((x) => x.toMap()).toList(),
+      'products': products.map((x) => x.toJson()).toList(),
     };
   }
 

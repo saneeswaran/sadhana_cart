@@ -30,7 +30,6 @@ class ClothingProductsDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final Map<String, dynamic> productData = product.getDetailsByCategory();
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
@@ -147,18 +146,23 @@ class ClothingProductsDetails extends StatelessWidget {
                               final sizeItem = product.sizeVariants?[index];
                               final isSelected = index == selectedSizeIndex;
 
+                              final bool sizeHaveMoreContent =
+                                  sizeItem!.size
+                                      .allMatches(sizeItem.size)
+                                      .length >
+                                  4;
+
                               return GestureDetector(
                                 onTap: () {
                                   ref
                                           .read(clothingSizeProvider.notifier)
                                           .state =
                                       index;
-                                  log(productData.toString());
-                                  log(product.productId!);
+                                  log("prodct sku ${product.productId}");
                                 },
                                 child: Container(
-                                  height: 40,
-                                  width: 60,
+                                  height: sizeHaveMoreContent ? 40 : 40,
+                                  width: sizeHaveMoreContent ? 120 : 60,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     color: isSelected
@@ -179,7 +183,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                     ],
                                   ),
                                   child: Text(
-                                    sizeItem!.size,
+                                    sizeItem.size,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: isSelected

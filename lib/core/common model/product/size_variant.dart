@@ -1,8 +1,10 @@
 import 'package:hive/hive.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'size_variant.g.dart';
 
 @HiveType(typeId: 9)
+@JsonSerializable()
 class SizeVariant extends HiveObject {
   @HiveField(0)
   final String size;
@@ -23,26 +25,18 @@ class SizeVariant extends HiveObject {
     this.skuSuffix,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'size': size,
-      'color': color,
-      'stock': stock,
-      'skuSuffix': skuSuffix,
-    };
-  }
+  factory SizeVariant.fromJson(Map<String, dynamic> json) =>
+      _$SizeVariantFromJson(json);
 
-  factory SizeVariant.fromMap(Map<String, dynamic> map) {
-    return SizeVariant(
-      size: map['size'] ?? '',
-      color: map['color'],
-      stock: map['stock'] ?? 0,
-      skuSuffix: map['skuSuffix'],
-    );
-  }
+  Map<String, dynamic> toJson() => _$SizeVariantToJson(this);
+
+  factory SizeVariant.fromMap(Map<String, dynamic> map) =>
+      SizeVariant.fromJson(map);
+
+  Map<String, dynamic> toMap() => toJson();
 
   @override
   String toString() {
-    return 'SizeVariant{size: $size, color: $color, stock: $stock}';
+    return 'SizeVariant{size: $size, color: $color, stock: $stock, skuSuffix: $skuSuffix}';
   }
 }

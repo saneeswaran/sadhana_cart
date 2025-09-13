@@ -40,52 +40,53 @@ void navigateToProductDesignBasedOnCategory({
       context: context,
       screen: ClothingProductsDetails(product: product),
     );
-  } else if (categoryName == CategoryConstants.accessories.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.accessories.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.footwear.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.footwear.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.fashion.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.fashion.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.personalCare.toLowerCase()) {
+  } else if (categoryLowerCase ==
+      CategoryConstants.personalCare.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.stationary.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.stationary.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.home.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.home.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.books.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.books.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.electronics.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.electronics.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.groceries.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.groceries.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryName == CategoryConstants.cosmetics.toLowerCase()) {
+  } else if (categoryLowerCase == CategoryConstants.cosmetics.toLowerCase()) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
