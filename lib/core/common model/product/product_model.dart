@@ -11,6 +11,7 @@
 //here important message
 //we mention datetime, timestamp also string.... because of the bulk upload option.. it don't have any option
 //if any developer see this means please don't curse us...
+//we given one structure there are not following that so we given like this
 
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
