@@ -91,6 +91,11 @@ void navigateToProductDesignBasedOnCategory({
       context: context,
       screen: AccessoriesScreen(product: product),
     );
+  } else if (categoryName == CategoryConstants.photoFrame.toLowerCase()) {
+    navigateTo(
+      context: context,
+      screen: AccessoriesScreen(product: product),
+    );
   }
   /*
 

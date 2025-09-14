@@ -15,6 +15,7 @@ class CategoryConstants {
   static const String stationary = "Stationary";
   static const String groceries = "Groceries";
   static const String cosmetics = "Cosmetics";
+  static const String photoFrame = "Photo Frame";
 
   //just for safety purpose
   static List<String> clothingCategory = [

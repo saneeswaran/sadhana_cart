@@ -4,9 +4,16 @@ import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rat
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
 
-class AccessoriesScreen extends StatelessWidget {
+class AccessoriesScreen extends StatefulWidget {
   final ProductModel product;
   const AccessoriesScreen({super.key, required this.product});
+
+  @override
+  State<AccessoriesScreen> createState() => _AccessoriesScreenState();
+}
+
+class _AccessoriesScreenState extends State<AccessoriesScreen> {
+  Map<String, dynamic> data = {};
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +21,11 @@ class AccessoriesScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            CustomCarouselSlider(product: product),
-            ProductPriceRating(product: product),
+            CustomCarouselSlider(product: widget.product),
+            ProductPriceRating(product: widget.product),
             CustomTileDropdown(
               title: "Description",
-              value: Text(product.description!),
+              value: Text(widget.product.description!),
             ),
           ],
         ),

@@ -173,27 +173,91 @@ class ProductService {
     }
   }
 
+  // static Future<List<ProductModel>> getProductByQuery({
+  //   required String query,
+  // }) async {
+  //   try {
+  //     log("Search started for query: '$query'");
+
+  //     final trimmedQuery = query.trim();
+  //     if (trimmedQuery.isEmpty) {
+  //       log("Query is empty after trimming. Returning empty list.");
+  //       return [];
+  //     }
+
+  //     final lowerQuery = trimmedQuery.toLowerCase();
+
+  //     // Log the collection path and query range
+  //     log("Firestore collection path: ${productRef.path}");
+  //     log("Querying 'name_lower' from '$lowerQuery' to '${lowerQuery}\uf8ff'");
+
+  //     // Optional: log all document names to see if data exists
+  //     final allDocs = await productRef.get();
+
+  //     log(
+  //       "All products in collection: ${allDocs.docs.map((d) {
+  //         final data = d.data() as Map<String, dynamic>?; // cast safely
+  //         return data?['name'] ?? 'null';
+  //       }).toList()}",
+  //     );
+  //     // Run the actual query
+  //     final querySnapshot = await productRef
+  //         .where("name_lower", isGreaterThanOrEqualTo: lowerQuery)
+  //         .where("name_lower", isLessThanOrEqualTo: "$lowerQuery\uf8ff")
+  //         .get();
+
+  //     log("Number of documents fetched: ${querySnapshot.docs.length}");
+
+  //     if (querySnapshot.docs.isNotEmpty) {
+  //       final products = querySnapshot.docs
+  //           .map(
+  //             (doc) => ProductModel.fromMap(doc.data() as Map<String, dynamic>),
+  //           )
+  //           .toList();
+
+  //       log("Products returned: ${products.map((p) => p.name).toList()}");
+  //       return products;
+  //     } else {
+  //       log("No products found for query: '$trimmedQuery'");
+  //       return [];
+  //     }
+  //   } catch (e, stackTrace) {
+  //     log("ProductService fetch error: $e", stackTrace: stackTrace);
+  //     return [];
+  //   }
+  // }
+
   static Future<List<ProductModel>> getProductByQuery({
     required String query,
   }) async {
     try {
-      final lowerQuery = query.toLowerCase();
+      log("Search started for query: '$query'");
 
-      final querySnapshot = await productRef
-          .where("name_lower", isGreaterThanOrEqualTo: lowerQuery)
-          .where("name_lower", isLessThanOrEqualTo: "$lowerQuery\uf8ff")
-          .get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        return querySnapshot.docs
-            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
-            .toList();
-      } else {
-        log("No products found for query: $query");
+      final trimmedQuery = query.trim().toLowerCase();
+      if (trimmedQuery.isEmpty) {
+        log("Query is empty after trimming. Returning empty list.");
         return [];
       }
-    } catch (e) {
-      log("ProductService fetch error: $e");
+
+      // Fetch all products
+      final allDocs = await productRef.get();
+      final allProducts = allDocs.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        return ProductModel.fromMap(data);
+      }).toList();
+
+      // Filter locally for exact match (case-insensitive)
+      final filteredProducts = allProducts.where((product) {
+        final name = product.name?.toLowerCase() ?? "";
+        return name.contains(trimmedQuery);
+      }).toList();
+
+      log(
+        "Products matching query '$query': ${filteredProducts.map((p) => p.name).toList()}",
+      );
+      return filteredProducts;
+    } catch (e, stackTrace) {
+      log("ProductService fetch error: $e", stackTrace: stackTrace);
       return [];
     }
   }
