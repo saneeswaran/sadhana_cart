@@ -20,47 +20,47 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProductModel {
-  @JsonKey(name: 'Product ID')
+  @JsonKey(name: 'productId')
   String? get productId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Name')
+  @JsonKey(name: 'name')
   String? get name => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Description')
+  @JsonKey(name: 'description')
   String? get description => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Category')
+  @JsonKey(name: 'category')
   String? get category => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Subcategory')
+  @JsonKey(name: 'subcategory')
   String? get subcategory => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Base SKU')
+  @JsonKey(name: 'baseSku')
   String? get baseSku => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Brand')
+  @JsonKey(name: 'brand')
   String? get brand => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Price')
+  @JsonKey(name: 'price')
   double? get price => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Offer Price')
+  @JsonKey(name: 'offerPrice')
   double? get offerPrice => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Stock')
+  @JsonKey(name: 'stock')
   int? get stock => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Rating')
+  @JsonKey(name: 'rating')
   double? get rating => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Images')
+  @JsonKey(name: 'images')
   List<String>? get images => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Seller ID')
+  @JsonKey(name: 'seller ID')
   String? get sellerId => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Cash On Delivery')
+  @JsonKey(name: 'cash On Delivery')
   String? get cashOnDelivery => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Size Variants')
+  @JsonKey(name: 'size Variants')
   List<SizeVariant>? get sizeVariants => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Timestamp')
+  @JsonKey(name: 'timestamp')
   String? get timestamp => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Date')
+  @JsonKey(name: 'date')
   String? get date => throw _privateConstructorUsedError; // Fashion / Clothing
-  @JsonKey(name: 'Material')
+  @JsonKey(name: 'material')
   String? get material => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Fit')
+  @JsonKey(name: 'fit')
   String? get fit => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Pattern')
+  @JsonKey(name: 'pattern')
   String? get pattern => throw _privateConstructorUsedError;
-  @JsonKey(name: 'Sleeve Type')
+  @JsonKey(name: 'sleeve Type')
   String? get sleeveType => throw _privateConstructorUsedError;
   @JsonKey(name: 'Care Instructions')
   String? get careInstruction => throw _privateConstructorUsedError;
@@ -291,27 +291,27 @@ abstract class $ProductModelCopyWith<$Res> {
       _$ProductModelCopyWithImpl<$Res, ProductModel>;
   @useResult
   $Res call(
-      {@JsonKey(name: 'Product ID') String? productId,
-      @JsonKey(name: 'Name') String? name,
-      @JsonKey(name: 'Description') String? description,
-      @JsonKey(name: 'Category') String? category,
-      @JsonKey(name: 'Subcategory') String? subcategory,
-      @JsonKey(name: 'Base SKU') String? baseSku,
-      @JsonKey(name: 'Brand') String? brand,
-      @JsonKey(name: 'Price') double? price,
-      @JsonKey(name: 'Offer Price') double? offerPrice,
-      @JsonKey(name: 'Stock') int? stock,
-      @JsonKey(name: 'Rating') double? rating,
-      @JsonKey(name: 'Images') List<String>? images,
-      @JsonKey(name: 'Seller ID') String? sellerId,
-      @JsonKey(name: 'Cash On Delivery') String? cashOnDelivery,
-      @JsonKey(name: 'Size Variants') List<SizeVariant>? sizeVariants,
-      @JsonKey(name: 'Timestamp') String? timestamp,
-      @JsonKey(name: 'Date') String? date,
-      @JsonKey(name: 'Material') String? material,
-      @JsonKey(name: 'Fit') String? fit,
-      @JsonKey(name: 'Pattern') String? pattern,
-      @JsonKey(name: 'Sleeve Type') String? sleeveType,
+      {@JsonKey(name: 'productId') String? productId,
+      @JsonKey(name: 'name') String? name,
+      @JsonKey(name: 'description') String? description,
+      @JsonKey(name: 'category') String? category,
+      @JsonKey(name: 'subcategory') String? subcategory,
+      @JsonKey(name: 'baseSku') String? baseSku,
+      @JsonKey(name: 'brand') String? brand,
+      @JsonKey(name: 'price') double? price,
+      @JsonKey(name: 'offerPrice') double? offerPrice,
+      @JsonKey(name: 'stock') int? stock,
+      @JsonKey(name: 'rating') double? rating,
+      @JsonKey(name: 'images') List<String>? images,
+      @JsonKey(name: 'seller ID') String? sellerId,
+      @JsonKey(name: 'cash On Delivery') String? cashOnDelivery,
+      @JsonKey(name: 'size Variants') List<SizeVariant>? sizeVariants,
+      @JsonKey(name: 'timestamp') String? timestamp,
+      @JsonKey(name: 'date') String? date,
+      @JsonKey(name: 'material') String? material,
+      @JsonKey(name: 'fit') String? fit,
+      @JsonKey(name: 'pattern') String? pattern,
+      @JsonKey(name: 'sleeve Type') String? sleeveType,
       @JsonKey(name: 'Care Instructions') String? careInstruction,
       @JsonKey(name: 'Size Options') List<String>? sizeOptions,
       @JsonKey(name: 'HSN Code') String? hsnCode,
@@ -1083,27 +1083,27 @@ abstract class _$$ProductModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@JsonKey(name: 'Product ID') String? productId,
-      @JsonKey(name: 'Name') String? name,
-      @JsonKey(name: 'Description') String? description,
-      @JsonKey(name: 'Category') String? category,
-      @JsonKey(name: 'Subcategory') String? subcategory,
-      @JsonKey(name: 'Base SKU') String? baseSku,
-      @JsonKey(name: 'Brand') String? brand,
-      @JsonKey(name: 'Price') double? price,
-      @JsonKey(name: 'Offer Price') double? offerPrice,
-      @JsonKey(name: 'Stock') int? stock,
-      @JsonKey(name: 'Rating') double? rating,
-      @JsonKey(name: 'Images') List<String>? images,
-      @JsonKey(name: 'Seller ID') String? sellerId,
-      @JsonKey(name: 'Cash On Delivery') String? cashOnDelivery,
-      @JsonKey(name: 'Size Variants') List<SizeVariant>? sizeVariants,
-      @JsonKey(name: 'Timestamp') String? timestamp,
-      @JsonKey(name: 'Date') String? date,
-      @JsonKey(name: 'Material') String? material,
-      @JsonKey(name: 'Fit') String? fit,
-      @JsonKey(name: 'Pattern') String? pattern,
-      @JsonKey(name: 'Sleeve Type') String? sleeveType,
+      {@JsonKey(name: 'productId') String? productId,
+      @JsonKey(name: 'name') String? name,
+      @JsonKey(name: 'description') String? description,
+      @JsonKey(name: 'category') String? category,
+      @JsonKey(name: 'subcategory') String? subcategory,
+      @JsonKey(name: 'baseSku') String? baseSku,
+      @JsonKey(name: 'brand') String? brand,
+      @JsonKey(name: 'price') double? price,
+      @JsonKey(name: 'offerPrice') double? offerPrice,
+      @JsonKey(name: 'stock') int? stock,
+      @JsonKey(name: 'rating') double? rating,
+      @JsonKey(name: 'images') List<String>? images,
+      @JsonKey(name: 'seller ID') String? sellerId,
+      @JsonKey(name: 'cash On Delivery') String? cashOnDelivery,
+      @JsonKey(name: 'size Variants') List<SizeVariant>? sizeVariants,
+      @JsonKey(name: 'timestamp') String? timestamp,
+      @JsonKey(name: 'date') String? date,
+      @JsonKey(name: 'material') String? material,
+      @JsonKey(name: 'fit') String? fit,
+      @JsonKey(name: 'pattern') String? pattern,
+      @JsonKey(name: 'sleeve Type') String? sleeveType,
       @JsonKey(name: 'Care Instructions') String? careInstruction,
       @JsonKey(name: 'Size Options') List<String>? sizeOptions,
       @JsonKey(name: 'HSN Code') String? hsnCode,
@@ -1868,27 +1868,27 @@ class __$$ProductModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProductModelImpl implements _ProductModel {
   const _$ProductModelImpl(
-      {@JsonKey(name: 'Product ID') this.productId,
-      @JsonKey(name: 'Name') this.name,
-      @JsonKey(name: 'Description') this.description,
-      @JsonKey(name: 'Category') this.category,
-      @JsonKey(name: 'Subcategory') this.subcategory,
-      @JsonKey(name: 'Base SKU') this.baseSku,
-      @JsonKey(name: 'Brand') this.brand,
-      @JsonKey(name: 'Price') this.price,
-      @JsonKey(name: 'Offer Price') this.offerPrice,
-      @JsonKey(name: 'Stock') this.stock,
-      @JsonKey(name: 'Rating') this.rating,
-      @JsonKey(name: 'Images') final List<String>? images,
-      @JsonKey(name: 'Seller ID') this.sellerId,
-      @JsonKey(name: 'Cash On Delivery') this.cashOnDelivery,
-      @JsonKey(name: 'Size Variants') final List<SizeVariant>? sizeVariants,
-      @JsonKey(name: 'Timestamp') this.timestamp,
-      @JsonKey(name: 'Date') this.date,
-      @JsonKey(name: 'Material') this.material,
-      @JsonKey(name: 'Fit') this.fit,
-      @JsonKey(name: 'Pattern') this.pattern,
-      @JsonKey(name: 'Sleeve Type') this.sleeveType,
+      {@JsonKey(name: 'productId') this.productId,
+      @JsonKey(name: 'name') this.name,
+      @JsonKey(name: 'description') this.description,
+      @JsonKey(name: 'category') this.category,
+      @JsonKey(name: 'subcategory') this.subcategory,
+      @JsonKey(name: 'baseSku') this.baseSku,
+      @JsonKey(name: 'brand') this.brand,
+      @JsonKey(name: 'price') this.price,
+      @JsonKey(name: 'offerPrice') this.offerPrice,
+      @JsonKey(name: 'stock') this.stock,
+      @JsonKey(name: 'rating') this.rating,
+      @JsonKey(name: 'images') final List<String>? images,
+      @JsonKey(name: 'seller ID') this.sellerId,
+      @JsonKey(name: 'cash On Delivery') this.cashOnDelivery,
+      @JsonKey(name: 'size Variants') final List<SizeVariant>? sizeVariants,
+      @JsonKey(name: 'timestamp') this.timestamp,
+      @JsonKey(name: 'date') this.date,
+      @JsonKey(name: 'material') this.material,
+      @JsonKey(name: 'fit') this.fit,
+      @JsonKey(name: 'pattern') this.pattern,
+      @JsonKey(name: 'sleeve Type') this.sleeveType,
       @JsonKey(name: 'Care Instructions') this.careInstruction,
       @JsonKey(name: 'Size Options') final List<String>? sizeOptions,
       @JsonKey(name: 'HSN Code') this.hsnCode,
@@ -2004,41 +2004,41 @@ class _$ProductModelImpl implements _ProductModel {
       _$$ProductModelImplFromJson(json);
 
   @override
-  @JsonKey(name: 'Product ID')
+  @JsonKey(name: 'productId')
   final String? productId;
   @override
-  @JsonKey(name: 'Name')
+  @JsonKey(name: 'name')
   final String? name;
   @override
-  @JsonKey(name: 'Description')
+  @JsonKey(name: 'description')
   final String? description;
   @override
-  @JsonKey(name: 'Category')
+  @JsonKey(name: 'category')
   final String? category;
   @override
-  @JsonKey(name: 'Subcategory')
+  @JsonKey(name: 'subcategory')
   final String? subcategory;
   @override
-  @JsonKey(name: 'Base SKU')
+  @JsonKey(name: 'baseSku')
   final String? baseSku;
   @override
-  @JsonKey(name: 'Brand')
+  @JsonKey(name: 'brand')
   final String? brand;
   @override
-  @JsonKey(name: 'Price')
+  @JsonKey(name: 'price')
   final double? price;
   @override
-  @JsonKey(name: 'Offer Price')
+  @JsonKey(name: 'offerPrice')
   final double? offerPrice;
   @override
-  @JsonKey(name: 'Stock')
+  @JsonKey(name: 'stock')
   final int? stock;
   @override
-  @JsonKey(name: 'Rating')
+  @JsonKey(name: 'rating')
   final double? rating;
   final List<String>? _images;
   @override
-  @JsonKey(name: 'Images')
+  @JsonKey(name: 'images')
   List<String>? get images {
     final value = _images;
     if (value == null) return null;
@@ -2048,14 +2048,14 @@ class _$ProductModelImpl implements _ProductModel {
   }
 
   @override
-  @JsonKey(name: 'Seller ID')
+  @JsonKey(name: 'seller ID')
   final String? sellerId;
   @override
-  @JsonKey(name: 'Cash On Delivery')
+  @JsonKey(name: 'cash On Delivery')
   final String? cashOnDelivery;
   final List<SizeVariant>? _sizeVariants;
   @override
-  @JsonKey(name: 'Size Variants')
+  @JsonKey(name: 'size Variants')
   List<SizeVariant>? get sizeVariants {
     final value = _sizeVariants;
     if (value == null) return null;
@@ -2065,23 +2065,23 @@ class _$ProductModelImpl implements _ProductModel {
   }
 
   @override
-  @JsonKey(name: 'Timestamp')
+  @JsonKey(name: 'timestamp')
   final String? timestamp;
   @override
-  @JsonKey(name: 'Date')
+  @JsonKey(name: 'date')
   final String? date;
 // Fashion / Clothing
   @override
-  @JsonKey(name: 'Material')
+  @JsonKey(name: 'material')
   final String? material;
   @override
-  @JsonKey(name: 'Fit')
+  @JsonKey(name: 'fit')
   final String? fit;
   @override
-  @JsonKey(name: 'Pattern')
+  @JsonKey(name: 'pattern')
   final String? pattern;
   @override
-  @JsonKey(name: 'Sleeve Type')
+  @JsonKey(name: 'sleeve Type')
   final String? sleeveType;
   @override
   @JsonKey(name: 'Care Instructions')
@@ -2759,27 +2759,27 @@ class _$ProductModelImpl implements _ProductModel {
 
 abstract class _ProductModel implements ProductModel {
   const factory _ProductModel(
-      {@JsonKey(name: 'Product ID') final String? productId,
-      @JsonKey(name: 'Name') final String? name,
-      @JsonKey(name: 'Description') final String? description,
-      @JsonKey(name: 'Category') final String? category,
-      @JsonKey(name: 'Subcategory') final String? subcategory,
-      @JsonKey(name: 'Base SKU') final String? baseSku,
-      @JsonKey(name: 'Brand') final String? brand,
-      @JsonKey(name: 'Price') final double? price,
-      @JsonKey(name: 'Offer Price') final double? offerPrice,
-      @JsonKey(name: 'Stock') final int? stock,
-      @JsonKey(name: 'Rating') final double? rating,
-      @JsonKey(name: 'Images') final List<String>? images,
-      @JsonKey(name: 'Seller ID') final String? sellerId,
-      @JsonKey(name: 'Cash On Delivery') final String? cashOnDelivery,
-      @JsonKey(name: 'Size Variants') final List<SizeVariant>? sizeVariants,
-      @JsonKey(name: 'Timestamp') final String? timestamp,
-      @JsonKey(name: 'Date') final String? date,
-      @JsonKey(name: 'Material') final String? material,
-      @JsonKey(name: 'Fit') final String? fit,
-      @JsonKey(name: 'Pattern') final String? pattern,
-      @JsonKey(name: 'Sleeve Type') final String? sleeveType,
+      {@JsonKey(name: 'productId') final String? productId,
+      @JsonKey(name: 'name') final String? name,
+      @JsonKey(name: 'description') final String? description,
+      @JsonKey(name: 'category') final String? category,
+      @JsonKey(name: 'subcategory') final String? subcategory,
+      @JsonKey(name: 'baseSku') final String? baseSku,
+      @JsonKey(name: 'brand') final String? brand,
+      @JsonKey(name: 'price') final double? price,
+      @JsonKey(name: 'offerPrice') final double? offerPrice,
+      @JsonKey(name: 'stock') final int? stock,
+      @JsonKey(name: 'rating') final double? rating,
+      @JsonKey(name: 'images') final List<String>? images,
+      @JsonKey(name: 'seller ID') final String? sellerId,
+      @JsonKey(name: 'cash On Delivery') final String? cashOnDelivery,
+      @JsonKey(name: 'size Variants') final List<SizeVariant>? sizeVariants,
+      @JsonKey(name: 'timestamp') final String? timestamp,
+      @JsonKey(name: 'date') final String? date,
+      @JsonKey(name: 'material') final String? material,
+      @JsonKey(name: 'fit') final String? fit,
+      @JsonKey(name: 'pattern') final String? pattern,
+      @JsonKey(name: 'sleeve Type') final String? sleeveType,
       @JsonKey(name: 'Care Instructions') final String? careInstruction,
       @JsonKey(name: 'Size Options') final List<String>? sizeOptions,
       @JsonKey(name: 'HSN Code') final String? hsnCode,
@@ -2892,67 +2892,67 @@ abstract class _ProductModel implements ProductModel {
       _$ProductModelImpl.fromJson;
 
   @override
-  @JsonKey(name: 'Product ID')
+  @JsonKey(name: 'productId')
   String? get productId;
   @override
-  @JsonKey(name: 'Name')
+  @JsonKey(name: 'name')
   String? get name;
   @override
-  @JsonKey(name: 'Description')
+  @JsonKey(name: 'description')
   String? get description;
   @override
-  @JsonKey(name: 'Category')
+  @JsonKey(name: 'category')
   String? get category;
   @override
-  @JsonKey(name: 'Subcategory')
+  @JsonKey(name: 'subcategory')
   String? get subcategory;
   @override
-  @JsonKey(name: 'Base SKU')
+  @JsonKey(name: 'baseSku')
   String? get baseSku;
   @override
-  @JsonKey(name: 'Brand')
+  @JsonKey(name: 'brand')
   String? get brand;
   @override
-  @JsonKey(name: 'Price')
+  @JsonKey(name: 'price')
   double? get price;
   @override
-  @JsonKey(name: 'Offer Price')
+  @JsonKey(name: 'offerPrice')
   double? get offerPrice;
   @override
-  @JsonKey(name: 'Stock')
+  @JsonKey(name: 'stock')
   int? get stock;
   @override
-  @JsonKey(name: 'Rating')
+  @JsonKey(name: 'rating')
   double? get rating;
   @override
-  @JsonKey(name: 'Images')
+  @JsonKey(name: 'images')
   List<String>? get images;
   @override
-  @JsonKey(name: 'Seller ID')
+  @JsonKey(name: 'seller ID')
   String? get sellerId;
   @override
-  @JsonKey(name: 'Cash On Delivery')
+  @JsonKey(name: 'cash On Delivery')
   String? get cashOnDelivery;
   @override
-  @JsonKey(name: 'Size Variants')
+  @JsonKey(name: 'size Variants')
   List<SizeVariant>? get sizeVariants;
   @override
-  @JsonKey(name: 'Timestamp')
+  @JsonKey(name: 'timestamp')
   String? get timestamp;
   @override
-  @JsonKey(name: 'Date')
+  @JsonKey(name: 'date')
   String? get date;
   @override // Fashion / Clothing
-  @JsonKey(name: 'Material')
+  @JsonKey(name: 'material')
   String? get material;
   @override
-  @JsonKey(name: 'Fit')
+  @JsonKey(name: 'fit')
   String? get fit;
   @override
-  @JsonKey(name: 'Pattern')
+  @JsonKey(name: 'pattern')
   String? get pattern;
   @override
-  @JsonKey(name: 'Sleeve Type')
+  @JsonKey(name: 'sleeve Type')
   String? get sleeveType;
   @override
   @JsonKey(name: 'Care Instructions')
