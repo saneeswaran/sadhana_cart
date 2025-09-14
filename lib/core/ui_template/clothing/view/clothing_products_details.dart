@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/product_extension.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
@@ -29,6 +30,7 @@ class ClothingProductsDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, dynamic> productData = product.getDetailsByCategory();
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: Padding(
@@ -149,8 +151,8 @@ class ClothingProductsDetails extends StatelessWidget {
                               final bool sizeHaveMoreContent =
                                   sizeItem!.size
                                       .allMatches(sizeItem.size)
-                                      .length >
-                                  4;
+                                      .length <
+                                  3;
 
                               return GestureDetector(
                                 onTap: () {
@@ -158,7 +160,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                           .read(clothingSizeProvider.notifier)
                                           .state =
                                       index;
-                                  log("prodct sku ${product.productId}");
+                                  log(product.productId.toString());
                                 },
                                 child: Container(
                                   height: sizeHaveMoreContent ? 40 : 40,
