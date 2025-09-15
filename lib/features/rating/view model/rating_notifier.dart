@@ -43,10 +43,24 @@ class RatingNotifier extends StateNotifier<RatingState> {
     }
   }
 
-  void deleteRating({required String ratingId}) {
-    state = state.copyWith(
-      ratings: state.ratings.where((e) => e.userId != ratingId).toList(),
+  Future<bool> deleteRating({
+    required String ratingId,
+    required String productId,
+  }) async {
+    final bool isSuccess = await RatingService.deleteUserOwnRating(
+      productId: productId,
+      ratingId: ratingId,
     );
+
+    if (isSuccess) {
+      state = state.copyWith(
+        isLoading: false,
+        ratings: await fetchProductRating(productId: productId),
+      );
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<bool> updaterating({

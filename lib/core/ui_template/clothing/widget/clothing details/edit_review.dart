@@ -117,11 +117,26 @@ Future<void> showEditRatingDialoge({
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           CustomOutlineButton(
-                            onPressed: () {
-                              if (!isLoading) Navigator.pop(context);
+                            onPressed: () async {
+                              final bool isSuccess = await ratingNotifier
+                                  .deleteRating(
+                                    ratingId: ratingId,
+                                    productId: productId,
+                                  );
+                              if (isSuccess && context.mounted) {
+                                ref.invalidate(
+                                  specificProductrating(productId),
+                                );
+                                showCustomSnackbar(
+                                  context: context,
+                                  message: "Rating deleted",
+                                  type: ToastType.success,
+                                );
+                                Navigator.pop(context);
+                              }
                             },
                             child: const Text(
-                              'Cancel',
+                              'Delete',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),

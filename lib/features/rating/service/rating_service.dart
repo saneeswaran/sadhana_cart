@@ -80,10 +80,14 @@ class RatingService {
     }
   }
 
-  static Future<bool> deleteUserOwnRating({required String productId}) async {
+  static Future<bool> deleteUserOwnRating({
+    required String productId,
+    required String ratingId,
+  }) async {
     try {
       final QuerySnapshot querySnapshot = await ratingRef
           .where("productid", isEqualTo: productId)
+          .where("ratingId", isEqualTo: ratingId)
           .where("userId", isEqualTo: currentUser)
           .get();
       if (querySnapshot.docs.isNotEmpty) {

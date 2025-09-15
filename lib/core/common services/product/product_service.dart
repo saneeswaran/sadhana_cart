@@ -128,7 +128,6 @@ class ProductService {
   }
 
   //pagination
-
   static Future<List<ProductModel>> getFeatureProducts() async {
     try {
       final QuerySnapshot querySnapshot = await productRef
@@ -173,60 +172,6 @@ class ProductService {
     }
   }
 
-  // static Future<List<ProductModel>> getProductByQuery({
-  //   required String query,
-  // }) async {
-  //   try {
-  //     log("Search started for query: '$query'");
-
-  //     final trimmedQuery = query.trim();
-  //     if (trimmedQuery.isEmpty) {
-  //       log("Query is empty after trimming. Returning empty list.");
-  //       return [];
-  //     }
-
-  //     final lowerQuery = trimmedQuery.toLowerCase();
-
-  //     // Log the collection path and query range
-  //     log("Firestore collection path: ${productRef.path}");
-  //     log("Querying 'name_lower' from '$lowerQuery' to '${lowerQuery}\uf8ff'");
-
-  //     // Optional: log all document names to see if data exists
-  //     final allDocs = await productRef.get();
-
-  //     log(
-  //       "All products in collection: ${allDocs.docs.map((d) {
-  //         final data = d.data() as Map<String, dynamic>?; // cast safely
-  //         return data?['name'] ?? 'null';
-  //       }).toList()}",
-  //     );
-  //     // Run the actual query
-  //     final querySnapshot = await productRef
-  //         .where("name_lower", isGreaterThanOrEqualTo: lowerQuery)
-  //         .where("name_lower", isLessThanOrEqualTo: "$lowerQuery\uf8ff")
-  //         .get();
-
-  //     log("Number of documents fetched: ${querySnapshot.docs.length}");
-
-  //     if (querySnapshot.docs.isNotEmpty) {
-  //       final products = querySnapshot.docs
-  //           .map(
-  //             (doc) => ProductModel.fromMap(doc.data() as Map<String, dynamic>),
-  //           )
-  //           .toList();
-
-  //       log("Products returned: ${products.map((p) => p.name).toList()}");
-  //       return products;
-  //     } else {
-  //       log("No products found for query: '$trimmedQuery'");
-  //       return [];
-  //     }
-  //   } catch (e, stackTrace) {
-  //     log("ProductService fetch error: $e", stackTrace: stackTrace);
-  //     return [];
-  //   }
-  // }
-
   static Future<List<ProductModel>> getProductByQuery({
     required String query,
   }) async {
@@ -246,15 +191,23 @@ class ProductService {
         return ProductModel.fromMap(data);
       }).toList();
 
-      // Filter locally for exact match (case-insensitive)
+      // log("Total products fetched: ${allProducts.length}");
+
+      // Filter locally for match (case-insensitive)
       final filteredProducts = allProducts.where((product) {
         final name = product.name?.toLowerCase() ?? "";
         return name.contains(trimmedQuery);
       }).toList();
 
-      log(
-        "Products matching query '$query': ${filteredProducts.map((p) => p.name).toList()}",
-      );
+      // Log only matched products
+      if (filteredProducts.isEmpty) {
+        log("No products matched query '$query'");
+      } else {
+        for (var p in filteredProducts) {
+          log("Matched product: ${p.name}");
+        }
+      }
+
       return filteredProducts;
     } catch (e, stackTrace) {
       log("ProductService fetch error: $e", stackTrace: stackTrace);
@@ -267,17 +220,27 @@ class ProductService {
     required int max,
   }) async {
     try {
+      log("Filtering products with price between $min and $max");
+
       final QuerySnapshot querySnapshot = await productRef
           .where("price", isGreaterThanOrEqualTo: min)
           .where("price", isLessThanOrEqualTo: max)
           .get();
 
+      log("Query executed. Docs found: ${querySnapshot.docs.length}");
+
       if (querySnapshot.docs.isNotEmpty) {
-        return querySnapshot.docs
+        final products = querySnapshot.docs
             .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
             .toList();
+
+        for (var i = 0; i < products.length; i++) {
+          log("Product $i: ${products[i].name} | Price: ${products[i].price}");
+        }
+
+        return products;
       } else {
-        log("product not found");
+        log("No products found in range $min - $max");
         return [];
       }
     } catch (e) {

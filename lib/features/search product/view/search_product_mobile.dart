@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20repo/product/all_products_notifier.dart';
 import 'package:sadhana_cart/core/common%20services/product/product_service.dart';
 import 'package:sadhana_cart/core/widgets/custom_search_field.dart';
+import 'package:sadhana_cart/features/search%20product/widgets/search_product_tile.dart';
 
 class SearchProductMobile extends ConsumerStatefulWidget {
   final PreferredSizeWidget? appBar;
@@ -17,12 +19,16 @@ class SearchProductMobile extends ConsumerStatefulWidget {
 
 class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
     with SingleTickerProviderStateMixin {
+  // Scroll controller
+  late ScrollController _scrollController;
+
   final controller = TextEditingController();
   List<ProductModel> displayedProducts = [];
   bool isRightDrawerOpen = false;
   bool isLoading = false;
 
   // Price filter
+  bool isFiltering = false;
   final double _minPrice = 0;
   final double _maxPrice = 5000;
   RangeValues _currentRange = const RangeValues(0, 5000);
@@ -33,15 +39,25 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
   void initState() {
     super.initState();
     controller.addListener(_onSearchChanged);
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        // load next page when near bottom
+        ref.read(allProductsProvider.notifier).fetchNextProducts();
+      }
+    });
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     controller.dispose();
     _debounce?.cancel();
     super.dispose();
   }
 
+  // Search
   void _onSearchChanged() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () async {
@@ -50,14 +66,30 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
       setState(() => isLoading = true);
 
       try {
-        // Fetch filtered products matching the search query
-        final results = await ProductService.getProductByQuery(
-          query: queryText,
-        );
+        List<ProductModel> baseProducts;
+
+        if (isFiltering) {
+          // first apply price filter
+          baseProducts = await ProductService.getProductsByMoneyFilter(
+            min: _currentRange.start.round(),
+            max: _currentRange.end.round(),
+          );
+        } else {
+          // otherwise fetch all products
+          baseProducts = await ProductService.fetchProducts();
+        }
+
+        // now apply search on baseProducts
+        final results = baseProducts.where((product) {
+          final name = product.name?.toLowerCase() ?? "";
+          return name.contains(queryText.toLowerCase());
+        }).toList();
 
         setState(() {
           displayedProducts = results;
         });
+
+        log("✅ Search results within filter: ${results.length}");
       } catch (e) {
         log("Search error: $e");
         setState(() {
@@ -69,6 +101,35 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
     });
   }
 
+  // Filter
+  Future<void> _applyPriceFilter() async {
+    setState(() {
+      isLoading = true;
+      isFiltering = true;
+    });
+
+    try {
+      final results = await ProductService.getProductsByMoneyFilter(
+        min: _currentRange.start.round(),
+        max: _currentRange.end.round(),
+      );
+
+      setState(() {
+        displayedProducts = results;
+      });
+
+      log("Filter applied. Showing ${results.length} products");
+    } catch (e) {
+      log("Error applying filter: $e");
+      setState(() {
+        displayedProducts = [];
+      });
+    } finally {
+      setState(() => isLoading = false);
+      toggleRightDrawer();
+    }
+  }
+
   void toggleRightDrawer() {
     setState(() => isRightDrawerOpen = !isRightDrawerOpen);
   }
@@ -76,7 +137,11 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    final itemsToShow = displayedProducts;
+    final allProducts = ref.watch(allProductsProvider);
+    final notifier = ref.read(allProductsProvider.notifier);
+
+    // Determine what to show
+    final isSearching = controller.text.trim().isNotEmpty;
 
     return Scaffold(
       backgroundColor: const Color(0xffFFFFFF),
@@ -88,7 +153,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                // Search bar and filter button
+                // Search bar + filter
                 Row(
                   children: [
                     Expanded(
@@ -122,94 +187,61 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                 ),
                 const SizedBox(height: 20),
 
-                // Show loading or empty states
+                // Loading state
                 if (isLoading)
                   const Expanded(
                     child: Center(child: CircularProgressIndicator()),
                   )
-                else if (itemsToShow.isEmpty)
-                  const Expanded(
-                    child: Center(child: Text("No products found")),
-                  )
-                else
-                  // GridView showing only filtered products
-                  Expanded(
-                    flex: 3,
-                    child: GridView.builder(
-                      itemCount: itemsToShow.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 0.65,
+                // Searching
+                else if (isSearching)
+                  displayedProducts.isEmpty
+                      ? const Expanded(
+                          child: Center(child: Text("No matching products")),
+                        )
+                      : Expanded(
+                          flex: 3,
+                          child: SearchProductTile(
+                            products: displayedProducts,
+                            isLoadingMore: false, // no pagination in search
+                            onTap: (product) {},
                           ),
-                      itemBuilder: (context, index) {
-                        final product = itemsToShow[index];
-                        return Card(
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                        )
+                // Price filtering
+                else if (isFiltering)
+                  displayedProducts.isEmpty
+                      ? const Expanded(
+                          child: Center(
+                            child: Text("No products in this price range"),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Product Image
-                              product.images != null &&
-                                      product.images!.isNotEmpty
-                                  ? ClipRRect(
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                      ),
-                                      child: Image.network(
-                                        product.images![0],
-                                        height: 120,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                  : Container(
-                                      height: 120,
-                                      width: double.infinity,
-                                      color: Colors.grey.shade200,
-                                      child: const Icon(Icons.image, size: 50),
-                                    ),
-
-                              // Product Name
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  product.name ?? "No Name",
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              // Product Price
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                ),
-                                child: Text(
-                                  "₹${product.price?.toStringAsFixed(0) ?? 0}",
-                                  style: const TextStyle(color: Colors.green),
-                                ),
-                              ),
-                            ],
+                        )
+                      : Expanded(
+                          flex: 3,
+                          child: SearchProductTile(
+                            products: displayedProducts,
+                            isLoadingMore: false, // no pagination in filter
+                            onTap: (product) {},
                           ),
-                        );
-                      },
-                    ),
-                  ),
+                        )
+                else // 📦 Default - show all products with pagination
+                  allProducts.isEmpty
+                      ? const Expanded(
+                          child: Center(child: Text("No products found")),
+                        )
+                      : Expanded(
+                          flex: 3,
+                          child: SearchProductTile(
+                            controller:
+                                _scrollController, // scroll for pagination
+                            products: allProducts,
+                            isLoadingMore: notifier.isLoading,
+                            onTap: (product) {},
+                          ),
+                        ),
               ],
             ),
           ),
 
-          // Right drawer overlay (Filter Panel)
+          //  Right drawer overlay (Filter Panel)
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             top: 0,
@@ -249,11 +281,11 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
-                      const Text("Category"),
-                      const SizedBox(height: 10),
-                      const Text("Brand"),
-                      const SizedBox(height: 10),
+                      // const SizedBox(height: 20),
+                      // const Text("Category"),
+                      // const SizedBox(height: 10),
+                      // const Text("Brand"),
+                      // const SizedBox(height: 10),
                       const Text(
                         "Price",
                         style: TextStyle(
@@ -289,8 +321,22 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                       ),
                       const Spacer(),
                       ElevatedButton(
-                        onPressed: toggleRightDrawer,
-                        child: const Text("Apply Filters"),
+                        onPressed: isLoading ? null : _applyPriceFilter,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(
+                            45,
+                          ), // optional, for full width
+                        ),
+                        child: isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : const Text("Apply Filters"),
                       ),
                     ],
                   ),
