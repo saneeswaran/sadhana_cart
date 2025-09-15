@@ -18,7 +18,6 @@ class RatingService {
   static final currentUser = FirebaseAuth.instance.currentUser!.uid;
 
   static Future<bool> addRating({
-    required String userName,
     required String productId,
     required double rating,
     required String comment,
@@ -32,6 +31,8 @@ class RatingService {
 
       final docRef = ratingRef.doc();
       final userDoc = await userRef.doc(currentUser).get();
+
+      final userName = userDoc.get("name");
 
       if (!userDoc.exists) {
         log("User document not found for userId: $currentUser");
@@ -59,7 +60,7 @@ class RatingService {
 
       // Calculate average rating
       final querySnapshot = await ratingRef
-          .where("productId", isEqualTo: productId)
+          .where("productid", isEqualTo: productId)
           .get();
 
       final allRatings = querySnapshot.docs.map((e) {
@@ -88,7 +89,7 @@ class RatingService {
   }) async {
     try {
       final QuerySnapshot querySnapshot = await ratingRef
-          .where("productId", isEqualTo: productId)
+          .where("productid", isEqualTo: productId)
           .get();
       return querySnapshot.docs
           .map((e) => RatingModel.fromMap(e.data() as Map<String, dynamic>))
@@ -102,7 +103,7 @@ class RatingService {
   static Future<bool> deleteUserOwnRating({required String productId}) async {
     try {
       final QuerySnapshot querySnapshot = await ratingRef
-          .where("productId", isEqualTo: productId)
+          .where("productid", isEqualTo: productId)
           .where("userId", isEqualTo: currentUser)
           .get();
       if (querySnapshot.docs.isNotEmpty) {
@@ -125,7 +126,7 @@ class RatingService {
   }) async {
     try {
       final QuerySnapshot querySnapshot = await ratingRef
-          .where("productId", isEqualTo: productId)
+          .where("productid", isEqualTo: productId)
           .where("userId", isEqualTo: currentUser)
           .get();
 

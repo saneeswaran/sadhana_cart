@@ -3,7 +3,7 @@ import 'package:sadhana_cart/core/common%20model/customer/customer_model.dart';
 import 'package:sadhana_cart/features/profile/service/user_service.dart';
 
 final userProvider = StateNotifierProvider<UserNotifier, CustomerModel?>(
-  (ref) => UserNotifier(ref),
+  (ref) => UserNotifier(ref)..fetchCurrentUserProfile(),
 );
 
 final getCurrentUserProfile = FutureProvider<CustomerModel?>((ref) async {

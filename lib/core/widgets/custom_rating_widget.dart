@@ -8,7 +8,6 @@ import 'package:sadhana_cart/features/rating/service/rating_service.dart';
 
 Future<void> showRatingDialog({
   required BuildContext context,
-  required String userName,
   required String productId,
 }) {
   double userRating = 0.0;
@@ -42,7 +41,6 @@ Future<void> showRatingDialog({
                 if (userRating > 0 && review.isNotEmpty) {
                   setState(() => isLoading = true);
                   final success = await RatingService.addRating(
-                    userName: userName,
                     productId: productId,
                     rating: userRating,
                     comment: review,

@@ -21,7 +21,6 @@ import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_main_page.dart';
-import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
 import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
 
 class ClothingProductsDetails extends StatelessWidget {
@@ -231,11 +230,9 @@ class ClothingProductsDetails extends StatelessWidget {
                           .toList(),
                     ),
                   ),
+            const SizedBox(height: 20),
             Consumer(
               builder: (context, ref, child) {
-                final userName = ref.read(
-                  userProvider.select((value) => value?.name ?? ""),
-                );
                 final ratingAsync = ref.watch(
                   specificProductrating(product.productid!),
                 );
@@ -254,9 +251,9 @@ class ClothingProductsDetails extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              "0 Ratings",
-                              style: TextStyle(
+                            Text(
+                              "${ratingList.length} Ratings",
+                              style: const TextStyle(
                                 color: AppColor.primaryColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -268,7 +265,6 @@ class ClothingProductsDetails extends StatelessWidget {
                                 showRatingDialog(
                                   context: context,
                                   productId: product.productid!,
-                                  userName: userName,
                                 );
                               },
                             ),
