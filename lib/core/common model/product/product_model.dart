@@ -15,6 +15,7 @@
 import 'dart:convert';
 
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
+import 'package:sadhana_cart/core/constants/category_constants.dart';
 
 class ProductModel {
   // Common Fields
@@ -570,257 +571,230 @@ class ProductModel {
 
   //this is the code will help you by getting products attributes by category
   Map<String, dynamic> getDetailsByCategory() {
-    switch (category!.toLowerCase()) {
-      case 'brassiere':
-      case 'mensbottomwear':
-      case 'fashion':
-      case 'clothing':
-      case 'menswear':
-      case 'womenswear':
-      case 'kidswear':
-      case 'dress':
-      case 'womens':
-      case 'womenstops':
-      case 'womensdress':
-      case 'wears':
-      case 'frock':
-      case 'gown':
-      case 'lehenga':
-      case 'kurti':
-      case 'tops':
-      case 'tshirt':
-      case 'salwar':
-      case 'ethnic':
-      case 'skirt':
-      case 'jumpsuit':
-      case 'outfit':
-      case 'partywear':
-      case 'casualwear':
-      case 'formalwear':
-      case 'casual':
-      case 'formal':
-      case 'casuals':
-      case 'formals':
-        return {
-          'material': material,
-          'fit': fit,
-          'pattern': pattern,
-          'sleevetype': sleevetype,
-          'careinstruction': careinstruction,
-          'sizeoptions': sizeoptions,
-          'hsncode': hsncode,
-          'weight': weight,
-          'length': length,
-          'width': width,
-          'height': height,
-          'fittype': fittype,
-          'gender': gender,
-          'necktype': necktype,
-          'occasion': occasion,
-          'stitchtype': stitchtype,
-          'vendor': vendor,
-          'variantsku': variantsku,
-          'closuretype': closuretype,
-          'embroiderystyle': embroiderystyle,
-          'lining': lining,
-          'model': model,
-          'neckstyle': neckstyle,
-          'padtype': padtype,
-          'pockets': pockets,
-          'printtype': printtype,
-          'productlength': productlength,
-          'producttype': producttype,
-          'risestyle': risestyle,
-          'sidetype': sidetype,
-          'sleeve': sleeve,
-          'sleevestyle': sleevestyle,
-          'slittype': slittype,
-          'specialfeatures': specialfeatures,
-          'straptype': straptype,
-          'style': style,
-          'transparent': transparent,
-          'type': type,
-          'worktype': worktype,
-          'blouseavailability': blouseavailability,
-          'patterncoverage': patterncoverage,
-          'age': age,
-          'agegroup': agegroup,
-          'waiststyle': waiststyle,
-        };
-
-      case 'mobile':
-        return {
-          'model': model,
-          'mobilecolor': mobilecolor,
-          'ram': ram,
-          'storage': storage,
-          'battery': battery,
-          'camera': camera,
-          'processor': processor,
-          'display': display,
-          'os': os,
-          'connectivity': connectivity,
-          'warranty': warranty,
-          'vendor': vendor,
-          'variantsku': variantsku,
-          'hsncode': hsncode,
-          'weight': weight,
-          'length': length,
-          'width': width,
-          'height': height,
-          'color': color,
-          'designoptions': designoptions,
-          'gender': gender,
-          'material': material,
-          'producttype': producttype,
-          'type': type,
-        };
-
-      case 'electronics':
-        return {
-          'resolution': resolution,
-          'displaytype': displaytype,
-          'smartfeatures': smartfeatures,
-          'energyrating': energyrating,
-          'powerconsumption': powerconsumption,
-          'vendor': vendor,
-          'variantsku': variantsku,
-          'hsncode': hsncode,
-          'weight': weight,
-          'length': length,
-          'width': width,
-          'height': height,
-          'color': color,
-          'expdate': expdate,
-          'material': material,
-          'mfgdate': mfgdate,
-          'model': model,
-          'pattern': pattern,
-          'producttype': producttype,
-          'type': type,
-          'highlight': highlight,
-          'otherhighlights': otherhighlights,
-        };
-
-      case 'jewellery':
-        return {
-          'jewellerymaterial': jewellerymaterial,
-          'purity': purity,
-          'jewelleryweight': jewelleryweight,
-          'jewellerycolor': jewellerycolor,
-          'jewellerysize': jewellerysize,
-          'gemstone': gemstone,
-          'certification': certification,
-          'occasion': occasion,
-          'vendor': vendor,
-          'hsncode': hsncode,
-          'length': length,
-          'width': width,
-          'height': height,
-          'gender': gender,
-          'pattern': pattern,
-          'style': style,
-        };
-
-      case 'book':
-      case 'books':
-        return {
-          'title': title,
-          'author': author,
-          'publisher': publisher,
-          'edition': edition,
-          'language': language,
-          'isbn': isbn,
-          'pages': pages,
-          'binding': binding,
-          'genre': genre,
-        };
-
-      case 'home_kitchen':
-      case 'home&kitchen':
-        return {
-          'vendor': vendor,
-          'hsncode': hsncode,
-          'weight': weight,
-          'length': length,
-          'width': width,
-          'height': height,
-          'variantsku': variantsku,
-          'color': color,
-          'framematerial': framematerial,
-          'model': model,
-          'mountingtype': mountingtype,
-          'type': type,
-        };
-
-      case 'beauty':
-      case 'beauty&personalcare':
-      case 'personalcare':
-        return {
-          'shadecolor': shadecolor,
-          'beautytype': beautytype,
-          'ingredients': ingredients,
-          'skinhairtype': skinhairtype,
-          'beautyweightvolume': beautyweightvolume,
-          'beautyexpirydate': beautyexpirydate,
-          'dermatologicallytested': dermatologicallytested,
-        };
-
-      case 'furniture':
-        return {
-          'sizevariants': sizevariants,
-          'dimension': dimension,
-          'weightcapacity': weightcapacity,
-          'assembly': assembly,
-          'style': style,
-          'roomtype': roomtype,
-        };
-
-      case 'grocery':
-        return {
-          'weightvolume': weightvolume,
-          'quantity': quantity,
-          'organic': organic,
-          'expirydate': expirydate,
-          'storageinstruction': storageinstruction,
-          'dietarypreference': dietarypreference,
-        };
-
-      case 'laptop':
-        return {
-          'graphics': graphics,
-          'screensize': screensize,
-          'operatingsystem': operatingsystem,
-          'port': port,
-          'ram': ram,
-          'storage': storage,
-          'processor': processor,
-          'battery': battery,
-          'weight': weight,
-          'warranty': warranty,
-          'model': model,
-          'display': display,
-          'resolution': resolution,
-        };
-
-      case 'footwear':
-        return {
-          'footwearmaterial': footwearmaterial,
-          'footweartype': footweartype,
-          'gender': gender,
-          'shoesize': shoesize,
-          'heelheight': heelheight,
-          'closuretype': closuretype,
-          'solematerial': solematerial,
-          'pattern': pattern,
-          'style': style,
-          'toeshape': toeshape,
-          'occasion': occasion,
-          'color': color,
-        };
-
-      default:
-        return {};
+    final clothingList = CategoryConstants.clothingCategory;
+    final isClothing = clothingList.any(
+      (clothing) => category!.toLowerCase().contains(clothing.toLowerCase()),
+    );
+    if (isClothing) {
+      return {
+        'material': material,
+        'fit': fit,
+        'pattern': pattern,
+        'sleevetype': sleevetype,
+        'careinstruction': careinstruction,
+        'sizeoptions': sizeoptions,
+        'hsncode': hsncode,
+        'weight': weight,
+        'length': length,
+        'width': width,
+        'height': height,
+        'fittype': fittype,
+        'gender': gender,
+        'necktype': necktype,
+        'occasion': occasion,
+        'stitchtype': stitchtype,
+        'vendor': vendor,
+        'variantsku': variantsku,
+        'closuretype': closuretype,
+        'embroiderystyle': embroiderystyle,
+        'lining': lining,
+        'model': model,
+        'neckstyle': neckstyle,
+        'padtype': padtype,
+        'pockets': pockets,
+        'printtype': printtype,
+        'productlength': productlength,
+        'producttype': producttype,
+        'risestyle': risestyle,
+        'sidetype': sidetype,
+        'sleeve': sleeve,
+        'sleevestyle': sleevestyle,
+        'slittype': slittype,
+        'specialfeatures': specialfeatures,
+        'straptype': straptype,
+        'style': style,
+        'transparent': transparent,
+        'type': type,
+        'worktype': worktype,
+        'blouseavailability': blouseavailability,
+        'patterncoverage': patterncoverage,
+        'age': age,
+        'agegroup': agegroup,
+        'waiststyle': waiststyle,
+      };
+    } else if (category!.toLowerCase() == "mobile" ||
+        subcategory!.toLowerCase() == "mobile") {
+      return {
+        'model': model,
+        'mobilecolor': mobilecolor,
+        'ram': ram,
+        'storage': storage,
+        'battery': battery,
+        'camera': camera,
+        'processor': processor,
+        'display': display,
+        'os': os,
+        'connectivity': connectivity,
+        'warranty': warranty,
+        'vendor': vendor,
+        'variantsku': variantsku,
+        'hsncode': hsncode,
+        'weight': weight,
+        'length': length,
+        'width': width,
+        'height': height,
+        'color': color,
+        'designoptions': designoptions,
+        'gender': gender,
+        'material': material,
+        'producttype': producttype,
+        'type': type,
+      };
+    } else if (category!.toLowerCase() == "electronics" ||
+        subcategory!.toLowerCase() == "electronics") {
+      return {
+        'resolution': resolution,
+        'displaytype': displaytype,
+        'smartfeatures': smartfeatures,
+        'energyrating': energyrating,
+        'powerconsumption': powerconsumption,
+        'vendor': vendor,
+        'variantsku': variantsku,
+        'hsncode': hsncode,
+        'weight': weight,
+        'length': length,
+        'width': width,
+        'height': height,
+        'color': color,
+        'expdate': expdate,
+        'material': material,
+        'mfgdate': mfgdate,
+        'model': model,
+        'pattern': pattern,
+        'producttype': producttype,
+        'type': type,
+        'highlight': highlight,
+        'otherhighlights': otherhighlights,
+      };
+    } else if (category!.toLowerCase() == "jewellery" ||
+        subcategory!.toLowerCase() == "jewellery") {
+      return {
+        'jewellerymaterial': jewellerymaterial,
+        'purity': purity,
+        'jewelleryweight': jewelleryweight,
+        'jewellerycolor': jewellerycolor,
+        'jewellerysize': jewellerysize,
+        'gemstone': gemstone,
+        'certification': certification,
+        'occasion': occasion,
+        'vendor': vendor,
+        'hsncode': hsncode,
+        'length': length,
+        'width': width,
+        'height': height,
+        'gender': gender,
+        'pattern': pattern,
+        'style': style,
+      };
+    } else if (category!.toLowerCase() == "books" ||
+        subcategory!.toLowerCase() == "books") {
+      return {
+        'title': title,
+        'author': author,
+        'publisher': publisher,
+        'edition': edition,
+        'language': language,
+        'isbn': isbn,
+        'pages': pages,
+        'binding': binding,
+        'genre': genre,
+      };
+    } else if (category!.toLowerCase() == "home_kitchen" ||
+        subcategory!.toLowerCase() == "home_kitchen") {
+      return {
+        'vendor': vendor,
+        'hsncode': hsncode,
+        'weight': weight,
+        'length': length,
+        'width': width,
+        'height': height,
+        'variantsku': variantsku,
+        'color': color,
+        'framematerial': framematerial,
+        'model': model,
+        'mountingtype': mountingtype,
+        'type': type,
+      };
+    } else if (category!.toLowerCase() == "personalcare" ||
+        category!.toLowerCase() == "beauty" ||
+        category!.toLowerCase() == "beauty&personalcare" ||
+        subcategory!.toLowerCase() == "personalcare" ||
+        subcategory!.toLowerCase() == "beauty" ||
+        subcategory!.toLowerCase() == "beauty&personalcare") {
+      return {
+        'shadecolor': shadecolor,
+        'beautytype': beautytype,
+        'ingredients': ingredients,
+        'skinhairtype': skinhairtype,
+        'beautyweightvolume': beautyweightvolume,
+        'beautyexpirydate': beautyexpirydate,
+        'dermatologicallytested': dermatologicallytested,
+      };
+    } else if (category!.toLowerCase() == "furniture" ||
+        subcategory!.toLowerCase() == "furniture") {
+      return {
+        'sizevariants': sizevariants,
+        'dimension': dimension,
+        'weightcapacity': weightcapacity,
+        'assembly': assembly,
+        'style': style,
+        'roomtype': roomtype,
+      };
+    } else if (category!.toLowerCase() == "grocery" ||
+        subcategory!.toLowerCase() == "grocery") {
+      return {
+        'weightvolume': weightvolume,
+        'quantity': quantity,
+        'organic': organic,
+        'expirydate': expirydate,
+        'storageinstruction': storageinstruction,
+        'dietarypreference': dietarypreference,
+      };
+    } else if (category!.toLowerCase() == "laptop" ||
+        subcategory!.toLowerCase() == "laptop") {
+      return {
+        'graphics': graphics,
+        'screensize': screensize,
+        'operatingsystem': operatingsystem,
+        'port': port,
+        'ram': ram,
+        'storage': storage,
+        'processor': processor,
+        'battery': battery,
+        'weight': weight,
+        'warranty': warranty,
+        'model': model,
+        'display': display,
+        'resolution': resolution,
+      };
+    } else if (category!.toLowerCase() == "footwear" ||
+        subcategory!.toLowerCase() == "footwear") {
+      return {
+        'footwearmaterial': footwearmaterial,
+        'footweartype': footweartype,
+        'gender': gender,
+        'shoesize': shoesize,
+        'heelheight': heelheight,
+        'closuretype': closuretype,
+        'solematerial': solematerial,
+        'pattern': pattern,
+        'style': style,
+        'toeshape': toeshape,
+        'occasion': occasion,
+        'color': color,
+      };
+    } else {
+      return {};
     }
   }
 
