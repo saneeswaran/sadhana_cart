@@ -24,9 +24,16 @@ class AccessoriesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get additional data
     final Map<String, dynamic> productAdditionalData = product
         .getDetailsByCategory();
+
+    if (product.category?.toLowerCase() == "accessories") {
+      productAdditionalData.remove("gender");
+    }
+
     log(product.productid.toString());
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -35,14 +42,19 @@ class AccessoriesScreen extends StatelessWidget {
             ProductPriceRating(product: product),
             CustomTileDropdown(
               title: "Description",
-              value: Text(product.description!),
+              value: Text(product.description ?? ""),
             ),
             CustomTileDropdown(
               title: "Details",
               value: Column(
-                children: productAdditionalData.entries.map((entry) {
-                  return ProductDetailRow(title: entry.key, value: entry.value);
-                }).toList(),
+                children: productAdditionalData.entries
+                    .map(
+                      (entry) => ProductDetailRow(
+                        title: entry.key,
+                        value: entry.value,
+                      ),
+                    )
+                    .toList(),
               ),
             ),
             Consumer(
@@ -52,12 +64,9 @@ class AccessoriesScreen extends StatelessWidget {
                 );
 
                 return ratingAsync.when(
-                  loading: () {
-                    return const RatingTileLoader();
-                  },
-                  error: (error, stack) {
-                    return Center(child: Text("Error: ${error.toString()}"));
-                  },
+                  loading: () => const RatingTileLoader(),
+                  error: (error, stack) =>
+                      Center(child: Text("Error: ${error.toString()}")),
                   data: (ratingList) {
                     return Column(
                       children: [
