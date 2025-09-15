@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/product/all_products_notifier.dart';
 import 'package:sadhana_cart/core/common%20services/product/product_service.dart';
+import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_search_field.dart';
 import 'package:sadhana_cart/features/search%20product/widgets/search_product_tile.dart';
 
@@ -72,18 +73,15 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
         List<ProductModel> baseProducts;
 
         if (isFiltering) {
-          // first apply price filter
           baseProducts = await ProductService.getProductsByMoneyFilter(
             min: _currentRange.start.round(),
             max: _currentRange.end.round(),
             rating: _selectedRating,
           );
         } else {
-          // otherwise fetch all products
           baseProducts = await ProductService.fetchProducts();
         }
 
-        // now apply search on baseProducts
         final results = baseProducts.where((product) {
           final name = product.name?.toLowerCase() ?? "";
           return name.contains(queryText.toLowerCase());
@@ -112,7 +110,6 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
     });
 
     try {
-      // Pass both price and rating to the service
       final results = await ProductService.getProductsByMoneyFilter(
         min: _currentRange.start.round(),
         max: _currentRange.end.round(),
@@ -158,7 +155,6 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                // Search bar + filter
                 Row(
                   children: [
                     Expanded(
@@ -207,7 +203,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                           flex: 3,
                           child: SearchProductTile(
                             products: displayedProducts,
-                            isLoadingMore: false, // no pagination in search
+                            isLoadingMore: false,
                             onTap: (product) {},
                           ),
                         )
@@ -223,7 +219,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                           flex: 3,
                           child: SearchProductTile(
                             products: displayedProducts,
-                            isLoadingMore: false, // no pagination in filter
+                            isLoadingMore: false,
                             onTap: (product) {},
                           ),
                         )
@@ -382,13 +378,10 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                       ),
 
                       const Spacer(),
-                      ElevatedButton(
-                        onPressed: isLoading ? null : _applyFilters,
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size.fromHeight(
-                            45,
-                          ), // optional, for full width
-                        ),
+                      CustomElevatedButton(
+                        onPressed: () {
+                          isLoading ? null : _applyFilters();
+                        },
                         child: isLoading
                             ? const SizedBox(
                                 width: 20,
@@ -398,7 +391,10 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text("Apply Filters"),
+                            : const Text(
+                                "Apply Filters",
+                                style: customElevatedButtonTextStyle,
+                              ),
                       ),
                     ],
                   ),

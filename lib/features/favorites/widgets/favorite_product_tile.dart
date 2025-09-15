@@ -5,6 +5,7 @@ import 'package:sadhana_cart/core/common%20repo/favorite/fav_model_notifier.dart
 import 'package:sadhana_cart/core/common%20repo/favorite/favorite_notifier.dart';
 import 'package:sadhana_cart/core/common%20services/favorite/favorite_service.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:collection/collection.dart';
 
@@ -34,12 +35,18 @@ class FavoriteProductTile extends ConsumerWidget {
         ),
         itemBuilder: (context, index) {
           final favorite = favList[index];
-          return GestureDetector(
-            onTap: () {},
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  navigateToProductDesignBasedOnCategory(
+                    context: context,
+                    categoryName: favorite.category ?? "",
+                    product: favorite,
+                  );
+                },
+                child: Container(
                   height: size.height * 0.22,
                   width: double.infinity,
                   decoration: BoxDecoration(
@@ -99,27 +106,27 @@ class FavoriteProductTile extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  favorite.name ?? '',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                favorite.name ?? '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  "${Constants.indianCurrency} ${favorite.offerprice}",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                "${Constants.indianCurrency} ${favorite.offerprice}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.black,
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         },
       ),
