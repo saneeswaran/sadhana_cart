@@ -147,4 +147,25 @@ class CustomerService {
       return false;
     }
   }
+
+  static Future<CustomerModel?> getCurrentUserProfile() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) throw Exception("User not logged in");
+
+      final querySnapshot = await customerRef
+          .where("id", isEqualTo: user.uid)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
+        return CustomerModel.fromMap(data);
+      }
+
+      return null;
+    } catch (e) {
+      log('Error fetching user profile: $e');
+      return null;
+    } finally {}
+  }
 }

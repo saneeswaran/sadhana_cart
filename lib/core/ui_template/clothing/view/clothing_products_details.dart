@@ -117,8 +117,6 @@ class ClothingProductsDetails extends StatelessWidget {
               width: size.width,
               child: Column(children: [ProductPriceRating(product: product)]),
             ),
-
-            const CustomDivider(),
             const SizedBox(height: 20),
 
             /// Sizes
@@ -126,89 +124,118 @@ class ClothingProductsDetails extends StatelessWidget {
               builder: (context, ref, child) {
                 final selectedSizeIndex = ref.watch(clothingSizeProvider);
 
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Size:",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: List.generate(
-                            product.sizevariants?.length ?? 0,
-                            (index) {
-                              final sizeItem = product.sizevariants?[index];
-                              final isSelected = index == selectedSizeIndex;
+                final hasValidSizes =
+                    product.sizevariants != null &&
+                    product.sizevariants!.any(
+                      (variant) =>
+                          variant.size.toLowerCase() != 'nan' &&
+                          variant.size.trim().isNotEmpty,
+                    );
 
-                              final bool sizeHaveMoreContent =
-                                  sizeItem!.size
-                                      .allMatches(sizeItem.size)
-                                      .length <
-                                  3;
+                if (!hasValidSizes) {
+                  return const SizedBox.shrink();
+                }
 
-                              return GestureDetector(
-                                onTap: () {
-                                  ref
-                                          .read(clothingSizeProvider.notifier)
-                                          .state =
-                                      index;
-                                  log(productData.toString());
-                                },
-                                child: Container(
-                                  height: 40,
-                                  width: sizeHaveMoreContent ? 40 : 120,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? AppColor.primaryColor
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? AppColor.primaryColor
-                                          : Colors.grey.shade300,
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade200,
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: Text(
-                                    sizeItem.size,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : Colors.black87,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
+                return Column(
+                  children: [
+                    hasValidSizes
+                        ? const CustomDivider()
+                        : const SizedBox.shrink(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Size:",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: List.generate(
+                                product.sizevariants?.length ?? 0,
+                                (index) {
+                                  final sizeItem = product.sizevariants?[index];
+                                  final isSelected = index == selectedSizeIndex;
+                                  if (sizeItem == null ||
+                                      sizeItem.size.toLowerCase() == 'nan' ||
+                                      sizeItem.size.trim().isEmpty) {
+                                    return const SizedBox.shrink();
+                                  }
+
+                                  final bool sizeHaveMoreContent =
+                                      sizeItem.size
+                                          .allMatches(sizeItem.size)
+                                          .length <
+                                      3;
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      ref
+                                              .read(
+                                                clothingSizeProvider.notifier,
+                                              )
+                                              .state =
+                                          index;
+                                      log(productData.toString());
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      width: sizeHaveMoreContent ? 40 : 120,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? AppColor.primaryColor
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(5),
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? AppColor.primaryColor
+                                              : Colors.grey.shade300,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.shade200,
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Text(
+                                        sizeItem.size,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: isSelected
+                                              ? Colors.white
+                                              : Colors.black87,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    hasValidSizes
+                        ? const CustomDivider()
+                        : const SizedBox.shrink(),
+                  ],
                 );
               },
             ),
+
             const SizedBox(height: 20),
-            const CustomDivider(),
             CustomTileDropdown(
               title: "Description",
               value: Text(product.description!),
@@ -245,49 +272,51 @@ class ClothingProductsDetails extends StatelessWidget {
                     return Center(child: Text("Error: ${error.toString()}"));
                   },
                   data: (ratingList) {
-                    if (ratingList.isEmpty) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "${ratingList.length} Ratings",
-                              style: const TextStyle(
-                                color: AppColor.primaryColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "${ratingList.length} Ratings",
+                                style: const TextStyle(
+                                  color: AppColor.primaryColor,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            CustomTextButton(
-                              text: "Write a Review",
-                              onPressed: () {
-                                showRatingDialog(
-                                  context: context,
-                                  productId: product.productid!,
-                                );
-                              },
-                            ),
-                          ],
+                              CustomTextButton(
+                                text: "Write a Review",
+                                onPressed: () {
+                                  showRatingDialog(
+                                    context: context,
+                                    productId: product.productid!,
+                                    ref: ref,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                         ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      itemCount: ratingList.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        final rating = ratingList[index];
-                        return RatingTile(
-                          imageUrl: rating.image.isEmpty
-                              ? AppImages.noProfile
-                              : rating.image,
-                          name: rating.userName,
-                          rating: rating.rating,
-                          review: rating.comment,
-                        );
-                      },
+                        ListView.builder(
+                          itemCount: ratingList.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            final rating = ratingList[index];
+                            return RatingTile(
+                              imageUrl: rating.image.isEmpty
+                                  ? AppImages.noProfile
+                                  : rating.image,
+                              name: rating.userName,
+                              rating: rating.rating,
+                              review: rating.comment,
+                            );
+                          },
+                        ),
+                      ],
                     );
                   },
                 );

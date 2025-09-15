@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/auth%20service/auth_service.dart';
+import 'package:sadhana_cart/core/common%20services/customer/customer_service.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
@@ -13,7 +14,6 @@ import 'package:sadhana_cart/core/widgets/loader.dart';
 import 'package:sadhana_cart/core/widgets/rounded_signin_button.dart';
 import 'package:sadhana_cart/features/auth/view/sign%20up/view/sign_in_mobile.dart';
 import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_option.dart';
-import 'package:sadhana_cart/features/profile/service/user_service.dart';
 
 class SignUpMobile extends ConsumerStatefulWidget {
   const SignUpMobile({super.key});
@@ -134,10 +134,10 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                                 ref: ref,
                               );
                           final bool profile =
-                              await UserService.createUserProfile(
+                              await CustomerService.createUserProfile(
                                 email: emailController.text.trim(),
                                 name: nameController.text.trim(),
-                                number: int.parse(
+                                contactNo: int.parse(
                                   phoneNumberController.text.trim(),
                                 ),
                               );

@@ -22,8 +22,25 @@ final avgRatingProvider = FutureProvider.autoDispose.family<double, String>((
 class RatingNotifier extends StateNotifier<RatingState> {
   RatingNotifier() : super(RatingState.initialState());
 
-  void addrating({required RatingModel rating}) {
-    state = state.copyWith(ratings: [...state.ratings, rating]);
+  Future<bool> addrating({
+    required String productId,
+    required double rating,
+    required String comment,
+  }) async {
+    final bool isSuccess = await RatingService.addRating(
+      productId: productId,
+      rating: rating,
+      comment: comment,
+    );
+    if (isSuccess) {
+      state = state.copyWith(
+        isLoading: false,
+        ratings: await fetchProductRating(productId: productId),
+      );
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void deleteRating({required String ratingId}) {

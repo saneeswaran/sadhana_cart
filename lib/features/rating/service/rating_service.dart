@@ -57,26 +57,6 @@ class RatingService {
       );
 
       await docRef.set(ratingModel.toMap());
-
-      // Calculate average rating
-      final querySnapshot = await ratingRef
-          .where("productid", isEqualTo: productId)
-          .get();
-
-      final allRatings = querySnapshot.docs.map((e) {
-        final data = e.data();
-        return RatingModel.fromMap(data as Map<String, dynamic>);
-      }).toList();
-
-      final double totalRating = allRatings.fold(
-        0,
-        (double sum, item) => sum + item.rating,
-      );
-
-      final double avgRating = totalRating / allRatings.length;
-
-      await productRef.doc(productId).update({"rating": avgRating});
-
       return true;
     } catch (e) {
       log("rating service error $e");
