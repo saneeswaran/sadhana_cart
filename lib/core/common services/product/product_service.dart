@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_fetch_result.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/features/rating/service/rating_service.dart';
 
 class ProductService {
   static const String products = "products";
@@ -216,35 +217,64 @@ class ProductService {
   }
 
   static Future<List<ProductModel>> getProductsByMoneyFilter({
-    required int min,
-    required int max,
+    int? min,
+    int? max,
+    double? rating, // double rating
   }) async {
     try {
-      log("Filtering products with price between $min and $max");
+      log("Starting product filter: min=$min, max=$max, rating=$rating");
 
-      final QuerySnapshot querySnapshot = await productRef
-          .where("price", isGreaterThanOrEqualTo: min)
-          .where("price", isLessThanOrEqualTo: max)
-          .get();
+      Query query = productRef;
 
-      log("Query executed. Docs found: ${querySnapshot.docs.length}");
-
-      if (querySnapshot.docs.isNotEmpty) {
-        final products = querySnapshot.docs
-            .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
-            .toList();
-
-        for (var i = 0; i < products.length; i++) {
-          log("Product $i: ${products[i].name} | Price: ${products[i].price}");
-        }
-
-        return products;
-      } else {
-        log("No products found in range $min - $max");
-        return [];
+      if (min != null) {
+        query = query.where("price", isGreaterThanOrEqualTo: min);
+        log("Applying min price filter: $min");
       }
-    } catch (e) {
-      log("ProductService fetch error: $e");
+
+      if (max != null) {
+        query = query.where("price", isLessThanOrEqualTo: max);
+        log("Applying max price filter: $max");
+      }
+
+      final querySnapshot = await query.get();
+      log("Products fetched from Firestore: ${querySnapshot.docs.length}");
+
+      var products = querySnapshot.docs
+          .map((e) => ProductModel.fromMap(e.data() as Map<String, dynamic>))
+          .toList();
+
+      List<ProductModel> matchedProducts = [];
+
+      if (rating != null) {
+        log("Filtering by rating: $rating");
+
+        // Process all ratings concurrently
+        final futures = products.map((product) async {
+          final avgRating = await RatingService.getAverageRating(
+            productId: product.productid!,
+          );
+
+          if (avgRating >= rating && avgRating < rating + 1) {
+            log(
+              " Matched product: ${product.name} | Price: ${product.price} | AvgRating: $avgRating",
+            );
+            return product;
+          } else {
+            return null;
+          }
+        }).toList();
+
+        final results = await Future.wait(futures);
+        matchedProducts = results.whereType<ProductModel>().toList();
+      } else {
+        log("ℹ No rating filter applied, all products matched");
+        matchedProducts = products;
+      }
+
+      log("Total matched products: ${matchedProducts.length}");
+      return matchedProducts;
+    } catch (e, stackTrace) {
+      log("❌ ProductService fetch error: $e", stackTrace: stackTrace);
       return [];
     }
   }

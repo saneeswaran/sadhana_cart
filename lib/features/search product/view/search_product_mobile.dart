@@ -33,6 +33,9 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
   final double _maxPrice = 5000;
   RangeValues _currentRange = const RangeValues(0, 5000);
 
+  // Rating
+  double? _selectedRating;
+
   Timer? _debounce;
 
   @override
@@ -73,6 +76,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
           baseProducts = await ProductService.getProductsByMoneyFilter(
             min: _currentRange.start.round(),
             max: _currentRange.end.round(),
+            rating: _selectedRating,
           );
         } else {
           // otherwise fetch all products
@@ -89,7 +93,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
           displayedProducts = results;
         });
 
-        log("✅ Search results within filter: ${results.length}");
+        log("Search results within filter: ${results.length}");
       } catch (e) {
         log("Search error: $e");
         setState(() {
@@ -101,26 +105,27 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
     });
   }
 
-  // Filter
-  Future<void> _applyPriceFilter() async {
+  Future<void> _applyFilters() async {
     setState(() {
       isLoading = true;
       isFiltering = true;
     });
 
     try {
+      // Pass both price and rating to the service
       final results = await ProductService.getProductsByMoneyFilter(
         min: _currentRange.start.round(),
         max: _currentRange.end.round(),
+        rating: _selectedRating,
       );
 
       setState(() {
         displayedProducts = results;
       });
 
-      log("Filter applied. Showing ${results.length} products");
+      log("Filters applied. Showing ${results.length} products");
     } catch (e) {
-      log("Error applying filter: $e");
+      log("Error applying filters: $e");
       setState(() {
         displayedProducts = [];
       });
@@ -211,7 +216,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                   displayedProducts.isEmpty
                       ? const Expanded(
                           child: Center(
-                            child: Text("No products in this price range"),
+                            child: Text("No products in this range"),
                           ),
                         )
                       : Expanded(
@@ -222,7 +227,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                             onTap: (product) {},
                           ),
                         )
-                else // 📦 Default - show all products with pagination
+                else // Default - show all products with pagination
                   allProducts.isEmpty
                       ? const Expanded(
                           child: Center(child: Text("No products found")),
@@ -281,11 +286,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                           ),
                         ],
                       ),
-                      // const SizedBox(height: 20),
-                      // const Text("Category"),
-                      // const SizedBox(height: 10),
-                      // const Text("Brand"),
-                      // const SizedBox(height: 10),
+
                       const Text(
                         "Price",
                         style: TextStyle(
@@ -319,9 +320,70 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
                           Text("₹${_currentRange.end.round()}"),
                         ],
                       ),
+
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Rating",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(5, (index) {
+                          final ratingValue = (index + 1)
+                              .toDouble(); // make it double
+                          final isSelected = _selectedRating == ratingValue;
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedRating =
+                                    ratingValue; // define this in your state
+                              });
+                            },
+                            child: Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: isSelected
+                                    ? Colors.orange
+                                    : Colors.white,
+                                border: Border.all(
+                                  color: Colors.grey.shade400,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.star,
+                                      size: 16,
+                                      color: Colors.amber,
+                                    ),
+                                    Text(
+                                      " $ratingValue",
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+
                       const Spacer(),
                       ElevatedButton(
-                        onPressed: isLoading ? null : _applyPriceFilter,
+                        onPressed: isLoading ? null : _applyFilters,
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(
                             45,
