@@ -1,10 +1,8 @@
 import 'package:hive/hive.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'size_variant.g.dart';
 
 @HiveType(typeId: 9)
-@JsonSerializable()
 class SizeVariant extends HiveObject {
   @HiveField(0)
   final String size;

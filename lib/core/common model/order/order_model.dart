@@ -75,7 +75,7 @@ class OrderModel {
       'orderDate': orderDate,
       'orderId': orderId,
       'createdAt': createdAt,
-      'products': products.map((x) => x.toJson()).toList(),
+      'products': products.map((x) => x.toMap()).toList(),
     };
   }
 

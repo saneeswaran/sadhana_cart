@@ -10,7 +10,7 @@ class CartWithProduct {
   CartWithProduct({required this.cart, required this.product});
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'cart': cart.toMap(), 'product': product.toJson()};
+    return <String, dynamic>{'cart': cart.toMap(), 'product': product.toMap()};
   }
 
   factory CartWithProduct.fromMap(Map<String, dynamic> map) {
