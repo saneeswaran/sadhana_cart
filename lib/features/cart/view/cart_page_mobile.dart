@@ -35,7 +35,7 @@ class CartPageMobile extends ConsumerWidget {
                   final cart = cartItems[index];
                   //to show the size variants
                   final cartModel = carts.firstWhere(
-                    (e) => e.productId == cart.productId,
+                    (e) => e.productId == cart.productid,
                     orElse: () => CartModel(
                       cartId: '',
                       customerId: '',
@@ -47,7 +47,7 @@ class CartPageMobile extends ConsumerWidget {
                   final sizes = cartModel.size;
 
                   //getting stock
-                  final selectedVariant = cart.sizeVariants?.firstWhere(
+                  final selectedVariant = cart.sizevariants?.firstWhere(
                     (e) => e.size == cartModel.size,
                     orElse: () => SizeVariant(size: '', stock: 0),
                   );
@@ -55,7 +55,7 @@ class CartPageMobile extends ConsumerWidget {
 
                   //get total price by quantity
                   final specificProductPrice =
-                      cartModel.quantity * cart.offerPrice!;
+                      cartModel.quantity * cart.offerprice!;
                   return Container(
                     margin: const EdgeInsets.all(10),
                     height: size.height * 0.19,
@@ -117,7 +117,7 @@ class CartPageMobile extends ConsumerWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 5),
-                                cart.sizeVariants != null
+                                cart.sizevariants != null
                                     ? Text(
                                         "Size: $sizes",
                                         style: const TextStyle(

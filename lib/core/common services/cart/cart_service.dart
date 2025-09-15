@@ -22,7 +22,7 @@ class CartService {
   }) async {
     try {
       final query = await cartRef
-          .where("productId", isEqualTo: product.productId)
+          .where("productId", isEqualTo: product.productid)
           .limit(1)
           .get();
 
@@ -42,7 +42,7 @@ class CartService {
         final CartModel cartModel = CartModel(
           cartId: docRef.id,
           customerId: currentUserId,
-          productId: product.productId!,
+          productId: product.productid!,
           quantity: 1,
           size: size,
         );

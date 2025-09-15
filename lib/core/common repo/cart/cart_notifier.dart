@@ -52,7 +52,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     final products = ref.read(productProvider);
     final productIds = state.map((c) => c.productId).toSet();
 
-    return products.where((p) => productIds.contains(p.productId)).toSet();
+    return products.where((p) => productIds.contains(p.productid)).toSet();
   }
 
   void increaseQuantity({required CartModel cart, required int maxStock}) {
@@ -80,10 +80,10 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
 
     for (final cart in state) {
       final cartProduct = products.firstWhere(
-        (product) => product.productId == cart.productId,
+        (product) => product.productid == cart.productId,
       );
       final product = cartProduct;
-      final price = product.offerPrice ?? 0.0;
+      final price = product.offerprice ?? 0.0;
       final qty = cart.quantity;
       total += price * qty;
     }

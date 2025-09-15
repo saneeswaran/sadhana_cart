@@ -1,17 +1,3 @@
-//please don't think about why this product model have so many things
-//because client not willing to hire people to make changes in excel sheet
-//also baapstore are not willing to create form based on our database structure
-//i don't have choice now.. if any good developer see this if you can optimize the model please do
-//also explain about data structure to client... there some unused values are storing in the database
-//i don't have choice now... sometime the stock count not showing in the product list
-//when they upload the product with bulk upload option... that thing is waste until they strictly follow the data structure
-//please explain and optimize the data structure to client
-//i don't have choice now.. if any good developer see this this if you can optimize the model please do
-
-//here important message
-//we mention datetime, timestamp also string.... because of the bulk upload option.. it don't have any option
-//if any developer see this means please don't curse us...
-
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 //please don't think about why this product model have so many things
 //because client not willing to hire people to make changes in excel sheet
@@ -26,25 +12,26 @@
 //here import message
 //we mention datetime, timestamp also string.... because of the bulk upload option.. it don't have any option
 //if any developer see this means please don't curse us...
+import 'dart:convert';
+
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class ProductModel {
   // Common Fields
-  final String? productId;
+  final String? productid;
   final String? name;
   final String? description;
   final String? category;
   final String? subcategory;
-  final String? baseSku;
+  final String? basesku;
   final String? brand;
-  final double? price;
-  final double? offerPrice;
+  final num? price;
+  final num? offerprice;
   final int? stock;
-  final double? rating;
+  final num? rating;
   final List<String>? images;
-  final String? sellerId;
-  final String? cashOnDelivery;
-  final List<SizeVariant>? sizeVariants;
+  final String? sellerid;
+  final List<SizeVariant>? sizevariants;
   final String? timestamp;
   final String? date;
 
@@ -52,50 +39,50 @@ class ProductModel {
   final String? material;
   final String? fit;
   final String? pattern;
-  final String? sleeveType;
-  final String? careInstruction;
-  final List<String>? sizeOptions;
-  final String? hsnCode;
-  final double? weight;
-  final double? length;
-  final double? width;
-  final double? height;
-  final String? fitType;
+  final String? sleevetype;
+  final String? careinstruction;
+  final List<String>? sizeoptions;
+  final String? hsncode;
+  final num? weight;
+  final num? length;
+  final num? width;
+  final num? height;
+  final String? fittype;
   final String? gender;
-  final String? neckType;
+  final String? necktype;
   final String? occasion;
-  final String? stitchType;
+  final String? stitchtype;
   final String? vendor;
-  final String? variantSku;
-  final String? closureType;
-  final String? embroideryStyle;
+  final String? variantsku;
+  final String? closuretype;
+  final String? embroiderystyle;
   final String? lining;
   final String? model;
-  final String? neckStyle;
-  final String? padType;
+  final String? neckstyle;
+  final String? padtype;
   final String? pockets;
-  final String? printType;
-  final String? productLength;
-  final String? productType;
-  final String? riseStyle;
-  final String? sideType;
+  final String? printtype;
+  final String? productlength;
+  final String? producttype;
+  final String? risestyle;
+  final String? sidetype;
   final String? sleeve;
-  final String? sleeveStyle;
-  final String? slitType;
-  final String? specialFeatures;
-  final String? strapType;
+  final String? sleevestyle;
+  final String? slittype;
+  final String? specialfeatures;
+  final String? straptype;
   final String? style;
   final bool? transparent;
   final String? type;
-  final String? workType;
-  final bool? blouseAvailability;
-  final String? patternCoverage;
+  final String? worktype;
+  final bool? blouseavailability;
+  final String? patterncoverage;
   final String? age;
-  final String? ageGroup;
-  final String? waistStyle;
+  final String? agegroup;
+  final String? waiststyle;
 
   // Mobile
-  final String? mobileColor;
+  final String? mobilecolor;
   final String? ram;
   final String? storage;
   final String? battery;
@@ -106,25 +93,25 @@ class ProductModel {
   final String? connectivity;
   final String? warranty;
   final String? color;
-  final String? designOptions;
+  final String? designoptions;
 
   // Electronics
   final String? resolution;
-  final String? displayType;
-  final String? smartFeatures;
-  final String? energyRating;
-  final String? powerConsumption;
-  final DateTime? expDate;
-  final String? mfgDate;
+  final String? displaytype;
+  final String? smartfeatures;
+  final String? energyrating;
+  final String? powerconsumption;
+  final DateTime? expdate;
+  final String? mfgdate;
   final String? highlight;
-  final String? otherHighlights;
+  final String? otherhighlights;
 
   // Jewellery
-  final String? jewelleryMaterial;
+  final String? jewellerymaterial;
   final String? purity;
-  final double? jewelleryWeight;
-  final String? jewelleryColor;
-  final String? jewellerySize;
+  final num? jewelleryweight;
+  final String? jewellerycolor;
+  final String? jewellerysize;
   final String? gemstone;
   final String? certification;
 
@@ -140,109 +127,107 @@ class ProductModel {
   final String? genre;
 
   // Home & Kitchen
-  final String? frameMaterial;
-  final String? mountingType;
+  final String? framematerial;
+  final String? mountingtype;
 
   // Beauty
-  final String? shadeColor;
-  final String? beautyType;
+  final String? shadecolor;
+  final String? beautytype;
   final List<String>? ingredients;
-  final String? skinHairType;
-  final String? beautyWeightVolume;
-  final String? beautyExpiryDate;
-  final bool? dermatologicallyTested;
+  final String? skinhairtype;
+  final String? beautyweightvolume;
+  final String? beautyexpirydate;
+  final bool? dermatologicallytested;
 
   // Furniture
   final String? dimension;
-  final String? weightCapacity;
+  final String? weightcapacity;
   final String? assembly;
-  final String? roomType;
+  final String? roomtype;
 
   // Grocery
-  final String? weightVolume;
+  final String? weightvolume;
   final String? quantity;
   final bool? organic;
-  final String? expiryDate;
-  final String? storageInstruction;
-  final String? dietaryPreference;
+  final String? expirydate;
+  final String? storageinstruction;
+  final String? dietarypreference;
 
   // Laptop
   final String? graphics;
-  final String? screenSize;
-  final String? operatingSystem;
+  final String? screensize;
+  final String? operatingsystem;
   final String? port;
 
   // Footwear
-  final String? footwearMaterial;
-  final String? footwearType;
-  final String? shoeSize;
-  final String? heelHeight;
-  final String? soleMaterial;
-  final String? toeShape;
-
+  final String? footwearmaterial;
+  final String? footweartype;
+  final String? shoesize;
+  final String? heelheight;
+  final String? solematerial;
+  final String? toeshape;
   ProductModel({
-    this.productId,
+    this.productid,
     this.name,
     this.description,
     this.category,
     this.subcategory,
-    this.baseSku,
+    this.basesku,
     this.brand,
     this.price,
-    this.offerPrice,
+    this.offerprice,
     this.stock,
     this.rating,
     this.images,
-    this.sellerId,
-    this.cashOnDelivery,
-    this.sizeVariants,
+    this.sellerid,
+    this.sizevariants,
     this.timestamp,
     this.date,
     this.material,
     this.fit,
     this.pattern,
-    this.sleeveType,
-    this.careInstruction,
-    this.sizeOptions,
-    this.hsnCode,
+    this.sleevetype,
+    this.careinstruction,
+    this.sizeoptions,
+    this.hsncode,
     this.weight,
     this.length,
     this.width,
     this.height,
-    this.fitType,
+    this.fittype,
     this.gender,
-    this.neckType,
+    this.necktype,
     this.occasion,
-    this.stitchType,
+    this.stitchtype,
     this.vendor,
-    this.variantSku,
-    this.closureType,
-    this.embroideryStyle,
+    this.variantsku,
+    this.closuretype,
+    this.embroiderystyle,
     this.lining,
     this.model,
-    this.neckStyle,
-    this.padType,
+    this.neckstyle,
+    this.padtype,
     this.pockets,
-    this.printType,
-    this.productLength,
-    this.productType,
-    this.riseStyle,
-    this.sideType,
+    this.printtype,
+    this.productlength,
+    this.producttype,
+    this.risestyle,
+    this.sidetype,
     this.sleeve,
-    this.sleeveStyle,
-    this.slitType,
-    this.specialFeatures,
-    this.strapType,
+    this.sleevestyle,
+    this.slittype,
+    this.specialfeatures,
+    this.straptype,
     this.style,
     this.transparent,
     this.type,
-    this.workType,
-    this.blouseAvailability,
-    this.patternCoverage,
+    this.worktype,
+    this.blouseavailability,
+    this.patterncoverage,
     this.age,
-    this.ageGroup,
-    this.waistStyle,
-    this.mobileColor,
+    this.agegroup,
+    this.waiststyle,
+    this.mobilecolor,
     this.ram,
     this.storage,
     this.battery,
@@ -253,21 +238,21 @@ class ProductModel {
     this.connectivity,
     this.warranty,
     this.color,
-    this.designOptions,
+    this.designoptions,
     this.resolution,
-    this.displayType,
-    this.smartFeatures,
-    this.energyRating,
-    this.powerConsumption,
-    this.expDate,
-    this.mfgDate,
+    this.displaytype,
+    this.smartfeatures,
+    this.energyrating,
+    this.powerconsumption,
+    this.expdate,
+    this.mfgdate,
     this.highlight,
-    this.otherHighlights,
-    this.jewelleryMaterial,
+    this.otherhighlights,
+    this.jewellerymaterial,
     this.purity,
-    this.jewelleryWeight,
-    this.jewelleryColor,
-    this.jewellerySize,
+    this.jewelleryweight,
+    this.jewellerycolor,
+    this.jewellerysize,
     this.gemstone,
     this.certification,
     this.title,
@@ -279,105 +264,100 @@ class ProductModel {
     this.pages,
     this.binding,
     this.genre,
-    this.frameMaterial,
-    this.mountingType,
-    this.shadeColor,
-    this.beautyType,
+    this.framematerial,
+    this.mountingtype,
+    this.shadecolor,
+    this.beautytype,
     this.ingredients,
-    this.skinHairType,
-    this.beautyWeightVolume,
-    this.beautyExpiryDate,
-    this.dermatologicallyTested,
+    this.skinhairtype,
+    this.beautyweightvolume,
+    this.beautyexpirydate,
+    this.dermatologicallytested,
     this.dimension,
-    this.weightCapacity,
+    this.weightcapacity,
     this.assembly,
-    this.roomType,
-    this.weightVolume,
+    this.roomtype,
+    this.weightvolume,
     this.quantity,
     this.organic,
-    this.expiryDate,
-    this.storageInstruction,
-    this.dietaryPreference,
+    this.expirydate,
+    this.storageinstruction,
+    this.dietarypreference,
     this.graphics,
-    this.screenSize,
-    this.operatingSystem,
+    this.screensize,
+    this.operatingsystem,
     this.port,
-    this.footwearMaterial,
-    this.footwearType,
-    this.shoeSize,
-    this.heelHeight,
-    this.soleMaterial,
-    this.toeShape,
+    this.footwearmaterial,
+    this.footweartype,
+    this.shoesize,
+    this.heelheight,
+    this.solematerial,
+    this.toeshape,
   });
+
   Map<String, dynamic> toMap() {
-    return {
-      // Common Fields
-      'productId': productId,
+    return <String, dynamic>{
+      'productid': productid,
       'name': name,
       'description': description,
       'category': category,
       'subcategory': subcategory,
-      'baseSku': baseSku,
+      'basesku': basesku,
       'brand': brand,
       'price': price,
-      'offerPrice': offerPrice,
+      'offerprice': offerprice,
       'stock': stock,
       'rating': rating,
       'images': images,
-      'sellerId': sellerId,
-      'cashOnDelivery': cashOnDelivery,
-      'sizeVariants': sizeVariants?.map((e) => e.toMap()).toList(),
+      'sellerid': sellerid,
+      'sizevariants': sizevariants?.map((x) => x.toMap()).toList(),
       'timestamp': timestamp,
       'date': date,
-
-      // Fashion / Clothing
       'material': material,
       'fit': fit,
       'pattern': pattern,
-      'sleeveType': sleeveType,
-      'careInstruction': careInstruction,
-      'sizeOptions': sizeOptions,
-      'hsnCode': hsnCode,
+      'sleevetype': sleevetype,
+      'careinstruction': careinstruction,
+      'sizeoptions': sizeoptions,
+      'hsncode': hsncode,
       'weight': weight,
       'length': length,
       'width': width,
       'height': height,
-      'fitType': fitType,
+      'fittype': fittype,
       'gender': gender,
-      'neckType': neckType,
+      'necktype': necktype,
       'occasion': occasion,
-      'stitchType': stitchType,
+      'stitchtype': stitchtype,
       'vendor': vendor,
-      'variantSku': variantSku,
-      'closureType': closureType,
-      'embroideryStyle': embroideryStyle,
+      'variantsku': variantsku,
+      'closuretype': closuretype,
+      'embroiderystyle': embroiderystyle,
       'lining': lining,
       'model': model,
-      'neckStyle': neckStyle,
-      'padType': padType,
+      'neckstyle': neckstyle,
+      'padtype': padtype,
       'pockets': pockets,
-      'printType': printType,
-      'productLength': productLength,
-      'productType': productType,
-      'riseStyle': riseStyle,
-      'sideType': sideType,
+      'printtype': printtype,
+      'productlength': productlength,
+      'producttype': producttype,
+      'risestyle': risestyle,
+      'sidetype': sidetype,
       'sleeve': sleeve,
-      'sleeveStyle': sleeveStyle,
-      'slitType': slitType,
-      'specialFeatures': specialFeatures,
-      'strapType': strapType,
+      'sleevestyle': sleevestyle,
+      'slittype': slittype,
+      'specialfeatures': specialfeatures,
+      'straptype': straptype,
       'style': style,
       'transparent': transparent,
       'type': type,
-      'workType': workType,
-      'blouseAvailability': blouseAvailability,
-      'patternCoverage': patternCoverage,
+      'worktype': worktype,
+      'blouseavailability': blouseavailability,
+      'patterncoverage': patterncoverage,
       'age': age,
-      'ageGroup': ageGroup,
-      'waistStyle': waistStyle,
-
-      // Mobile
-      'mobileColor': mobileColor,
+      'agegroup': agegroup,
+      'waiststyle': waiststyle,
+      'mobilecolor': mobilecolor,
       'ram': ram,
       'storage': storage,
       'battery': battery,
@@ -388,29 +368,23 @@ class ProductModel {
       'connectivity': connectivity,
       'warranty': warranty,
       'color': color,
-      'designOptions': designOptions,
-
-      // Electronics
+      'designoptions': designoptions,
       'resolution': resolution,
-      'displayType': displayType,
-      'smartFeatures': smartFeatures,
-      'energyRating': energyRating,
-      'powerConsumption': powerConsumption,
-      'expDate': expDate,
-      'mfgDate': mfgDate,
+      'displaytype': displaytype,
+      'smartfeatures': smartfeatures,
+      'energyrating': energyrating,
+      'powerconsumption': powerconsumption,
+      'expdate': expdate?.millisecondsSinceEpoch,
+      'mfgdate': mfgdate,
       'highlight': highlight,
-      'otherHighlights': otherHighlights,
-
-      // Jewellery
-      'jewelleryMaterial': jewelleryMaterial,
+      'otherhighlights': otherhighlights,
+      'jewellerymaterial': jewellerymaterial,
       'purity': purity,
-      'jewelleryWeight': jewelleryWeight,
-      'jewelleryColor': jewelleryColor,
-      'jewellerySize': jewellerySize,
+      'jewelleryweight': jewelleryweight,
+      'jewellerycolor': jewellerycolor,
+      'jewellerysize': jewellerysize,
       'gemstone': gemstone,
       'certification': certification,
-
-      // Book
       'title': title,
       'author': author,
       'publisher': publisher,
@@ -420,123 +394,107 @@ class ProductModel {
       'pages': pages,
       'binding': binding,
       'genre': genre,
-
-      // Home & Kitchen
-      'frameMaterial': frameMaterial,
-      'mountingType': mountingType,
-
-      // Beauty
-      'shadeColor': shadeColor,
-      'beautyType': beautyType,
+      'framematerial': framematerial,
+      'mountingtype': mountingtype,
+      'shadecolor': shadecolor,
+      'beautytype': beautytype,
       'ingredients': ingredients,
-      'skinHairType': skinHairType,
-      'beautyWeightVolume': beautyWeightVolume,
-      'beautyExpiryDate': beautyExpiryDate,
-      'dermatologicallyTested': dermatologicallyTested,
-
-      // Furniture
+      'skinhairtype': skinhairtype,
+      'beautyweightvolume': beautyweightvolume,
+      'beautyexpirydate': beautyexpirydate,
+      'dermatologicallytested': dermatologicallytested,
       'dimension': dimension,
-      'weightCapacity': weightCapacity,
+      'weightcapacity': weightcapacity,
       'assembly': assembly,
-      'roomType': roomType,
-
-      // Grocery
-      'weightVolume': weightVolume,
+      'roomtype': roomtype,
+      'weightvolume': weightvolume,
       'quantity': quantity,
       'organic': organic,
-      'expiryDate': expiryDate,
-      'storageInstruction': storageInstruction,
-      'dietaryPreference': dietaryPreference,
-
-      // Laptop
+      'expirydate': expirydate,
+      'storageinstruction': storageinstruction,
+      'dietarypreference': dietarypreference,
       'graphics': graphics,
-      'screenSize': screenSize,
-      'operatingSystem': operatingSystem,
+      'screensize': screensize,
+      'operatingsystem': operatingsystem,
       'port': port,
-
-      // Footwear
-      'footwearMaterial': footwearMaterial,
-      'footwearType': footwearType,
-      'shoeSize': shoeSize,
-      'heelHeight': heelHeight,
-      'soleMaterial': soleMaterial,
-      'toeShape': toeShape,
+      'footwearmaterial': footwearmaterial,
+      'footweartype': footweartype,
+      'shoesize': shoesize,
+      'heelheight': heelheight,
+      'solamaterial': solematerial,
+      'toeshape': toeshape,
     };
   }
 
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
-      productId: map['productId'],
+      productid: map['productid'],
       name: map['name'],
       description: map['description'],
       category: map['category'],
       subcategory: map['subcategory'],
-      baseSku: map['baseSku'],
+      basesku: map['basesku'],
       brand: map['brand'],
-      price: (map['price'] as num?)?.toDouble(),
-      offerPrice: (map['offerPrice'] as num?)?.toDouble(),
+      price: map['price'],
+      offerprice: map['offerprice'],
       stock: map['stock'],
-      rating: (map['rating'] as num?)?.toDouble(),
-      images: List<String>.from(map['images'] ?? []),
-      sellerId: map['sellerId'],
-      cashOnDelivery: map['cashOnDelivery'],
-      sizeVariants: map['sizeVariants'] is List
-          ? (map['sizeVariants'] as List)
-                .map((e) => SizeVariant.fromMap(e))
-                .toList()
+      rating: map['rating'],
+      images: map['images'] != null ? List.from(map['images']) : null,
+      sellerid: map['sellerid'],
+      sizevariants: map['sizevariants'] != null
+          ? List.from(
+              map['sizevariants'],
+            ).map((x) => SizeVariant.fromMap(x)).toList()
           : null,
-
       timestamp: map['timestamp'],
       date: map['date'],
-
-      // Fashion
       material: map['material'],
       fit: map['fit'],
       pattern: map['pattern'],
-      sleeveType: map['sleeveType'],
-      careInstruction: map['careInstruction'],
-      sizeOptions: List<String>.from(map['sizeOptions'] ?? []),
-      hsnCode: map['hsnCode'],
-      weight: (map['weight'] as num?)?.toDouble(),
-      length: (map['length'] as num?)?.toDouble(),
-      width: (map['width'] as num?)?.toDouble(),
-      height: (map['height'] as num?)?.toDouble(),
-      fitType: map['fitType'],
+      sleevetype: map['sleevetype'],
+      careinstruction: map['careinstruction'],
+      sizeoptions: map['sizeoptions'] != null
+          ? List.from(map['sizeoptions'])
+          : null,
+      hsncode: map['hsncode'],
+      weight: map['weight'],
+      length: map['length'],
+      width: map['width'],
+      height: map['height'],
+      fittype: map['fittype'],
       gender: map['gender'],
-      neckType: map['neckType'],
+      necktype: map['necktype'],
       occasion: map['occasion'],
-      stitchType: map['stitchType'],
+      stitchtype: map['stitchtype'],
       vendor: map['vendor'],
-      variantSku: map['variantSku'],
-      closureType: map['closureType'],
-      embroideryStyle: map['embroideryStyle'],
+      variantsku: map['variantsku'],
+      closuretype: map['closuretype'],
+      embroiderystyle: map['embroiderystyle'],
       lining: map['lining'],
       model: map['model'],
-      neckStyle: map['neckStyle'],
-      padType: map['padType'],
+      neckstyle: map['neckstyle'],
+      padtype: map['padtype'],
       pockets: map['pockets'],
-      printType: map['printType'],
-      productLength: map['productLength'],
-      productType: map['productType'],
-      riseStyle: map['riseStyle'],
-      sideType: map['sideType'],
+      printtype: map['printtype'],
+      productlength: map['productlength'],
+      producttype: map['producttype'],
+      risestyle: map['risestyle'],
+      sidetype: map['sidetype'],
       sleeve: map['sleeve'],
-      sleeveStyle: map['sleeveStyle'],
-      slitType: map['slitType'],
-      specialFeatures: map['specialFeatures'],
-      strapType: map['strapType'],
+      sleevestyle: map['sleevestyle'],
+      slittype: map['slittype'],
+      specialfeatures: map['specialfeatures'],
+      straptype: map['straptype'],
       style: map['style'],
       transparent: map['transparent'],
       type: map['type'],
-      workType: map['workType'],
-      blouseAvailability: map['blouseAvailability'],
-      patternCoverage: map['patternCoverage'],
+      worktype: map['worktype'],
+      blouseavailability: map['blouseavailability'],
+      patterncoverage: map['patterncoverage'],
       age: map['age'],
-      ageGroup: map['ageGroup'],
-      waistStyle: map['waistStyle'],
-
-      // Mobile
-      mobileColor: map['mobileColor'],
+      agegroup: map['agegroup'],
+      waiststyle: map['waiststyle'],
+      mobilecolor: map['mobilecolor'],
       ram: map['ram'],
       storage: map['storage'],
       battery: map['battery'],
@@ -547,29 +505,25 @@ class ProductModel {
       connectivity: map['connectivity'],
       warranty: map['warranty'],
       color: map['color'],
-      designOptions: map['designOptions'],
-
-      // Electronics
+      designoptions: map['designoptions'],
       resolution: map['resolution'],
-      displayType: map['displayType'],
-      smartFeatures: map['smartFeatures'],
-      energyRating: map['energyRating'],
-      powerConsumption: map['powerConsumption'],
-      expDate: map['expDate'],
-      mfgDate: map['mfgDate'],
+      displaytype: map['displaytype'],
+      smartfeatures: map['smartfeatures'],
+      energyrating: map['energyrating'],
+      powerconsumption: map['powerconsumption'],
+      expdate: map['expdate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['expdate'])
+          : null,
+      mfgdate: map['mfgdate'],
       highlight: map['highlight'],
-      otherHighlights: map['otherHighlights'],
-
-      // Jewellery
-      jewelleryMaterial: map['jewelleryMaterial'],
+      otherhighlights: map['otherhighlights'],
+      jewellerymaterial: map['jewellerymaterial'],
       purity: map['purity'],
-      jewelleryWeight: (map['jewelleryWeight'] as num?)?.toDouble(),
-      jewelleryColor: map['jewelleryColor'],
-      jewellerySize: map['jewellerySize'],
+      jewelleryweight: map['jewelleryweight'],
+      jewellerycolor: map['jewellerycolor'],
+      jewellerysize: map['jewellerysize'],
       gemstone: map['gemstone'],
       certification: map['certification'],
-
-      // Book
       title: map['title'],
       author: map['author'],
       publisher: map['publisher'],
@@ -579,64 +533,60 @@ class ProductModel {
       pages: map['pages'],
       binding: map['binding'],
       genre: map['genre'],
-
-      // Home & Kitchen
-      frameMaterial: map['frameMaterial'],
-      mountingType: map['mountingType'],
-
-      // Beauty
-      shadeColor: map['shadeColor'],
-      beautyType: map['beautyType'],
-      ingredients: List<String>.from(map['ingredients'] ?? []),
-      skinHairType: map['skinHairType'],
-      beautyWeightVolume: map['beautyWeightVolume'],
-      beautyExpiryDate: map['beautyExpiryDate'],
-      dermatologicallyTested: map['dermatologicallyTested'],
-
-      // Furniture
+      framematerial: map['framematerial'],
+      mountingtype: map['mountingtype'],
+      shadecolor: map['shadecolor'],
+      beautytype: map['beautytype'],
+      ingredients: map['ingredients'] != null
+          ? List.from(map['ingredients'])
+          : null,
+      skinhairtype: map['skinhairtype'],
+      beautyweightvolume: map['beautyweightvolume'],
+      beautyexpirydate: map['beautyexpirydate'],
+      dermatologicallytested: map['dermatologicallytested'],
       dimension: map['dimension'],
-      weightCapacity: map['weightCapacity'],
+      weightcapacity: map['weightcapacity'],
       assembly: map['assembly'],
-      roomType: map['roomType'],
-
-      // Grocery
-      weightVolume: map['weightVolume'],
+      roomtype: map['roomtype'],
+      weightvolume: map['weightvolume'],
       quantity: map['quantity'],
       organic: map['organic'],
-      expiryDate: map['expiryDate'],
-      storageInstruction: map['storageInstruction'],
-      dietaryPreference: map['dietaryPreference'],
-
-      // Laptop
+      expirydate: map['expirydate'],
+      storageinstruction: map['storageinstruction'],
+      dietarypreference: map['dietarypreference'],
       graphics: map['graphics'],
-      screenSize: map['screenSize'],
-      operatingSystem: map['operatingSystem'],
+      screensize: map['screensize'],
+      operatingsystem: map['operatingsystem'],
       port: map['port'],
-
-      // Footwear
-      footwearMaterial: map['footwearMaterial'],
-      footwearType: map['footwearType'],
-      shoeSize: map['shoeSize'],
-      heelHeight: map['heelHeight'],
-      soleMaterial: map['soleMaterial'],
-      toeShape: map['toeShape'],
+      footwearmaterial: map['footwearmaterial'],
+      footweartype: map['footweartype'],
+      shoesize: map['shoesize'],
+      heelheight: map['heelheight'],
+      solematerial: map['solematerial'],
+      toeshape: map['toeshape'],
     );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory ProductModel.fromJson(String source) =>
+      ProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
   //this is the code will help you by getting products attributes by category
   Map<String, dynamic> getDetailsByCategory() {
     switch (category!.toLowerCase()) {
-      case "Brassiere":
-      case "Mens Bottom Wear":
+      case 'brassiere':
+      case 'mensbottomwear':
       case 'fashion':
       case 'clothing':
       case 'menswear':
       case 'womenswear':
       case 'kidswear':
-      case "dress":
-      case "Womens":
-      case "Womens Tops":
-      case "Womens Dress":
-      case "wears":
+      case 'dress':
+      case 'womens':
+      case 'womenstops':
+      case 'womensdress':
+      case 'wears':
       case 'frock':
       case 'gown':
       case 'lehenga':
@@ -659,53 +609,53 @@ class ProductModel {
           'material': material,
           'fit': fit,
           'pattern': pattern,
-          'sleeveType': sleeveType,
-          'careInstruction': careInstruction,
-          'sizeOptions': sizeOptions,
-          'hsnCode': hsnCode,
+          'sleevetype': sleevetype,
+          'careinstruction': careinstruction,
+          'sizeoptions': sizeoptions,
+          'hsncode': hsncode,
           'weight': weight,
           'length': length,
           'width': width,
           'height': height,
-          'fitType': fitType,
+          'fittype': fittype,
           'gender': gender,
-          'neckType': neckType,
+          'necktype': necktype,
           'occasion': occasion,
-          'stitchType': stitchType,
+          'stitchtype': stitchtype,
           'vendor': vendor,
-          'variantSku': variantSku,
-          'closureType': closureType,
-          'embroideryStyle': embroideryStyle,
+          'variantsku': variantsku,
+          'closuretype': closuretype,
+          'embroiderystyle': embroiderystyle,
           'lining': lining,
           'model': model,
-          'neckStyle': neckStyle,
-          'padType': padType,
+          'neckstyle': neckstyle,
+          'padtype': padtype,
           'pockets': pockets,
-          'printType': printType,
-          'productLength': productLength,
-          'productType': productType,
-          'riseStyle': riseStyle,
-          'sideType': sideType,
+          'printtype': printtype,
+          'productlength': productlength,
+          'producttype': producttype,
+          'risestyle': risestyle,
+          'sidetype': sidetype,
           'sleeve': sleeve,
-          'sleeveStyle': sleeveStyle,
-          'slitType': slitType,
-          'specialFeatures': specialFeatures,
-          'strapType': strapType,
+          'sleevestyle': sleevestyle,
+          'slittype': slittype,
+          'specialfeatures': specialfeatures,
+          'straptype': straptype,
           'style': style,
           'transparent': transparent,
           'type': type,
-          'workType': workType,
-          'blouseAvailability': blouseAvailability,
-          'patternCoverage': patternCoverage,
+          'worktype': worktype,
+          'blouseavailability': blouseavailability,
+          'patterncoverage': patterncoverage,
           'age': age,
-          'ageGroup': ageGroup,
-          'waistStyle': waistStyle,
+          'agegroup': agegroup,
+          'waiststyle': waiststyle,
         };
 
       case 'mobile':
         return {
           'model': model,
-          'mobileColor': mobileColor,
+          'mobilecolor': mobilecolor,
           'ram': ram,
           'storage': storage,
           'battery': battery,
@@ -716,58 +666,58 @@ class ProductModel {
           'connectivity': connectivity,
           'warranty': warranty,
           'vendor': vendor,
-          'variantSku': variantSku,
-          'hsnCode': hsnCode,
+          'variantsku': variantsku,
+          'hsncode': hsncode,
           'weight': weight,
           'length': length,
           'width': width,
           'height': height,
           'color': color,
-          'designOptions': designOptions,
+          'designoptions': designoptions,
           'gender': gender,
           'material': material,
-          'productType': productType,
+          'producttype': producttype,
           'type': type,
         };
 
       case 'electronics':
         return {
           'resolution': resolution,
-          'displayType': displayType,
-          'smartFeatures': smartFeatures,
-          'energyRating': energyRating,
-          'powerConsumption': powerConsumption,
+          'displaytype': displaytype,
+          'smartfeatures': smartfeatures,
+          'energyrating': energyrating,
+          'powerconsumption': powerconsumption,
           'vendor': vendor,
-          'variantSku': variantSku,
-          'hsnCode': hsnCode,
+          'variantsku': variantsku,
+          'hsncode': hsncode,
           'weight': weight,
           'length': length,
           'width': width,
           'height': height,
           'color': color,
-          'expDate': expDate,
+          'expdate': expdate,
           'material': material,
-          'mfgDate': mfgDate,
+          'mfgdate': mfgdate,
           'model': model,
           'pattern': pattern,
-          'productType': productType,
+          'producttype': producttype,
           'type': type,
           'highlight': highlight,
-          'otherHighlights': otherHighlights,
+          'otherhighlights': otherhighlights,
         };
 
       case 'jewellery':
         return {
-          'jewelleryMaterial': jewelleryMaterial,
+          'jewellerymaterial': jewellerymaterial,
           'purity': purity,
-          'jewelleryWeight': jewelleryWeight,
-          'jewelleryColor': jewelleryColor,
-          'jewellerySize': jewellerySize,
+          'jewelleryweight': jewelleryweight,
+          'jewellerycolor': jewellerycolor,
+          'jewellerysize': jewellerysize,
           'gemstone': gemstone,
           'certification': certification,
           'occasion': occasion,
           'vendor': vendor,
-          'hsnCode': hsnCode,
+          'hsncode': hsncode,
           'length': length,
           'width': width,
           'height': height,
@@ -791,60 +741,60 @@ class ProductModel {
         };
 
       case 'home_kitchen':
-      case 'home & kitchen':
+      case 'home&kitchen':
         return {
           'vendor': vendor,
-          'hsnCode': hsnCode,
+          'hsncode': hsncode,
           'weight': weight,
           'length': length,
           'width': width,
           'height': height,
-          'variantSku': variantSku,
+          'variantsku': variantsku,
           'color': color,
-          'frameMaterial': frameMaterial,
+          'framematerial': framematerial,
           'model': model,
-          'mountingType': mountingType,
+          'mountingtype': mountingtype,
           'type': type,
         };
 
       case 'beauty':
-      case "beauty & personal care":
-      case "Personal Care":
+      case 'beauty&personalcare':
+      case 'personalcare':
         return {
-          'shadeColor': shadeColor,
-          'beautyType': beautyType,
+          'shadecolor': shadecolor,
+          'beautytype': beautytype,
           'ingredients': ingredients,
-          'skinHairType': skinHairType,
-          'beautyWeightVolume': beautyWeightVolume,
-          'beautyExpiryDate': beautyExpiryDate,
-          'dermatologicallyTested': dermatologicallyTested,
+          'skinhairtype': skinhairtype,
+          'beautyweightvolume': beautyweightvolume,
+          'beautyexpirydate': beautyexpirydate,
+          'dermatologicallytested': dermatologicallytested,
         };
 
       case 'furniture':
         return {
-          'sizeVariants': sizeVariants,
+          'sizevariants': sizevariants,
           'dimension': dimension,
-          'weightCapacity': weightCapacity,
+          'weightcapacity': weightcapacity,
           'assembly': assembly,
           'style': style,
-          'roomType': roomType,
+          'roomtype': roomtype,
         };
 
       case 'grocery':
         return {
-          'weightVolume': weightVolume,
+          'weightvolume': weightvolume,
           'quantity': quantity,
           'organic': organic,
-          'expiryDate': expiryDate,
-          'storageInstruction': storageInstruction,
-          'dietaryPreference': dietaryPreference,
+          'expirydate': expirydate,
+          'storageinstruction': storageinstruction,
+          'dietarypreference': dietarypreference,
         };
 
       case 'laptop':
         return {
           'graphics': graphics,
-          'screenSize': screenSize,
-          'operatingSystem': operatingSystem,
+          'screensize': screensize,
+          'operatingsystem': operatingsystem,
           'port': port,
           'ram': ram,
           'storage': storage,
@@ -859,16 +809,16 @@ class ProductModel {
 
       case 'footwear':
         return {
-          'footwearMaterial': footwearMaterial,
-          'footwearType': footwearType,
+          'footwearmaterial': footwearmaterial,
+          'footweartype': footweartype,
           'gender': gender,
-          'shoeSize': shoeSize,
-          'heelHeight': heelHeight,
-          'closureType': closureType,
-          'soleMaterial': soleMaterial,
+          'shoesize': shoesize,
+          'heelheight': heelheight,
+          'closuretype': closuretype,
+          'solematerial': solematerial,
           'pattern': pattern,
           'style': style,
-          'toeShape': toeShape,
+          'toeshape': toeshape,
           'occasion': occasion,
           'color': color,
         };
@@ -880,6 +830,6 @@ class ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(productId: $productId, name: $name, description: $description, category: $category, subcategory: $subcategory, baseSku: $baseSku, brand: $brand, price: $price, offerPrice: $offerPrice, stock: $stock, rating: $rating, images: $images, sellerId: $sellerId, cashOnDelivery: $cashOnDelivery, sizeVariants: $sizeVariants, timestamp: $timestamp, date: $date, material: $material, fit: $fit, pattern: $pattern, sleeveType: $sleeveType, careInstruction: $careInstruction, sizeOptions: $sizeOptions, hsnCode: $hsnCode, weight: $weight, length: $length, width: $width, height: $height, fitType: $fitType, gender: $gender, neckType: $neckType, occasion: $occasion, stitchType: $stitchType, vendor: $vendor, variantSku: $variantSku, closureType: $closureType, embroideryStyle: $embroideryStyle, lining: $lining, model: $model, neckStyle: $neckStyle, padType: $padType, pockets: $pockets, printType: $printType, productLength: $productLength, productType: $productType, riseStyle: $riseStyle, sideType: $sideType, sleeve: $sleeve, sleeveStyle: $sleeveStyle, slitType: $slitType, specialFeatures: $specialFeatures, strapType: $strapType, style: $style, transparent: $transparent, type: $type, workType: $workType, blouseAvailability: $blouseAvailability, patternCoverage: $patternCoverage, age: $age, ageGroup: $ageGroup, waistStyle: $waistStyle, mobileColor: $mobileColor, ram: $ram, storage: $storage, battery: $battery, camera: $camera, processor: $processor, display: $display, os: $os, connectivity: $connectivity, warranty: $warranty, color: $color, designOptions: $designOptions, resolution: $resolution, displayType: $displayType, smartFeatures: $smartFeatures, energyRating: $energyRating, powerConsumption: $powerConsumption, expDate: $expDate, mfgDate: $mfgDate, highlight: $highlight, otherHighlights: $otherHighlights, jewelleryMaterial: $jewelleryMaterial, purity: $purity, jewelleryWeight: $jewelleryWeight, jewelleryColor: $jewelleryColor, jewellerySize: $jewellerySize, gemstone: $gemstone, certification: $certification, title: $title, author: $author, publisher: $publisher, edition: $edition, language: $language, isbn: $isbn, pages: $pages, binding: $binding, genre: $genre, frameMaterial: $frameMaterial, mountingType: $mountingType, shadeColor: $shadeColor, beautyType: $beautyType, ingredients: $ingredients, skinHairType: $skinHairType, beautyWeightVolume: $beautyWeightVolume, beautyExpiryDate: $beautyExpiryDate, dermatologicallyTested: $dermatologicallyTested, dimension: $dimension, weightCapacity: $weightCapacity, assembly: $assembly, roomType: $roomType, weightVolume: $weightVolume, quantity: $quantity, organic: $organic, expiryDate: $expiryDate, storageInstruction: $storageInstruction, dietaryPreference: $dietaryPreference, graphics: $graphics, screenSize: $screenSize, operatingSystem: $operatingSystem, port: $port, footwearMaterial: $footwearMaterial, footwearType: $footwearType, shoeSize: $shoeSize, heelHeight: $heelHeight, soleMaterial: $soleMaterial, toeShape: $toeShape)';
+    return 'ProductModel(productid: $productid, name: $name, description: $description, category: $category, subcategory: $subcategory, basesku: $basesku, brand: $brand, price: $price, offerprice: $offerprice, stock: $stock, rating: $rating, images: $images, sellerid: $sellerid, sizevariants: $sizevariants, timestamp: $timestamp, date: $date, material: $material, fit: $fit, pattern: $pattern, sleevetype: $sleevetype, careinstruction: $careinstruction, sizeoptions: $sizeoptions, hsncode: $hsncode, weight: $weight, length: $length, width: $width, height: $height, fittype: $fittype, gender: $gender, necktype: $necktype, occasion: $occasion, stitchtype: $stitchtype, vendor: $vendor, variantsku: $variantsku, closuretype: $closuretype, embroiderystyle: $embroiderystyle, lining: $lining, model: $model, neckstyle: $neckstyle, padtype: $padtype, pockets: $pockets, printtype: $printtype, productlength: $productlength, producttype: $producttype, risestyle: $risestyle, sidetype: $sidetype, sleeve: $sleeve, sleevestyle: $sleevestyle, slittype: $slittype, specialfeatures: $specialfeatures, straptype: $straptype, style: $style, transparent: $transparent, type: $type, worktype: $worktype, blouseavailability: $blouseavailability, patterncoverage: $patterncoverage, age: $age, agegroup: $agegroup, waiststyle: $waiststyle, mobilecolor: $mobilecolor, ram: $ram, storage: $storage, battery: $battery, camera: $camera, processor: $processor, display: $display, os: $os, connectivity: $connectivity, warranty: $warranty, color: $color, designoptions: $designoptions, resolution: $resolution, displaytype: $displaytype, smartfeatures: $smartfeatures, energyrating: $energyrating, powerconsumption: $powerconsumption, expdate: $expdate, mfgdate: $mfgdate, highlight: $highlight, otherhighlights: $otherhighlights, jewellerymaterial: $jewellerymaterial, purity: $purity, jewelleryweight: $jewelleryweight, jewellerycolor: $jewellerycolor, jewellerysize: $jewellerysize, gemstone: $gemstone, certification: $certification, title: $title, author: $author, publisher: $publisher, edition: $edition, language: $language, isbn: $isbn, pages: $pages, binding: $binding, genre: $genre, framematerial: $framematerial, mountingtype: $mountingtype, shadecolor: $shadecolor, beautytype: $beautytype, ingredients: $ingredients, skinhairtype: $skinhairtype, beautyweightvolume: $beautyweightvolume, beautyexpirydate: $beautyexpirydate, dermatologicallytested: $dermatologicallytested, dimension: $dimension, weightcapacity: $weightcapacity, assembly: $assembly, roomtype: $roomtype, weightvolume: $weightvolume, quantity: $quantity, organic: $organic, expirydate: $expirydate, storageinstruction: $storageinstruction, dietarypreference: $dietarypreference, graphics: $graphics, screensize: $screensize, operatingsystem: $operatingsystem, port: $port, footwearmaterial: $footwearmaterial, footweartype: $footweartype, shoesize: $shoesize, heelheight: $heelheight, solematerial: $solematerial, toeshape: $toeshape)';
   }
 }

@@ -62,7 +62,7 @@ class OrderService {
         log("Running Firestore transaction for order: ${orderDoc.id}");
 
         for (final orderedProduct in products) {
-          final productId = orderedProduct.productId;
+          final productId = orderedProduct.productid;
 
           if (productId == null || productId.isEmpty) {
             log("Invalid product ID in order.");
@@ -84,9 +84,9 @@ class OrderService {
           log("Updating stock for product: $productId");
 
           final currentTotalStock = data.stock ?? 0;
-          final List<dynamic> sizeVariants = data.sizeVariants ?? [];
+          final List<dynamic> sizeVariants = data.sizevariants ?? [];
           final List<SizeVariant> orderedVariants =
-              orderedProduct.sizeVariants ?? [];
+              orderedProduct.sizevariants ?? [];
 
           final updatedVariants = sizeVariants.map((variant) {
             final variantSize = variant['size'];

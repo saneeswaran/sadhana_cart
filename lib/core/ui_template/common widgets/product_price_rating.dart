@@ -41,7 +41,7 @@ class ProductPriceRating extends StatelessWidget {
             children: [
               StarRating(
                 mainAxisAlignment: MainAxisAlignment.start,
-                rating: product.rating ?? 0,
+                rating: (product.rating ?? 0).toDouble(),
                 color: AppColor.ratingColor,
                 size: 25.0,
                 onRatingChanged: (value) {
@@ -49,7 +49,7 @@ class ProductPriceRating extends StatelessWidget {
                 },
               ),
               Text(
-                "${Constants.indianCurrency} ${product.offerPrice}",
+                "${Constants.indianCurrency} ${product.offerprice}",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

@@ -77,9 +77,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     // Check if there is any extra data
     final hasExtras =
         widget.product.warranty != null ||
-        widget.product.sizeVariants!.isNotEmpty;
+        widget.product.sizevariants!.isNotEmpty;
 
-    if (!hasExtras) return const SizedBox.shrink(); // hide section if no extras
+    if (!hasExtras) return const SizedBox.shrink();
 
     return Column(
       children: [
@@ -92,10 +92,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   title: "Warranty",
                   value: widget.product.warranty!,
                 ),
-              if (widget.product.sizeVariants!.isNotEmpty)
+              if (widget.product.sizevariants!.isNotEmpty)
                 ProductDetailRow(
                   title: "Variants",
-                  value: widget.product.sizeVariants!.join(", "),
+                  value: widget.product.sizevariants!.join(", "),
                 ),
             ],
           ),

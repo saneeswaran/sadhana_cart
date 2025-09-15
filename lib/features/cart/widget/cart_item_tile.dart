@@ -23,7 +23,7 @@ class CartItemTile extends ConsumerWidget {
             physics: const ClampingScrollPhysics(),
             itemBuilder: (context, index) {
               final car = cart[index];
-              final variant = car.sizeVariants?[index];
+              final variant = car.sizevariants?[index];
               //outside container
               return Container(
                 margin: const EdgeInsets.all(10),
@@ -71,7 +71,7 @@ class CartItemTile extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            "${Constants.indianCurrency} ${car.offerPrice}",
+                            "${Constants.indianCurrency} ${car.offerprice}",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(

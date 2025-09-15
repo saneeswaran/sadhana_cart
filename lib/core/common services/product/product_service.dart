@@ -22,7 +22,7 @@ class ProductService {
       ref.read(loadingProvider.notifier).state = true;
 
       Query query = productRef
-          .orderBy("productId", descending: true)
+          .orderBy("productid", descending: true)
           .limit(limit);
       if (startAfter != null) {
         query = query.startAfterDocument(startAfter);
@@ -133,7 +133,7 @@ class ProductService {
     try {
       final QuerySnapshot querySnapshot = await productRef
           .limit(10)
-          .orderBy('productId')
+          .orderBy('productid')
           .get();
       if (querySnapshot.docs.isNotEmpty) {
         return querySnapshot.docs

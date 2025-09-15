@@ -30,7 +30,7 @@ class FavoriteService {
       final docRef = favoriteRef.doc();
       final favoriteModel = FavoriteModel(
         favoriteId: docRef.id,
-        productId: product.productId!,
+        productId: product.productid!,
         customerId: currentUserId,
       );
       await favoriteRef.doc(docRef.id).set(favoriteModel.toMap());

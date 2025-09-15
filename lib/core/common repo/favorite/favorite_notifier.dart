@@ -20,10 +20,10 @@ class FavoriteNotifier extends StateNotifier<Set<ProductModel>> {
   }
 
   void removeFromFavorite({required ProductModel product}) {
-    state = state.where((e) => e.productId != product.productId).toSet();
+    state = state.where((e) => e.productid != product.productid).toSet();
   }
 
   bool isFavorite(String productId) {
-    return state.any((e) => e.productId == productId);
+    return state.any((e) => e.productid == productId);
   }
 }

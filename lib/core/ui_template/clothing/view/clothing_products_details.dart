@@ -7,10 +7,12 @@ import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/skeletonizer/rating_tile_loader.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
 import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rating.dart';
+import 'package:sadhana_cart/core/ui_template/head%20phones/widgets/product_detail_row.dart';
 import 'package:sadhana_cart/core/widgets/custom_carousel_slider.dart';
 import 'package:sadhana_cart/core/widgets/custom_divider.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
@@ -29,7 +31,9 @@ class ClothingProductsDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final Map<String, dynamic> productData = product.getDetailsByCategory();
+    final Map<String, dynamic> productData = product.getDetailsByCategory();
+    final Map<String, dynamic> cleanProduct =
+        AvoidNullValues.removeNullValuesDeep(productData);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: Padding(
@@ -42,12 +46,12 @@ class ClothingProductsDetails extends StatelessWidget {
                   final cartItems = ref.watch(cartProvider);
                   final cartNotifier = ref.read(cartProvider.notifier);
                   final bool isAlreadyInCart = cartItems.any(
-                    (c) => c.productId == product.productId,
+                    (c) => c.productId == product.productid,
                   );
 
                   final selectedSize = ref.watch(clothingSizeProvider);
                   final selected =
-                      product.sizeVariants?[selectedSize].size ?? "L";
+                      product.sizevariants?[selectedSize].size ?? "L";
                   return CustomElevatedButton(
                     child: Text(
                       isAlreadyInCart ? "Remove" : "Add to Cart",
@@ -69,7 +73,7 @@ class ClothingProductsDetails extends StatelessWidget {
                         }
                       } else {
                         final cartItem = cartItems.firstWhere(
-                          (c) => c.productId == product.productId,
+                          (c) => c.productId == product.productid,
                         );
 
                         await cartNotifier.removeFromCart(cart: cartItem);
@@ -142,9 +146,9 @@ class ClothingProductsDetails extends StatelessWidget {
                           spacing: 8,
                           runSpacing: 8,
                           children: List.generate(
-                            product.sizeVariants?.length ?? 0,
+                            product.sizevariants?.length ?? 0,
                             (index) {
-                              final sizeItem = product.sizeVariants?[index];
+                              final sizeItem = product.sizevariants?[index];
                               final isSelected = index == selectedSizeIndex;
 
                               final bool sizeHaveMoreContent =
@@ -159,11 +163,11 @@ class ClothingProductsDetails extends StatelessWidget {
                                           .read(clothingSizeProvider.notifier)
                                           .state =
                                       index;
-                                  log(product.productId.toString());
+                                  log(productData.toString());
                                 },
                                 child: Container(
-                                  height: sizeHaveMoreContent ? 40 : 40,
-                                  width: sizeHaveMoreContent ? 120 : 60,
+                                  height: 40,
+                                  width: sizeHaveMoreContent ? 40 : 120,
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     color: isSelected
@@ -212,13 +216,28 @@ class ClothingProductsDetails extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
+            cleanProduct.containsValue("null")
+                ? const SizedBox.shrink()
+                : CustomTileDropdown(
+                    title: "Details",
+                    value: Column(
+                      children: cleanProduct.entries
+                          .map(
+                            (entry) => ProductDetailRow(
+                              title: entry.key,
+                              value: entry.value,
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
             Consumer(
               builder: (context, ref, child) {
                 final userName = ref.read(
                   userProvider.select((value) => value?.name ?? ""),
                 );
                 final ratingAsync = ref.watch(
-                  specificProductrating(product.productId!),
+                  specificProductrating(product.productid!),
                 );
 
                 return ratingAsync.when(
@@ -248,7 +267,7 @@ class ClothingProductsDetails extends StatelessWidget {
                               onPressed: () {
                                 showRatingDialog(
                                   context: context,
-                                  productId: product.productId!,
+                                  productId: product.productid!,
                                   userName: userName,
                                 );
                               },

@@ -47,7 +47,7 @@ class FavoriteProductTile extends ConsumerWidget {
                     image: DecorationImage(
                       image: CachedNetworkImageProvider(
                         favorite.images!.first,
-                        cacheKey: favorite.productId,
+                        cacheKey: favorite.productid,
                       ),
                       fit: BoxFit.cover,
                     ),
@@ -65,7 +65,7 @@ class FavoriteProductTile extends ConsumerWidget {
                       builder: (context, ref, child) {
                         final favSet = ref.watch(favoriteModelProvider);
                         final model = favSet.firstWhereOrNull(
-                          (e) => e.productId == favorite.productId,
+                          (e) => e.productId == favorite.productid,
                         );
 
                         final favoriteId = model?.favoriteId;
@@ -111,7 +111,7 @@ class FavoriteProductTile extends ConsumerWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "${Constants.indianCurrency} ${favorite.offerPrice}",
+                  "${Constants.indianCurrency} ${favorite.offerprice}",
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

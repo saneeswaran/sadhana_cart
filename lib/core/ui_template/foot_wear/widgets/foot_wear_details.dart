@@ -47,11 +47,11 @@ class FootWearDetails extends StatelessWidget {
                       return Expanded(
                         child: Wrap(
                           children: List.generate(
-                            product.sizeVariants!.length,
+                            product.sizevariants!.length,
                             (index) {
                               final isSelected = index == selecIndex;
                               final colorName =
-                                  product.sizeVariants![index].color;
+                                  product.sizevariants![index].color;
                               final color = getColorFromDatabase(colorName!);
                               final isWhite = color == AppColors.white.color;
 
@@ -134,10 +134,10 @@ class FootWearDetails extends StatelessWidget {
                       Expanded(
                         child: Wrap(
                           children: List.generate(
-                            product.sizeVariants!.length,
+                            product.sizevariants!.length,
                             (index) {
                               final sizeItem =
-                                  product.sizeVariants![index].size;
+                                  product.sizevariants![index].size;
                               final firstPart = sizeItem.split(" ")[0];
                               final isSelected = index == selectSize;
                               return GestureDetector(
@@ -231,18 +231,18 @@ class FootWearDetails extends StatelessWidget {
                             spacing: 5,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              product.footwearType != null
+                              product.footweartype != null
                                   ? WidgetTemplate.productDetailsRowTemplate(
                                       title: "Footwear Type: ",
-                                      value: product.footwearType!,
+                                      value: product.footweartype!,
                                       isGiveSpaceAtlast: true,
                                     )
                                   : const SizedBox.shrink(),
-                              product.footwearMaterial != null
+                              product.footwearmaterial != null
                                   ? WidgetTemplate.productDetailsRowTemplate(
                                       title: "Material: ",
-                                      value: product.footwearMaterial != null
-                                          ? product.footwearMaterial!
+                                      value: product.footwearmaterial != null
+                                          ? product.footwearmaterial!
                                           : "N/A",
                                       isGiveSpaceAtlast: true,
                                     )

@@ -42,10 +42,10 @@ class LaptopAdditionalInformation extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 15),
-          if (product.screenSize != null)
+          if (product.screensize != null)
             WidgetTemplate.productDetailsRowTemplate(
               title: "Screen Size",
-              value: product.screenSize!,
+              value: product.screensize!,
               isGiveSpaceAtlast: false,
             ),
           if (product.processor != null)

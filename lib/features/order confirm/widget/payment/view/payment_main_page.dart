@@ -75,7 +75,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
       // Add order to Firestore
       final success = await OrderService.addOrder(
-        totalAmount: widget.product.price ?? 0,
+        totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
         address:
             "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
         phoneNumber: address.phoneNumber ?? 0,
@@ -180,7 +180,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
               if (address != null) {
                 final success = await OrderService.addOrder(
-                  totalAmount: widget.product.price ?? 0,
+                  totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
                   address:
                       "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
                   phoneNumber: address.phoneNumber ?? 0,
