@@ -14,7 +14,6 @@
 import 'dart:convert';
 
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
-import 'package:sadhana_cart/core/constants/category_constants.dart';
 
 class ProductModel {
   // Common Fields
@@ -570,574 +569,695 @@ class ProductModel {
 
   //this is the code will help you by getting products attributes by category
   Map<String, dynamic> getDetailsByCategory() {
-    final clothingList = CategoryConstants.clothingCategory;
-    final mobileKeywords = CategoryConstants.mobileKeywords;
-    final laptopKeywords = CategoryConstants.laptopKeywords;
-    final electronicsKeywords = CategoryConstants.electronicsKeywords;
-    final accessoriesKeywords = CategoryConstants.accessoriesKeywords;
-    final homeKeywords = CategoryConstants.homeKeywords;
-    final furnnitureKeywords = CategoryConstants.furnitureKeywords;
-    final beautyKeywords = CategoryConstants.beautyKeywords;
-    final jewelleryKeywords = CategoryConstants.jewelleryKeywords;
-    final booksKeywords = CategoryConstants.bookKeywords;
-    final toyKeywords = CategoryConstants.toyKeywords;
-    final personalCareKeywords = CategoryConstants.personalCareKeywords;
-    final stationaryKeywords = CategoryConstants.stationeryKeywords;
-    final groceryKeywords = CategoryConstants.groceryKeywords;
-    final cosmeticsKeywords = CategoryConstants.cosmeticsKeywords;
-    final photoFrameKeywords = CategoryConstants.photoFrameKeywords;
-    final footWearKeyWords = CategoryConstants.footwearKeywords;
+    final allDetails = {
+      'material': material,
+      'fit': fit,
+      'pattern': pattern,
+      'sleevetype': sleevetype,
+      'careinstruction': careinstruction,
+      'sizeoptions': sizeoptions,
+      'hsncode': hsncode,
+      'weight': weight,
+      'length': length,
+      'width': width,
+      'height': height,
+      'fittype': fittype,
+      'gender': gender,
+      'necktype': necktype,
+      'occasion': occasion,
+      'stitchtype': stitchtype,
+      'vendor': vendor,
+      'variantsku': variantsku,
+      'closuretype': closuretype,
+      'embroiderystyle': embroiderystyle,
+      'lining': lining,
+      'model': model,
+      'neckstyle': neckstyle,
+      'padtype': padtype,
+      'pockets': pockets,
+      'printtype': printtype,
+      'productlength': productlength,
+      'producttype': producttype,
+      'risestyle': risestyle,
+      'sidetype': sidetype,
+      'sleeve': sleeve,
+      'sleevestyle': sleevestyle,
+      'slittype': slittype,
+      'specialfeatures': specialfeatures,
+      'straptype': straptype,
+      'style': style,
+      'transparent': transparent,
+      'type': type,
+      'worktype': worktype,
+      'blouseavailability': blouseavailability,
+      'patterncoverage': patterncoverage,
+      'age': age,
+      'agegroup': agegroup,
+      'waiststyle': waiststyle,
+      'mobilecolor': mobilecolor,
+      'ram': ram,
+      'storage': storage,
+      'battery': battery,
+      'camera': camera,
+      'processor': processor,
+      'display': display,
+      'os': os,
+      'connectivity': connectivity,
+      'warranty': warranty,
+      'color': color,
+      'designoptions': designoptions,
+      'resolution': resolution,
+      'displaytype': displaytype,
+      'smartfeatures': smartfeatures,
+      'energyrating': energyrating,
+      'powerconsumption': powerconsumption,
+      'expdate': expdate,
+      'mfgdate': mfgdate,
+      'highlight': highlight,
+      'otherhighlights': otherhighlights,
+      'jewellerymaterial': jewellerymaterial,
+      'purity': purity,
+      'jewelleryweight': jewelleryweight,
+      'jewellerycolor': jewellerycolor,
+      'jewellerysize': jewellerysize,
+      'gemstone': gemstone,
+      'certification': certification,
+      'title': title,
+      'author': author,
+      'publisher': publisher,
+      'edition': edition,
+      'language': language,
+      'isbn': isbn,
+      'pages': pages,
+      'binding': binding,
+      'genre': genre,
+      'framematerial': framematerial,
+      'mountingtype': mountingtype,
+      'shadecolor': shadecolor,
+      'beautytype': beautytype,
+      'ingredients': ingredients,
+      'skinhairtype': skinhairtype,
+      'beautyweightvolume': beautyweightvolume,
+      'beautyexpirydate': beautyexpirydate,
+      'dermatologicallytested': dermatologicallytested,
+      'dimension': dimension,
+      'weightcapacity': weightcapacity,
+      'assembly': assembly,
+      'roomtype': roomtype,
+      'weightvolume': weightvolume,
+      'quantity': quantity,
+      'organic': organic,
+      'expirydate': expirydate,
+      'storageinstruction': storageinstruction,
+      'dietarypreference': dietarypreference,
+      'graphics': graphics,
+      'screensize': screensize,
+      'operatingsystem': operatingsystem,
+      'port': port,
+      'footwearmaterial': footwearmaterial,
+      'footweartype': footweartype,
+      'shoesize': shoesize,
+      'heelheight': heelheight,
+      'solematerial': solematerial,
+      'toeshape': toeshape,
+    };
+    final nonNullDetails = Map.fromEntries(
+      allDetails.entries.where((e) {
+        final value = e.value;
+        if (value == null) return false;
+        if (value is String && value.trim().isEmpty) return false;
+        if (value is List && value.isEmpty) return false;
+        return true;
+      }),
+    );
 
-    final lowerCategory = category?.toLowerCase() ?? "";
-
-    final isClothing = clothingList.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isMobile = mobileKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isLaptop = laptopKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isElectronics = electronicsKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isAccessories = accessoriesKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isHome = homeKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isFurniture = furnnitureKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isBeauty = beautyKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isJewellery = jewelleryKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isBook = booksKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isToy = toyKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isPersonalCare = personalCareKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isStationary = stationaryKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isGrocery = groceryKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isCosmetics = cosmeticsKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isPhotoFrame = photoFrameKeywords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-    final isFootWear = footWearKeyWords.any(
-      (e) => lowerCategory.contains(e.toLowerCase()),
-    );
-
-    if (isClothing) {
-      return {
-        'material': material,
-        'fit': fit,
-        'pattern': pattern,
-        'sleevetype': sleevetype,
-        'careinstruction': careinstruction,
-        'sizeoptions': sizeoptions,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'fittype': fittype,
-        'gender': gender,
-        'necktype': necktype,
-        'occasion': occasion,
-        'stitchtype': stitchtype,
-        'vendor': vendor,
-        'variantsku': variantsku,
-        'closuretype': closuretype,
-        'embroiderystyle': embroiderystyle,
-        'lining': lining,
-        'model': model,
-        'neckstyle': neckstyle,
-        'padtype': padtype,
-        'pockets': pockets,
-        'printtype': printtype,
-        'productlength': productlength,
-        'producttype': producttype,
-        'risestyle': risestyle,
-        'sidetype': sidetype,
-        'sleeve': sleeve,
-        'sleevestyle': sleevestyle,
-        'slittype': slittype,
-        'specialfeatures': specialfeatures,
-        'straptype': straptype,
-        'style': style,
-        'transparent': transparent,
-        'type': type,
-        'worktype': worktype,
-        'blouseavailability': blouseavailability,
-        'patterncoverage': patterncoverage,
-        'age': age,
-        'agegroup': agegroup,
-        'waiststyle': waiststyle,
-      };
-    } else if (isMobile) {
-      return {
-        'model': model,
-        'mobilecolor': mobilecolor,
-        'ram': ram,
-        'storage': storage,
-        'battery': battery,
-        'camera': camera,
-        'processor': processor,
-        'display': display,
-        'os': os,
-        'connectivity': connectivity,
-        'warranty': warranty,
-        'vendor': vendor,
-        'variantsku': variantsku,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'color': color,
-        'designoptions': designoptions,
-        'gender': gender,
-        'material': material,
-        'producttype': producttype,
-        'type': type,
-        'pattern': pattern,
-        'style': style,
-      };
-    } else if (isElectronics) {
-      return {
-        'resolution': resolution,
-        'displaytype': displaytype,
-        'smartfeatures': smartfeatures,
-        'energyrating': energyrating,
-        'powerconsumption': powerconsumption,
-        'vendor': vendor,
-        'variantsku': variantsku,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'color': color,
-        'expdate': expdate,
-        'material': material,
-        'mfgdate': mfgdate,
-        'model': model,
-        'pattern': pattern,
-        'producttype': producttype,
-        'type': type,
-        'highlight': highlight,
-        'otherhighlights': otherhighlights,
-        'style': style,
-      };
-    } else if (isJewellery) {
-      return {
-        'jewellerymaterial': jewellerymaterial,
-        'purity': purity,
-        'jewelleryweight': jewelleryweight,
-        'jewellerycolor': jewellerycolor,
-        'jewellerysize': jewellerysize,
-        'gemstone': gemstone,
-        'certification': certification,
-        'occasion': occasion,
-        'vendor': vendor,
-        'hsncode': hsncode,
-        'length': length,
-        'width': width,
-        'height': height,
-        'gender': gender,
-        'pattern': pattern,
-        'style': style,
-        'weight': weight,
-        'material': material,
-      };
-    } else if (isBook) {
-      return {
-        'title': title,
-        'author': author,
-        'publisher': publisher,
-        'edition': edition,
-        'language': language,
-        'isbn': isbn,
-        'pages': pages,
-        'binding': binding,
-        'genre': genre,
-      };
-    } else if (isHome) {
-      return {
-        'vendor': vendor,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'variantsku': variantsku,
-        'color': color,
-        'framematerial': framematerial,
-        'model': model,
-        'mountingtype': mountingtype,
-        'type': type,
-        'gender': gender,
-        'pattern': pattern,
-        'style': style,
-        'material': material,
-      };
-    } else if (isBeauty) {
-      return {
-        'shadecolor': shadecolor,
-        'beautytype': beautytype,
-        'ingredients': ingredients,
-        'skinhairtype': skinhairtype,
-        'beautyweightvolume': beautyweightvolume,
-        'beautyexpirydate': beautyexpirydate,
-        'dermatologicallytested': dermatologicallytested,
-        'hsncode': hsncode,
-        'length': length,
-        'width': width,
-        'height': height,
-        'gender': gender,
-        'pattern': pattern,
-        'style': style,
-        'weight': weight,
-        'material': material,
-      };
-    } else if (isFurniture) {
-      return {
-        'sizevariants': sizevariants,
-        'dimension': dimension,
-        'weightcapacity': weightcapacity,
-        'assembly': assembly,
-        'style': style,
-        'roomtype': roomtype,
-        'hsncode': hsncode,
-        'length': length,
-        'width': width,
-        'height': height,
-        'gender': gender,
-        'pattern': pattern,
-        'weight': weight,
-        'material': material,
-      };
-    } else if (isGrocery) {
-      return {
-        'weightvolume': weightvolume,
-        'quantity': quantity,
-        'organic': organic,
-        'expirydate': expirydate,
-        'storageinstruction': storageinstruction,
-        'dietarypreference': dietarypreference,
-      };
-    } else if (isLaptop) {
-      return {
-        'graphics': graphics,
-        'screensize': screensize,
-        'operatingsystem': operatingsystem,
-        'port': port,
-        'ram': ram,
-        'storage': storage,
-        'processor': processor,
-        'battery': battery,
-        'weight': weight,
-        'warranty': warranty,
-        'model': model,
-        'display': display,
-        'resolution': resolution,
-        'hsncode': hsncode,
-        'length': length,
-        'width': width,
-        'height': height,
-        'gender': gender,
-        'pattern': pattern,
-        'style': style,
-        'material': material,
-      };
-    } else if (isFootWear) {
-      return {
-        'footwearmaterial': footwearmaterial,
-        'footweartype': footweartype,
-        'gender': gender,
-        'shoesize': shoesize,
-        'heelheight': heelheight,
-        'closuretype': closuretype,
-        'solematerial': solematerial,
-        'pattern': pattern,
-        'style': style,
-        'toeshape': toeshape,
-        'occasion': occasion,
-        'color': color,
-        'hsncode': hsncode,
-        'length': length,
-        'width': width,
-        'height': height,
-        'weight': weight,
-        'material': material,
-      };
-    } else if (isToy) {
-      return {
-        'agegroup': agegroup,
-        'age': age,
-        'gender': gender,
-        'material': material,
-        'color': color,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'vendor': vendor,
-        'pattern': pattern,
-        'style': style,
-        'occasion': occasion,
-        'brand': brand,
-        'model': model,
-        'producttype': producttype,
-      };
-    } else if (isAccessories) {
-      return {
-        'material': material,
-        'color': color,
-        'gender': gender,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'style': style,
-        'pattern': pattern,
-        'occasion': occasion,
-        'vendor': vendor,
-        'model': model,
-        'producttype': producttype,
-        'type': type,
-      };
-    } else if (isPersonalCare) {
-      return {
-        'material': material,
-        'gender': gender,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'vendor': vendor,
-        'style': style,
-        'pattern': pattern,
-        'producttype': producttype,
-        'type': type,
-        'occasion': occasion,
-      };
-    } else if (isStationary) {
-      return {
-        'material': material,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'vendor': vendor,
-        'color': color,
-        'pattern': pattern,
-        'style': style,
-        'model': model,
-        'producttype': producttype,
-        'type': type,
-      };
-    } else if (isCosmetics) {
-      return {
-        'shadecolor': shadecolor,
-        'beautytype': beautytype,
-        'ingredients': ingredients,
-        'skinhairtype': skinhairtype,
-        'beautyweightvolume': beautyweightvolume,
-        'beautyexpirydate': beautyexpirydate,
-        'dermatologicallytested': dermatologicallytested,
-        'material': material,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'vendor': vendor,
-        'gender': gender,
-        'pattern': pattern,
-        'style': style,
-        'type': type,
-      };
-    } else if (isPhotoFrame) {
-      return {
-        'material': material,
-        'framematerial': framematerial,
-        'mountingtype': mountingtype,
-        'hsncode': hsncode,
-        'weight': weight,
-        'length': length,
-        'width': width,
-        'height': height,
-        'vendor': vendor,
-        'color': color,
-        'pattern': pattern,
-        'style': style,
-        'producttype': producttype,
-        'type': type,
-      };
-    } else {
-      return {
-        if (material != null) 'material': material,
-        if (fit != null) 'fit': fit,
-        if (pattern != null) 'pattern': pattern,
-        if (sleevetype != null) 'sleevetype': sleevetype,
-        if (careinstruction != null) 'careinstruction': careinstruction,
-        if (sizeoptions != null && sizeoptions!.isNotEmpty)
-          'sizeoptions': sizeoptions,
-        if (hsncode != null) 'hsncode': hsncode,
-        if (weight != null) 'weight': weight,
-        if (length != null) 'length': length,
-        if (width != null) 'width': width,
-        if (height != null) 'height': height,
-        if (fittype != null) 'fittype': fittype,
-        if (gender != null) 'gender': gender,
-        if (necktype != null) 'necktype': necktype,
-        if (occasion != null) 'occasion': occasion,
-        if (stitchtype != null) 'stitchtype': stitchtype,
-        if (vendor != null) 'vendor': vendor,
-        if (variantsku != null) 'variantsku': variantsku,
-        if (closuretype != null) 'closuretype': closuretype,
-        if (embroiderystyle != null) 'embroiderystyle': embroiderystyle,
-        if (lining != null) 'lining': lining,
-        if (model != null) 'model': model,
-        if (neckstyle != null) 'neckstyle': neckstyle,
-        if (padtype != null) 'padtype': padtype,
-        if (pockets != null) 'pockets': pockets,
-        if (printtype != null) 'printtype': printtype,
-        if (productlength != null) 'productlength': productlength,
-        if (producttype != null) 'producttype': producttype,
-        if (risestyle != null) 'risestyle': risestyle,
-        if (sidetype != null) 'sidetype': sidetype,
-        if (sleeve != null) 'sleeve': sleeve,
-        if (sleevestyle != null) 'sleevestyle': sleevestyle,
-        if (slittype != null) 'slittype': slittype,
-        if (specialfeatures != null) 'specialfeatures': specialfeatures,
-        if (straptype != null) 'straptype': straptype,
-        if (style != null) 'style': style,
-        if (transparent != null) 'transparent': transparent,
-        if (type != null) 'type': type,
-        if (worktype != null) 'worktype': worktype,
-        if (blouseavailability != null)
-          'blouseavailability': blouseavailability,
-        if (patterncoverage != null) 'patterncoverage': patterncoverage,
-        if (age != null) 'age': age,
-        if (agegroup != null) 'agegroup': agegroup,
-        if (waiststyle != null) 'waiststyle': waiststyle,
-
-        // Mobile
-        if (mobilecolor != null) 'mobilecolor': mobilecolor,
-        if (ram != null) 'ram': ram,
-        if (storage != null) 'storage': storage,
-        if (battery != null) 'battery': battery,
-        if (camera != null) 'camera': camera,
-        if (processor != null) 'processor': processor,
-        if (display != null) 'display': display,
-        if (os != null) 'os': os,
-        if (connectivity != null) 'connectivity': connectivity,
-        if (warranty != null) 'warranty': warranty,
-        if (color != null) 'color': color,
-        if (designoptions != null) 'designoptions': designoptions,
-
-        // Electronics
-        if (resolution != null) 'resolution': resolution,
-        if (displaytype != null) 'displaytype': displaytype,
-        if (smartfeatures != null) 'smartfeatures': smartfeatures,
-        if (energyrating != null) 'energyrating': energyrating,
-        if (powerconsumption != null) 'powerconsumption': powerconsumption,
-        if (expdate != null) 'expdate': expdate,
-        if (mfgdate != null) 'mfgdate': mfgdate,
-        if (highlight != null) 'highlight': highlight,
-        if (otherhighlights != null) 'otherhighlights': otherhighlights,
-
-        // Jewellery
-        if (jewellerymaterial != null) 'jewellerymaterial': jewellerymaterial,
-        if (purity != null) 'purity': purity,
-        if (jewelleryweight != null) 'jewelleryweight': jewelleryweight,
-        if (jewellerycolor != null) 'jewellerycolor': jewellerycolor,
-        if (jewellerysize != null) 'jewellerysize': jewellerysize,
-        if (gemstone != null) 'gemstone': gemstone,
-        if (certification != null) 'certification': certification,
-
-        // Book
-        if (title != null) 'title': title,
-        if (author != null) 'author': author,
-        if (publisher != null) 'publisher': publisher,
-        if (edition != null) 'edition': edition,
-        if (language != null) 'language': language,
-        if (isbn != null) 'isbn': isbn,
-        if (pages != null) 'pages': pages,
-        if (binding != null) 'binding': binding,
-        if (genre != null) 'genre': genre,
-
-        // Home & Kitchen
-        if (framematerial != null) 'framematerial': framematerial,
-        if (mountingtype != null) 'mountingtype': mountingtype,
-
-        // Beauty
-        if (shadecolor != null) 'shadecolor': shadecolor,
-        if (beautytype != null) 'beautytype': beautytype,
-        if (ingredients != null && ingredients!.isNotEmpty)
-          'ingredients': ingredients,
-        if (skinhairtype != null) 'skinhairtype': skinhairtype,
-        if (beautyweightvolume != null)
-          'beautyweightvolume': beautyweightvolume,
-        if (beautyexpirydate != null) 'beautyexpirydate': beautyexpirydate,
-        if (dermatologicallytested != null)
-          'dermatologicallytested': dermatologicallytested,
-
-        // Furniture
-        if (dimension != null) 'dimension': dimension,
-        if (weightcapacity != null) 'weightcapacity': weightcapacity,
-        if (assembly != null) 'assembly': assembly,
-        if (roomtype != null) 'roomtype': roomtype,
-
-        // Grocery
-        if (weightvolume != null) 'weightvolume': weightvolume,
-        if (quantity != null) 'quantity': quantity,
-        if (organic != null) 'organic': organic,
-        if (expirydate != null) 'expirydate': expirydate,
-        if (storageinstruction != null)
-          'storageinstruction': storageinstruction,
-        if (dietarypreference != null) 'dietarypreference': dietarypreference,
-
-        // Laptop
-        if (graphics != null) 'graphics': graphics,
-        if (screensize != null) 'screensize': screensize,
-        if (operatingsystem != null) 'operatingsystem': operatingsystem,
-        if (port != null) 'port': port,
-
-        // Footwear
-        if (footwearmaterial != null) 'footwearmaterial': footwearmaterial,
-        if (footweartype != null) 'footweartype': footweartype,
-        if (shoesize != null) 'shoesize': shoesize,
-        if (heelheight != null) 'heelheight': heelheight,
-        if (solematerial != null) 'solematerial': solematerial,
-        if (toeshape != null) 'toeshape': toeshape,
-      };
-    }
+    return nonNullDetails;
   }
 
-  @override
-  String toString() {
-    return 'ProductModel(productid: $productid, name: $name, description: $description, category: $category, subcategory: $subcategory, basesku: $basesku, brand: $brand, price: $price, offerprice: $offerprice, stock: $stock, images: $images, sellerid: $sellerid, sizevariants: $sizevariants, timestamp: $timestamp, date: $date, material: $material, fit: $fit, pattern: $pattern, sleevetype: $sleevetype, careinstruction: $careinstruction, sizeoptions: $sizeoptions, hsncode: $hsncode, weight: $weight, length: $length, width: $width, height: $height, fittype: $fittype, gender: $gender, necktype: $necktype, occasion: $occasion, stitchtype: $stitchtype, vendor: $vendor, variantsku: $variantsku, closuretype: $closuretype, embroiderystyle: $embroiderystyle, lining: $lining, model: $model, neckstyle: $neckstyle, padtype: $padtype, pockets: $pockets, printtype: $printtype, productlength: $productlength, producttype: $producttype, risestyle: $risestyle, sidetype: $sidetype, sleeve: $sleeve, sleevestyle: $sleevestyle, slittype: $slittype, specialfeatures: $specialfeatures, straptype: $straptype, style: $style, transparent: $transparent, type: $type, worktype: $worktype, blouseavailability: $blouseavailability, patterncoverage: $patterncoverage, age: $age, agegroup: $agegroup, waiststyle: $waiststyle, mobilecolor: $mobilecolor, ram: $ram, storage: $storage, battery: $battery, camera: $camera, processor: $processor, display: $display, os: $os, connectivity: $connectivity, warranty: $warranty, color: $color, designoptions: $designoptions, resolution: $resolution, displaytype: $displaytype, smartfeatures: $smartfeatures, energyrating: $energyrating, powerconsumption: $powerconsumption, expdate: $expdate, mfgdate: $mfgdate, highlight: $highlight, otherhighlights: $otherhighlights, jewellerymaterial: $jewellerymaterial, purity: $purity, jewelleryweight: $jewelleryweight, jewellerycolor: $jewellerycolor, jewellerysize: $jewellerysize, gemstone: $gemstone, certification: $certification, title: $title, author: $author, publisher: $publisher, edition: $edition, language: $language, isbn: $isbn, pages: $pages, binding: $binding, genre: $genre, framematerial: $framematerial, mountingtype: $mountingtype, shadecolor: $shadecolor, beautytype: $beautytype, ingredients: $ingredients, skinhairtype: $skinhairtype, beautyweightvolume: $beautyweightvolume, beautyexpirydate: $beautyexpirydate, dermatologicallytested: $dermatologicallytested, dimension: $dimension, weightcapacity: $weightcapacity, assembly: $assembly, roomtype: $roomtype, weightvolume: $weightvolume, quantity: $quantity, organic: $organic, expirydate: $expirydate, storageinstruction: $storageinstruction, dietarypreference: $dietarypreference, graphics: $graphics, screensize: $screensize, operatingsystem: $operatingsystem, port: $port, footwearmaterial: $footwearmaterial, footweartype: $footweartype, shoesize: $shoesize, heelheight: $heelheight, solematerial: $solematerial, toeshape: $toeshape)';
-  }
+  // this is our old code
+
+  // final clothingList = CategoryConstants.clothingCategory;
+  // final mobileKeywords = CategoryConstants.mobileKeywords;
+  // final laptopKeywords = CategoryConstants.laptopKeywords;
+  // final electronicsKeywords = CategoryConstants.electronicsKeywords;
+  // final accessoriesKeywords = CategoryConstants.accessoriesKeywords;
+  // final homeKeywords = CategoryConstants.homeKeywords;
+  // final furnnitureKeywords = CategoryConstants.furnitureKeywords;
+  // final beautyKeywords = CategoryConstants.beautyKeywords;
+  // final jewelleryKeywords = CategoryConstants.jewelleryKeywords;
+  // final booksKeywords = CategoryConstants.bookKeywords;
+  // final toyKeywords = CategoryConstants.toyKeywords;
+  // final personalCareKeywords = CategoryConstants.personalCareKeywords;
+  // final stationaryKeywords = CategoryConstants.stationeryKeywords;
+  // final groceryKeywords = CategoryConstants.groceryKeywords;
+  // final cosmeticsKeywords = CategoryConstants.cosmeticsKeywords;
+  // final photoFrameKeywords = CategoryConstants.photoFrameKeywords;
+  // final footWearKeyWords = CategoryConstants.footwearKeywords;
+
+  // final lowerCategory = category?.toLowerCase() ?? "";
+
+  // final isClothing = clothingList.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isMobile = mobileKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isLaptop = laptopKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isElectronics = electronicsKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isAccessories = accessoriesKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isHome = homeKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isFurniture = furnnitureKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isBeauty = beautyKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isJewellery = jewelleryKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isBook = booksKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isToy = toyKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isPersonalCare = personalCareKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isStationary = stationaryKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isGrocery = groceryKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isCosmetics = cosmeticsKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isPhotoFrame = photoFrameKeywords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+  // final isFootWear = footWearKeyWords.any(
+  //   (e) => lowerCategory.contains(e.toLowerCase()),
+  // );
+
+  // if (isClothing) {
+  //   return {
+  //     'material': material,
+  //     'fit': fit,
+  //     'pattern': pattern,
+  //     'sleevetype': sleevetype,
+  //     'careinstruction': careinstruction,
+  //     'sizeoptions': sizeoptions,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'fittype': fittype,
+  //     'gender': gender,
+  //     'necktype': necktype,
+  //     'occasion': occasion,
+  //     'stitchtype': stitchtype,
+  //     'vendor': vendor,
+  //     'variantsku': variantsku,
+  //     'closuretype': closuretype,
+  //     'embroiderystyle': embroiderystyle,
+  //     'lining': lining,
+  //     'model': model,
+  //     'neckstyle': neckstyle,
+  //     'padtype': padtype,
+  //     'pockets': pockets,
+  //     'printtype': printtype,
+  //     'productlength': productlength,
+  //     'producttype': producttype,
+  //     'risestyle': risestyle,
+  //     'sidetype': sidetype,
+  //     'sleeve': sleeve,
+  //     'sleevestyle': sleevestyle,
+  //     'slittype': slittype,
+  //     'specialfeatures': specialfeatures,
+  //     'straptype': straptype,
+  //     'style': style,
+  //     'transparent': transparent,
+  //     'type': type,
+  //     'worktype': worktype,
+  //     'blouseavailability': blouseavailability,
+  //     'patterncoverage': patterncoverage,
+  //     'age': age,
+  //     'agegroup': agegroup,
+  //     'waiststyle': waiststyle,
+  //   };
+  // } else if (isMobile) {
+  //   return {
+  //     'model': model,
+  //     'mobilecolor': mobilecolor,
+  //     'ram': ram,
+  //     'storage': storage,
+  //     'battery': battery,
+  //     'camera': camera,
+  //     'processor': processor,
+  //     'display': display,
+  //     'os': os,
+  //     'connectivity': connectivity,
+  //     'warranty': warranty,
+  //     'vendor': vendor,
+  //     'variantsku': variantsku,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'color': color,
+  //     'designoptions': designoptions,
+  //     'gender': gender,
+  //     'material': material,
+  //     'producttype': producttype,
+  //     'type': type,
+  //     'pattern': pattern,
+  //     'style': style,
+  //   };
+  // } else if (isElectronics) {
+  //   return {
+  //     'resolution': resolution,
+  //     'displaytype': displaytype,
+  //     'smartfeatures': smartfeatures,
+  //     'energyrating': energyrating,
+  //     'powerconsumption': powerconsumption,
+  //     'vendor': vendor,
+  //     'variantsku': variantsku,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'color': color,
+  //     'expdate': expdate,
+  //     'material': material,
+  //     'mfgdate': mfgdate,
+  //     'model': model,
+  //     'pattern': pattern,
+  //     'producttype': producttype,
+  //     'type': type,
+  //     'highlight': highlight,
+  //     'otherhighlights': otherhighlights,
+  //     'style': style,
+  //   };
+  // } else if (isJewellery) {
+  //   return {
+  //     'jewellerymaterial': jewellerymaterial,
+  //     'purity': purity,
+  //     'jewelleryweight': jewelleryweight,
+  //     'jewellerycolor': jewellerycolor,
+  //     'jewellerysize': jewellerysize,
+  //     'gemstone': gemstone,
+  //     'certification': certification,
+  //     'occasion': occasion,
+  //     'vendor': vendor,
+  //     'hsncode': hsncode,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'gender': gender,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'weight': weight,
+  //     'material': material,
+  //   };
+  // } else if (isBook) {
+  //   return {
+  //     'title': title,
+  //     'author': author,
+  //     'publisher': publisher,
+  //     'edition': edition,
+  //     'language': language,
+  //     'isbn': isbn,
+  //     'pages': pages,
+  //     'binding': binding,
+  //     'genre': genre,
+  //   };
+  // } else if (isHome) {
+  //   return {
+  //     'vendor': vendor,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'variantsku': variantsku,
+  //     'color': color,
+  //     'framematerial': framematerial,
+  //     'model': model,
+  //     'mountingtype': mountingtype,
+  //     'type': type,
+  //     'gender': gender,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'material': material,
+  //   };
+  // } else if (isBeauty) {
+  //   return {
+  //     'shadecolor': shadecolor,
+  //     'beautytype': beautytype,
+  //     'ingredients': ingredients,
+  //     'skinhairtype': skinhairtype,
+  //     'beautyweightvolume': beautyweightvolume,
+  //     'beautyexpirydate': beautyexpirydate,
+  //     'dermatologicallytested': dermatologicallytested,
+  //     'hsncode': hsncode,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'gender': gender,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'weight': weight,
+  //     'material': material,
+  //   };
+  // } else if (isFurniture) {
+  //   return {
+  //     'sizevariants': sizevariants,
+  //     'dimension': dimension,
+  //     'weightcapacity': weightcapacity,
+  //     'assembly': assembly,
+  //     'style': style,
+  //     'roomtype': roomtype,
+  //     'hsncode': hsncode,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'gender': gender,
+  //     'pattern': pattern,
+  //     'weight': weight,
+  //     'material': material,
+  //   };
+  // } else if (isGrocery) {
+  //   return {
+  //     'weightvolume': weightvolume,
+  //     'quantity': quantity,
+  //     'organic': organic,
+  //     'expirydate': expirydate,
+  //     'storageinstruction': storageinstruction,
+  //     'dietarypreference': dietarypreference,
+  //   };
+  // } else if (isLaptop) {
+  //   return {
+  //     'graphics': graphics,
+  //     'screensize': screensize,
+  //     'operatingsystem': operatingsystem,
+  //     'port': port,
+  //     'ram': ram,
+  //     'storage': storage,
+  //     'processor': processor,
+  //     'battery': battery,
+  //     'weight': weight,
+  //     'warranty': warranty,
+  //     'model': model,
+  //     'display': display,
+  //     'resolution': resolution,
+  //     'hsncode': hsncode,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'gender': gender,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'material': material,
+  //   };
+  // } else if (isFootWear) {
+  //   return {
+  //     'footwearmaterial': footwearmaterial,
+  //     'footweartype': footweartype,
+  //     'gender': gender,
+  //     'shoesize': shoesize,
+  //     'heelheight': heelheight,
+  //     'closuretype': closuretype,
+  //     'solematerial': solematerial,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'toeshape': toeshape,
+  //     'occasion': occasion,
+  //     'color': color,
+  //     'hsncode': hsncode,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'weight': weight,
+  //     'material': material,
+  //   };
+  // } else if (isToy) {
+  //   return {
+  //     'agegroup': agegroup,
+  //     'age': age,
+  //     'gender': gender,
+  //     'material': material,
+  //     'color': color,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'vendor': vendor,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'occasion': occasion,
+  //     'brand': brand,
+  //     'model': model,
+  //     'producttype': producttype,
+  //   };
+  // } else if (isAccessories) {
+  //   return {
+  //     'material': material,
+  //     'color': color,
+  //     'gender': gender,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'style': style,
+  //     'pattern': pattern,
+  //     'occasion': occasion,
+  //     'vendor': vendor,
+  //     'model': model,
+  //     'producttype': producttype,
+  //     'type': type,
+  //   };
+  // } else if (isPersonalCare) {
+  //   return {
+  //     'material': material,
+  //     'gender': gender,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'vendor': vendor,
+  //     'style': style,
+  //     'pattern': pattern,
+  //     'producttype': producttype,
+  //     'type': type,
+  //     'occasion': occasion,
+  //   };
+  // } else if (isStationary) {
+  //   return {
+  //     'material': material,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'vendor': vendor,
+  //     'color': color,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'model': model,
+  //     'producttype': producttype,
+  //     'type': type,
+  //   };
+  // } else if (isCosmetics) {
+  //   return {
+  //     'shadecolor': shadecolor,
+  //     'beautytype': beautytype,
+  //     'ingredients': ingredients,
+  //     'skinhairtype': skinhairtype,
+  //     'beautyweightvolume': beautyweightvolume,
+  //     'beautyexpirydate': beautyexpirydate,
+  //     'dermatologicallytested': dermatologicallytested,
+  //     'material': material,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'vendor': vendor,
+  //     'gender': gender,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'type': type,
+  //   };
+  // } else if (isPhotoFrame) {
+  //   return {
+  //     'material': material,
+  //     'framematerial': framematerial,
+  //     'mountingtype': mountingtype,
+  //     'hsncode': hsncode,
+  //     'weight': weight,
+  //     'length': length,
+  //     'width': width,
+  //     'height': height,
+  //     'vendor': vendor,
+  //     'color': color,
+  //     'pattern': pattern,
+  //     'style': style,
+  //     'producttype': producttype,
+  //     'type': type,
+  //   };
+  // } else {
+  //   return {
+  //     if (material != null) 'material': material,
+  //     if (fit != null) 'fit': fit,
+  //     if (pattern != null) 'pattern': pattern,
+  //     if (sleevetype != null) 'sleevetype': sleevetype,
+  //     if (careinstruction != null) 'careinstruction': careinstruction,
+  //     if (sizeoptions != null && sizeoptions!.isNotEmpty)
+  //       'sizeoptions': sizeoptions,
+  //     if (hsncode != null) 'hsncode': hsncode,
+  //     if (weight != null) 'weight': weight,
+  //     if (length != null) 'length': length,
+  //     if (width != null) 'width': width,
+  //     if (height != null) 'height': height,
+  //     if (fittype != null) 'fittype': fittype,
+  //     if (gender != null) 'gender': gender,
+  //     if (necktype != null) 'necktype': necktype,
+  //     if (occasion != null) 'occasion': occasion,
+  //     if (stitchtype != null) 'stitchtype': stitchtype,
+  //     if (vendor != null) 'vendor': vendor,
+  //     if (variantsku != null) 'variantsku': variantsku,
+  //     if (closuretype != null) 'closuretype': closuretype,
+  //     if (embroiderystyle != null) 'embroiderystyle': embroiderystyle,
+  //     if (lining != null) 'lining': lining,
+  //     if (model != null) 'model': model,
+  //     if (neckstyle != null) 'neckstyle': neckstyle,
+  //     if (padtype != null) 'padtype': padtype,
+  //     if (pockets != null) 'pockets': pockets,
+  //     if (printtype != null) 'printtype': printtype,
+  //     if (productlength != null) 'productlength': productlength,
+  //     if (producttype != null) 'producttype': producttype,
+  //     if (risestyle != null) 'risestyle': risestyle,
+  //     if (sidetype != null) 'sidetype': sidetype,
+  //     if (sleeve != null) 'sleeve': sleeve,
+  //     if (sleevestyle != null) 'sleevestyle': sleevestyle,
+  //     if (slittype != null) 'slittype': slittype,
+  //     if (specialfeatures != null) 'specialfeatures': specialfeatures,
+  //     if (straptype != null) 'straptype': straptype,
+  //     if (style != null) 'style': style,
+  //     if (transparent != null) 'transparent': transparent,
+  //     if (type != null) 'type': type,
+  //     if (worktype != null) 'worktype': worktype,
+  //     if (blouseavailability != null)
+  //       'blouseavailability': blouseavailability,
+  //     if (patterncoverage != null) 'patterncoverage': patterncoverage,
+  //     if (age != null) 'age': age,
+  //     if (agegroup != null) 'agegroup': agegroup,
+  //     if (waiststyle != null) 'waiststyle': waiststyle,
+
+  //     // Mobile
+  //     if (mobilecolor != null) 'mobilecolor': mobilecolor,
+  //     if (ram != null) 'ram': ram,
+  //     if (storage != null) 'storage': storage,
+  //     if (battery != null) 'battery': battery,
+  //     if (camera != null) 'camera': camera,
+  //     if (processor != null) 'processor': processor,
+  //     if (display != null) 'display': display,
+  //     if (os != null) 'os': os,
+  //     if (connectivity != null) 'connectivity': connectivity,
+  //     if (warranty != null) 'warranty': warranty,
+  //     if (color != null) 'color': color,
+  //     if (designoptions != null) 'designoptions': designoptions,
+
+  //     // Electronics
+  //     if (resolution != null) 'resolution': resolution,
+  //     if (displaytype != null) 'displaytype': displaytype,
+  //     if (smartfeatures != null) 'smartfeatures': smartfeatures,
+  //     if (energyrating != null) 'energyrating': energyrating,
+  //     if (powerconsumption != null) 'powerconsumption': powerconsumption,
+  //     if (expdate != null) 'expdate': expdate,
+  //     if (mfgdate != null) 'mfgdate': mfgdate,
+  //     if (highlight != null) 'highlight': highlight,
+  //     if (otherhighlights != null) 'otherhighlights': otherhighlights,
+
+  //     // Jewellery
+  //     if (jewellerymaterial != null) 'jewellerymaterial': jewellerymaterial,
+  //     if (purity != null) 'purity': purity,
+  //     if (jewelleryweight != null) 'jewelleryweight': jewelleryweight,
+  //     if (jewellerycolor != null) 'jewellerycolor': jewellerycolor,
+  //     if (jewellerysize != null) 'jewellerysize': jewellerysize,
+  //     if (gemstone != null) 'gemstone': gemstone,
+  //     if (certification != null) 'certification': certification,
+
+  //     // Book
+  //     if (title != null) 'title': title,
+  //     if (author != null) 'author': author,
+  //     if (publisher != null) 'publisher': publisher,
+  //     if (edition != null) 'edition': edition,
+  //     if (language != null) 'language': language,
+  //     if (isbn != null) 'isbn': isbn,
+  //     if (pages != null) 'pages': pages,
+  //     if (binding != null) 'binding': binding,
+  //     if (genre != null) 'genre': genre,
+
+  //     // Home & Kitchen
+  //     if (framematerial != null) 'framematerial': framematerial,
+  //     if (mountingtype != null) 'mountingtype': mountingtype,
+
+  //     // Beauty
+  //     if (shadecolor != null) 'shadecolor': shadecolor,
+  //     if (beautytype != null) 'beautytype': beautytype,
+  //     if (ingredients != null && ingredients!.isNotEmpty)
+  //       'ingredients': ingredients,
+  //     if (skinhairtype != null) 'skinhairtype': skinhairtype,
+  //     if (beautyweightvolume != null)
+  //       'beautyweightvolume': beautyweightvolume,
+  //     if (beautyexpirydate != null) 'beautyexpirydate': beautyexpirydate,
+  //     if (dermatologicallytested != null)
+  //       'dermatologicallytested': dermatologicallytested,
+
+  //     // Furniture
+  //     if (dimension != null) 'dimension': dimension,
+  //     if (weightcapacity != null) 'weightcapacity': weightcapacity,
+  //     if (assembly != null) 'assembly': assembly,
+  //     if (roomtype != null) 'roomtype': roomtype,
+
+  //     // Grocery
+  //     if (weightvolume != null) 'weightvolume': weightvolume,
+  //     if (quantity != null) 'quantity': quantity,
+  //     if (organic != null) 'organic': organic,
+  //     if (expirydate != null) 'expirydate': expirydate,
+  //     if (storageinstruction != null)
+  //       'storageinstruction': storageinstruction,
+  //     if (dietarypreference != null) 'dietarypreference': dietarypreference,
+
+  //     // Laptop
+  //     if (graphics != null) 'graphics': graphics,
+  //     if (screensize != null) 'screensize': screensize,
+  //     if (operatingsystem != null) 'operatingsystem': operatingsystem,
+  //     if (port != null) 'port': port,
+
+  //     // Footwear
+  //     if (footwearmaterial != null) 'footwearmaterial': footwearmaterial,
+  //     if (footweartype != null) 'footweartype': footweartype,
+  //     if (shoesize != null) 'shoesize': shoesize,
+  //     if (heelheight != null) 'heelheight': heelheight,
+  //     if (solematerial != null) 'solematerial': solematerial,
+  //     if (toeshape != null) 'toeshape': toeshape,
+  //   };
+  // }
 }
