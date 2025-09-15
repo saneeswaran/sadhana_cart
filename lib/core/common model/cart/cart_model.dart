@@ -12,7 +12,7 @@ class CartModel extends HiveObject {
   final String customerId;
 
   @HiveField(2)
-  final String productId;
+  final String productid;
 
   @HiveField(3)
   int quantity = 1;
@@ -23,7 +23,7 @@ class CartModel extends HiveObject {
   CartModel({
     required this.cartId,
     required this.customerId,
-    required this.productId,
+    required this.productid,
     required this.quantity,
     required this.size,
   });
@@ -31,14 +31,14 @@ class CartModel extends HiveObject {
   CartModel copyWith({
     String? cartId,
     String? customerId,
-    String? productId,
+    String? productid,
     int? quantity,
     String? sizeVariant,
   }) {
     return CartModel(
       cartId: cartId ?? this.cartId,
       customerId: customerId ?? this.customerId,
-      productId: productId ?? this.productId,
+      productid: productid ?? this.productid,
       quantity: quantity ?? this.quantity,
       size: sizeVariant ?? size,
     );
@@ -48,7 +48,7 @@ class CartModel extends HiveObject {
     return {
       'cartId': cartId,
       'customerId': customerId,
-      'productId': productId,
+      'productid': productid,
       'quantity': quantity,
       'sizeVariant': size,
     };
@@ -58,7 +58,7 @@ class CartModel extends HiveObject {
     return CartModel(
       cartId: map['cartId'].toString(),
       customerId: map['customerId'].toString(),
-      productId: map['productId'].toString(),
+      productid: map['productid'].toString(),
       quantity: map['quantity'] is int
           ? map['quantity']
           : int.tryParse(map['quantity'].toString()) ?? 1,
@@ -73,6 +73,6 @@ class CartModel extends HiveObject {
 
   @override
   String toString() {
-    return 'CartModel(cartId: $cartId, customerId: $customerId, productId: $productId, quantity: $quantity, size: $size)';
+    return 'CartModel(cartId: $cartId, customerId: $customerId, productid: $productid, quantity: $quantity, size: $size)';
   }
 }

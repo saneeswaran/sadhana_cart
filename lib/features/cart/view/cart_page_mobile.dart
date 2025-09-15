@@ -35,11 +35,11 @@ class CartPageMobile extends ConsumerWidget {
                   final cart = cartItems[index];
                   //to show the size variants
                   final cartModel = carts.firstWhere(
-                    (e) => e.productId == cart.productid,
+                    (e) => e.productid == cart.productid,
                     orElse: () => CartModel(
                       cartId: '',
                       customerId: '',
-                      productId: '',
+                      productid: '',
                       quantity: 0,
                       size: '',
                     ),

@@ -22,7 +22,7 @@ class CartService {
   }) async {
     try {
       final query = await cartRef
-          .where("productId", isEqualTo: product.productid)
+          .where("productid", isEqualTo: product.productid)
           .limit(1)
           .get();
 
@@ -42,7 +42,7 @@ class CartService {
         final CartModel cartModel = CartModel(
           cartId: docRef.id,
           customerId: currentUserId,
-          productId: product.productid!,
+          productid: product.productid!,
           quantity: 1,
           size: size,
         );
@@ -120,10 +120,10 @@ class CartService {
           final cartItem = CartModel.fromMap(
             doc.data() as Map<String, dynamic>,
           );
-          final productId = cartItem.productId;
+          final productid = cartItem.productid;
 
           final productSnapshot = await productRef
-              .where('productId', isEqualTo: productId)
+              .where('productid', isEqualTo: productid)
               .get();
 
           if (productSnapshot.docs.isNotEmpty) {

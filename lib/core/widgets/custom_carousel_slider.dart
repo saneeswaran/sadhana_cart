@@ -94,7 +94,7 @@ class CustomCarouselSlider extends ConsumerWidget {
                   );
                   final favModel = ref.watch(favoriteModelProvider);
                   final matchedFavorite = favModel.firstWhereOrNull(
-                    (e) => e.productId == product.productid,
+                    (e) => e.productid == product.productid,
                   );
                   final String? existsFavoriteId = matchedFavorite?.favoriteId;
 

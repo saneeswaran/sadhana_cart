@@ -82,7 +82,7 @@ class ProductNotifier extends StateNotifier<List<ProductModel>> {
     try {
       Query query = FirebaseFirestore.instance
           .collection(ProductService.products)
-          .orderBy("productId", descending: true)
+          .orderBy("productid", descending: true)
           .limit(_limit);
 
       if (_lastDocument != null) {

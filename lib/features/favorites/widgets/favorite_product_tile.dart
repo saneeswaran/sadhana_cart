@@ -65,7 +65,7 @@ class FavoriteProductTile extends ConsumerWidget {
                       builder: (context, ref, child) {
                         final favSet = ref.watch(favoriteModelProvider);
                         final model = favSet.firstWhereOrNull(
-                          (e) => e.productId == favorite.productid,
+                          (e) => e.productid == favorite.productid,
                         );
 
                         final favoriteId = model?.favoriteId;

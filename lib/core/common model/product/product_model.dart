@@ -28,7 +28,6 @@ class ProductModel {
   final num? price;
   final num? offerprice;
   final int? stock;
-  final num? rating;
   final List<String>? images;
   final String? sellerid;
   final List<SizeVariant>? sizevariants;
@@ -177,7 +176,6 @@ class ProductModel {
     this.price,
     this.offerprice,
     this.stock,
-    this.rating,
     this.images,
     this.sellerid,
     this.sizevariants,
@@ -307,7 +305,6 @@ class ProductModel {
       'price': price,
       'offerprice': offerprice,
       'stock': stock,
-      'rating': rating,
       'images': images,
       'sellerid': sellerid,
       'sizevariants': sizevariants?.map((x) => x.toMap()).toList(),
@@ -438,7 +435,6 @@ class ProductModel {
       price: map['price'],
       offerprice: map['offerprice'],
       stock: map['stock'],
-      rating: map['rating'],
       images: map['images'] != null ? List.from(map['images']) : null,
       sellerid: map['sellerid'],
       sizevariants: map['sizevariants'] != null
@@ -830,6 +826,6 @@ class ProductModel {
 
   @override
   String toString() {
-    return 'ProductModel(productid: $productid, name: $name, description: $description, category: $category, subcategory: $subcategory, basesku: $basesku, brand: $brand, price: $price, offerprice: $offerprice, stock: $stock, rating: $rating, images: $images, sellerid: $sellerid, sizevariants: $sizevariants, timestamp: $timestamp, date: $date, material: $material, fit: $fit, pattern: $pattern, sleevetype: $sleevetype, careinstruction: $careinstruction, sizeoptions: $sizeoptions, hsncode: $hsncode, weight: $weight, length: $length, width: $width, height: $height, fittype: $fittype, gender: $gender, necktype: $necktype, occasion: $occasion, stitchtype: $stitchtype, vendor: $vendor, variantsku: $variantsku, closuretype: $closuretype, embroiderystyle: $embroiderystyle, lining: $lining, model: $model, neckstyle: $neckstyle, padtype: $padtype, pockets: $pockets, printtype: $printtype, productlength: $productlength, producttype: $producttype, risestyle: $risestyle, sidetype: $sidetype, sleeve: $sleeve, sleevestyle: $sleevestyle, slittype: $slittype, specialfeatures: $specialfeatures, straptype: $straptype, style: $style, transparent: $transparent, type: $type, worktype: $worktype, blouseavailability: $blouseavailability, patterncoverage: $patterncoverage, age: $age, agegroup: $agegroup, waiststyle: $waiststyle, mobilecolor: $mobilecolor, ram: $ram, storage: $storage, battery: $battery, camera: $camera, processor: $processor, display: $display, os: $os, connectivity: $connectivity, warranty: $warranty, color: $color, designoptions: $designoptions, resolution: $resolution, displaytype: $displaytype, smartfeatures: $smartfeatures, energyrating: $energyrating, powerconsumption: $powerconsumption, expdate: $expdate, mfgdate: $mfgdate, highlight: $highlight, otherhighlights: $otherhighlights, jewellerymaterial: $jewellerymaterial, purity: $purity, jewelleryweight: $jewelleryweight, jewellerycolor: $jewellerycolor, jewellerysize: $jewellerysize, gemstone: $gemstone, certification: $certification, title: $title, author: $author, publisher: $publisher, edition: $edition, language: $language, isbn: $isbn, pages: $pages, binding: $binding, genre: $genre, framematerial: $framematerial, mountingtype: $mountingtype, shadecolor: $shadecolor, beautytype: $beautytype, ingredients: $ingredients, skinhairtype: $skinhairtype, beautyweightvolume: $beautyweightvolume, beautyexpirydate: $beautyexpirydate, dermatologicallytested: $dermatologicallytested, dimension: $dimension, weightcapacity: $weightcapacity, assembly: $assembly, roomtype: $roomtype, weightvolume: $weightvolume, quantity: $quantity, organic: $organic, expirydate: $expirydate, storageinstruction: $storageinstruction, dietarypreference: $dietarypreference, graphics: $graphics, screensize: $screensize, operatingsystem: $operatingsystem, port: $port, footwearmaterial: $footwearmaterial, footweartype: $footweartype, shoesize: $shoesize, heelheight: $heelheight, solematerial: $solematerial, toeshape: $toeshape)';
+    return 'ProductModel(productid: $productid, name: $name, description: $description, category: $category, subcategory: $subcategory, basesku: $basesku, brand: $brand, price: $price, offerprice: $offerprice, stock: $stock, images: $images, sellerid: $sellerid, sizevariants: $sizevariants, timestamp: $timestamp, date: $date, material: $material, fit: $fit, pattern: $pattern, sleevetype: $sleevetype, careinstruction: $careinstruction, sizeoptions: $sizeoptions, hsncode: $hsncode, weight: $weight, length: $length, width: $width, height: $height, fittype: $fittype, gender: $gender, necktype: $necktype, occasion: $occasion, stitchtype: $stitchtype, vendor: $vendor, variantsku: $variantsku, closuretype: $closuretype, embroiderystyle: $embroiderystyle, lining: $lining, model: $model, neckstyle: $neckstyle, padtype: $padtype, pockets: $pockets, printtype: $printtype, productlength: $productlength, producttype: $producttype, risestyle: $risestyle, sidetype: $sidetype, sleeve: $sleeve, sleevestyle: $sleevestyle, slittype: $slittype, specialfeatures: $specialfeatures, straptype: $straptype, style: $style, transparent: $transparent, type: $type, worktype: $worktype, blouseavailability: $blouseavailability, patterncoverage: $patterncoverage, age: $age, agegroup: $agegroup, waiststyle: $waiststyle, mobilecolor: $mobilecolor, ram: $ram, storage: $storage, battery: $battery, camera: $camera, processor: $processor, display: $display, os: $os, connectivity: $connectivity, warranty: $warranty, color: $color, designoptions: $designoptions, resolution: $resolution, displaytype: $displaytype, smartfeatures: $smartfeatures, energyrating: $energyrating, powerconsumption: $powerconsumption, expdate: $expdate, mfgdate: $mfgdate, highlight: $highlight, otherhighlights: $otherhighlights, jewellerymaterial: $jewellerymaterial, purity: $purity, jewelleryweight: $jewelleryweight, jewellerycolor: $jewellerycolor, jewellerysize: $jewellerysize, gemstone: $gemstone, certification: $certification, title: $title, author: $author, publisher: $publisher, edition: $edition, language: $language, isbn: $isbn, pages: $pages, binding: $binding, genre: $genre, framematerial: $framematerial, mountingtype: $mountingtype, shadecolor: $shadecolor, beautytype: $beautytype, ingredients: $ingredients, skinhairtype: $skinhairtype, beautyweightvolume: $beautyweightvolume, beautyexpirydate: $beautyexpirydate, dermatologicallytested: $dermatologicallytested, dimension: $dimension, weightcapacity: $weightcapacity, assembly: $assembly, roomtype: $roomtype, weightvolume: $weightvolume, quantity: $quantity, organic: $organic, expirydate: $expirydate, storageinstruction: $storageinstruction, dietarypreference: $dietarypreference, graphics: $graphics, screensize: $screensize, operatingsystem: $operatingsystem, port: $port, footwearmaterial: $footwearmaterial, footweartype: $footweartype, shoesize: $shoesize, heelheight: $heelheight, solematerial: $solematerial, toeshape: $toeshape)';
   }
 }

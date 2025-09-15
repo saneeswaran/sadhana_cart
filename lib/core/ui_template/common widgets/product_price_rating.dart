@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating/flutter_rating.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
 
 class ProductPriceRating extends StatelessWidget {
   final ProductModel product;
@@ -39,13 +41,26 @@ class ProductPriceRating extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              StarRating(
-                mainAxisAlignment: MainAxisAlignment.start,
-                rating: (product.rating ?? 0).toDouble(),
-                color: AppColor.ratingColor,
-                size: 25.0,
-                onRatingChanged: (value) {
-                  log(value.toString());
+              Consumer(
+                builder: (context, ref, child) {
+                  final ratingAsync = ref.watch(
+                    avgRatingProvider(product.productid ?? ''),
+                  );
+                  return ratingAsync.when(
+                    data: (rating) {
+                      return StarRating(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        rating: (rating).toDouble(),
+                        color: AppColor.ratingColor,
+                        size: 25.0,
+                        onRatingChanged: (value) {
+                          log(value.toString());
+                        },
+                      );
+                    },
+                    error: (e, s) => const Text('error'),
+                    loading: () => const Text('loading'),
+                  );
                 },
               ),
               Text(

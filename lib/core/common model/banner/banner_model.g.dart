@@ -20,7 +20,7 @@ class BannerModelAdapter extends TypeAdapter<BannerModel> {
       bannerId: fields[0] as String,
       bannerName: fields[1] as String,
       bannerImage: fields[2] as String,
-      productId: fields[3] as String,
+      productid: fields[3] as String,
     );
   }
 
@@ -35,7 +35,7 @@ class BannerModelAdapter extends TypeAdapter<BannerModel> {
       ..writeByte(2)
       ..write(obj.bannerImage)
       ..writeByte(3)
-      ..write(obj.productId);
+      ..write(obj.productid);
   }
 
   @override

@@ -10,19 +10,19 @@ class FavoriteModel extends HiveObject {
   @HiveField(0)
   final String favoriteId;
   @HiveField(1)
-  final String productId;
+  final String productid;
   @HiveField(2)
   final String customerId;
   FavoriteModel({
     required this.favoriteId,
-    required this.productId,
+    required this.productid,
     required this.customerId,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'favoriteId': favoriteId,
-      'productId': productId,
+      'productid': productid,
       'customerId': customerId,
     };
   }
@@ -30,7 +30,7 @@ class FavoriteModel extends HiveObject {
   factory FavoriteModel.fromMap(Map<String, dynamic> map) {
     return FavoriteModel(
       favoriteId: map['favoriteId'] as String,
-      productId: map['productId'] as String,
+      productid: map['productid'] as String,
       customerId: map['customerId'] as String,
     );
   }
@@ -42,5 +42,5 @@ class FavoriteModel extends HiveObject {
 
   @override
   String toString() =>
-      'FavoriteModel(favoriteId: $favoriteId, productId: $productId, customerId: $customerId)';
+      'FavoriteModel(favoriteId: $favoriteId, productid: $productid, customerId: $customerId)';
 }

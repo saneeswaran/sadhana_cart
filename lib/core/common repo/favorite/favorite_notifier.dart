@@ -23,7 +23,7 @@ class FavoriteNotifier extends StateNotifier<Set<ProductModel>> {
     state = state.where((e) => e.productid != product.productid).toSet();
   }
 
-  bool isFavorite(String productId) {
-    return state.any((e) => e.productid == productId);
+  bool isFavorite(String productid) {
+    return state.any((e) => e.productid == productid);
   }
 }

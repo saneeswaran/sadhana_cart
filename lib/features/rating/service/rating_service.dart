@@ -50,7 +50,7 @@ class RatingService {
         userId: currentUser,
         userName: userName,
         image: imageUrl,
-        productId: productId,
+        productid: productId,
         rating: rating,
         comment: comment,
         createdAt: Timestamp.now(),
@@ -136,7 +136,7 @@ class RatingService {
           userId: currentUser,
           userName: userName,
           image: imageUrl,
-          productId: productId,
+          productid: productId,
           rating: rating,
           comment: comment,
           createdAt: Timestamp.now(),
@@ -152,6 +152,32 @@ class RatingService {
     } catch (e) {
       log("rating service error $e");
       return false;
+    }
+  }
+
+  static Future<double> getAverageRating({required String productId}) async {
+    try {
+      final querySnapshot = await ratingRef
+          .where("productid", isEqualTo: productId)
+          .get();
+
+      final docs = querySnapshot.docs;
+
+      if (docs.isEmpty) return 0.0;
+
+      double totalRating = 0;
+
+      for (final doc in docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final double rating = (data['rating'] ?? 0).toDouble();
+        totalRating += rating;
+      }
+
+      final double avgRating = totalRating / docs.length;
+      return double.parse(avgRating.toStringAsFixed(1));
+    } catch (e) {
+      log("getAverageRating error: $e");
+      return 0.0;
     }
   }
 }

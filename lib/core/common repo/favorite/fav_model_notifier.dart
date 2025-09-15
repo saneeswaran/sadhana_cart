@@ -15,8 +15,8 @@ class FavModelNotifier extends StateNotifier<Set<FavoriteModel>> {
     state = await FavoriteService.fetchFavorites();
   }
 
-  FavoriteModel? getFavoriteModel(String productId) =>
-      state.firstWhereOrNull((element) => element.productId == productId);
+  FavoriteModel? getFavoriteModel(String productid) =>
+      state.firstWhereOrNull((element) => element.productid == productid);
 
   void addToFavorite({required FavoriteModel favorite}) {
     state = {...state, favorite};
@@ -26,6 +26,6 @@ class FavModelNotifier extends StateNotifier<Set<FavoriteModel>> {
     state = state.where((e) => e.favoriteId != favoriteId).toSet();
   }
 
-  String checkTheProductIsInFavorite(String productId) =>
-      state.firstWhere((element) => element.productId == productId).favoriteId;
+  String checkTheProductIsInFavorite(String productid) =>
+      state.firstWhere((element) => element.productid == productid).favoriteId;
 }

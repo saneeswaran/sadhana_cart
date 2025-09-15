@@ -13,12 +13,12 @@ class BannerModel extends HiveObject {
   @HiveField(2)
   final String bannerImage;
   @HiveField(3)
-  final String productId;
+  final String productid;
   BannerModel({
     required this.bannerId,
     required this.bannerName,
     required this.bannerImage,
-    required this.productId,
+    required this.productid,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,7 +26,7 @@ class BannerModel extends HiveObject {
       'bannerId': bannerId,
       'bannerName': bannerName,
       'bannerImage': bannerImage,
-      'productId': productId,
+      'productid': productid,
     };
   }
 
@@ -35,7 +35,7 @@ class BannerModel extends HiveObject {
       bannerId: map['bannerId'] as String,
       bannerName: map['bannerName'] as String,
       bannerImage: map['bannerImage'] as String,
-      productId: map['productId'] as String,
+      productid: map['productid'] as String,
     );
   }
 

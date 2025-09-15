@@ -30,7 +30,7 @@ class FavoriteService {
       final docRef = favoriteRef.doc();
       final favoriteModel = FavoriteModel(
         favoriteId: docRef.id,
-        productId: product.productid!,
+        productid: product.productid!,
         customerId: currentUserId,
       );
       await favoriteRef.doc(docRef.id).set(favoriteModel.toMap());
@@ -98,11 +98,11 @@ class FavoriteService {
           .get();
 
       final List<String> productIds = favSnapshot.docs
-          .map((doc) => doc["productId"] as String)
+          .map((doc) => doc["productid"] as String)
           .toList();
 
       final List<Future<QuerySnapshot>> futures = productIds.map((productId) {
-        return productRef.where("productId", isEqualTo: productId).get();
+        return productRef.where("productid", isEqualTo: productId).get();
       }).toList();
 
       final List<QuerySnapshot> results = await Future.wait(futures);

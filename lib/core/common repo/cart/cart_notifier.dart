@@ -44,13 +44,13 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
       final updated = await CartService.fetchCart();
       state = {...updated};
     } else {
-      state = state.where((e) => e.productId != cart.productId).toSet();
+      state = state.where((e) => e.productid != cart.productid).toSet();
     }
   }
 
   Set<ProductModel> getCartProducts() {
     final products = ref.read(productProvider);
-    final productIds = state.map((c) => c.productId).toSet();
+    final productIds = state.map((c) => c.productid).toSet();
 
     return products.where((p) => productIds.contains(p.productid)).toSet();
   }
@@ -60,7 +60,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
       final updatedCart = cart.copyWith(quantity: cart.quantity + 1);
       state = {
         for (final c in state)
-          if (c.productId == cart.productId) updatedCart else c,
+          if (c.productid == cart.productid) updatedCart else c,
       };
     }
   }
@@ -70,7 +70,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
       final updatedCart = cart.copyWith(quantity: cart.quantity - 1);
       state = {
         for (final c in state)
-          if (c.productId == cart.productId) updatedCart else c,
+          if (c.productid == cart.productid) updatedCart else c,
       };
     }
   }
@@ -80,7 +80,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
 
     for (final cart in state) {
       final cartProduct = products.firstWhere(
-        (product) => product.productid == cart.productId,
+        (product) => product.productid == cart.productid,
       );
       final product = cartProduct;
       final price = product.offerprice ?? 0.0;

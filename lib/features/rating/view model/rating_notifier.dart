@@ -12,6 +12,13 @@ final specificProductrating = FutureProvider.autoDispose
       return await RatingService.fetchRating(productId: productId);
     });
 
+final avgRatingProvider = FutureProvider.autoDispose.family<double, String>((
+  ref,
+  productId,
+) async {
+  return await RatingService.getAverageRating(productId: productId);
+});
+
 class RatingNotifier extends StateNotifier<RatingState> {
   RatingNotifier() : super(RatingState.initialState());
 

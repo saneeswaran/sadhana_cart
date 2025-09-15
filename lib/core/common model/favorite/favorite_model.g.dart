@@ -18,7 +18,7 @@ class FavoriteModelAdapter extends TypeAdapter<FavoriteModel> {
     };
     return FavoriteModel(
       favoriteId: fields[0] as String,
-      productId: fields[1] as String,
+      productid: fields[1] as String,
       customerId: fields[2] as String,
     );
   }
@@ -30,7 +30,7 @@ class FavoriteModelAdapter extends TypeAdapter<FavoriteModel> {
       ..writeByte(0)
       ..write(obj.favoriteId)
       ..writeByte(1)
-      ..write(obj.productId)
+      ..write(obj.productid)
       ..writeByte(2)
       ..write(obj.customerId);
   }

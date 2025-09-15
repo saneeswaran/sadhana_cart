@@ -79,7 +79,7 @@ class HiveHelper {
 
   static Future<void> addCart({required CartModel cart}) async {
     final box = Hive.box<CartModel>(cartBox);
-    box.put(cart.productId, cart);
+    box.put(cart.productid, cart);
   }
 
   static Set<CartModel> getCart() {
@@ -95,7 +95,7 @@ class HiveHelper {
   //favorite
   static Future<void> addFavorites({required FavoriteModel favorite}) async {
     final box = Hive.box<FavoriteModel>(favoriteBox);
-    await box.put(favorite.productId, favorite);
+    await box.put(favorite.productid, favorite);
   }
 
   static Set<ProductModel> getFavorite() {
