@@ -28,7 +28,7 @@ void navigateToProductDesignBasedOnCategory({
   required String categoryName,
   required ProductModel product,
 }) {
-  final categoryLowerCase = categoryName.toLowerCase().replaceAll(' ', '_');
+  // final categoryLowerCase = categoryName.toLowerCase().replaceAll(' ', '_');
 
   final clothingList = CategoryConstants.clothingCategory;
 
@@ -36,12 +36,18 @@ void navigateToProductDesignBasedOnCategory({
     (clothing) => categoryName.toLowerCase().contains(clothing.toLowerCase()),
   );
 
+  final accessoryList = CategoryConstants.accessoriesKeywords;
+
+  final isAccessories = accessoryList.any(
+    (e) => categoryName.toLowerCase().contains(e.toLowerCase()),
+  );
+
   if (isClothing) {
     navigateTo(
       context: context,
       screen: ClothingProductsDetails(product: product),
     );
-  } else if (categoryLowerCase == CategoryConstants.accessories.toLowerCase()) {
+  } else if (isAccessories) {
     navigateTo(
       context: context,
       screen: AccessoriesScreen(product: product),
