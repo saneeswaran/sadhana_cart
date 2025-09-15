@@ -17,16 +17,16 @@ import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
 
-class AccessoriesScreen extends StatelessWidget {
+class OtherProductDetails extends StatelessWidget {
   final ProductModel product;
-  const AccessoriesScreen({super.key, required this.product});
+  const OtherProductDetails({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> productAdditionalData = product
-        .getDetailsByCategory();
-    final Map<String, dynamic> cleanedData =
-        AvoidNullValues.removeNullValuesDeep(productAdditionalData);
+    final Map<String, dynamic> productData = product.getDetailsByCategory();
+    final Map<String, dynamic> cleanData = AvoidNullValues.removeNullValuesDeep(
+      productData,
+    );
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -40,7 +40,7 @@ class AccessoriesScreen extends StatelessWidget {
             CustomTileDropdown(
               title: "Details",
               value: Column(
-                children: cleanedData.entries.map((entry) {
+                children: cleanData.entries.map((entry) {
                   return ProductDetailRow(title: entry.key, value: entry.value);
                 }).toList(),
               ),

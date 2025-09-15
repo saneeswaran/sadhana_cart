@@ -3,6 +3,7 @@ import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/category_constants.dart';
 import 'package:sadhana_cart/core/ui_template/accessories/view/accessories_screen.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/view/clothing_products_details.dart';
+import 'package:sadhana_cart/core/ui_template/other_product/view/other_product_details.dart';
 
 void navigateTo({required BuildContext context, required Widget screen}) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
@@ -45,58 +46,64 @@ void navigateToProductDesignBasedOnCategory({
       context: context,
       screen: AccessoriesScreen(product: product),
     );
-  } else if (categoryLowerCase == CategoryConstants.footwear.toLowerCase()) {
+  } else {
     navigateTo(
       context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.fashion.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryLowerCase ==
-      CategoryConstants.personalCare.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.stationary.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.home.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.books.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.electronics.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.groceries.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.cosmetics.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryName == CategoryConstants.photoFrame.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
+      screen: OtherProductDetails(product: product),
     );
   }
+  //  else if (categoryLowerCase == CategoryConstants.footwear.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryLowerCase == CategoryConstants.fashion.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryLowerCase ==
+  //     CategoryConstants.personalCare.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryLowerCase == CategoryConstants.stationary.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryLowerCase == CategoryConstants.home.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryLowerCase == CategoryConstants.books.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryLowerCase == CategoryConstants.electronics.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryLowerCase == CategoryConstants.groceries.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryLowerCase == CategoryConstants.cosmetics.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // } else if (categoryName == CategoryConstants.photoFrame.toLowerCase()) {
+  //   navigateTo(
+  //     context: context,
+  //     screen: AccessoriesScreen(product: product),
+  //   );
+  // }
   /*
 
 else if (categoryLowerCase.toLowerCase() ==
