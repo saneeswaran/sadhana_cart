@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
@@ -10,6 +11,7 @@ import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/skeletonizer/rating_tile_loader.dart';
+import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/edit_review.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
 import 'package:sadhana_cart/core/ui_template/common%20widgets/product_price_rating.dart';
 import 'package:sadhana_cart/core/ui_template/head%20phones/widgets/product_detail_row.dart';
@@ -305,14 +307,35 @@ class ClothingProductsDetails extends StatelessWidget {
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
+                            final currentUser =
+                                FirebaseAuth.instance.currentUser!.uid;
                             final rating = ratingList[index];
-                            return RatingTile(
-                              imageUrl: rating.image.isEmpty
-                                  ? AppImages.noProfile
-                                  : rating.image,
-                              name: rating.userName,
-                              rating: rating.rating,
-                              review: rating.comment,
+                            return GestureDetector(
+                              onTap: () {
+                                if (rating.userId == currentUser) {
+                                  showEditRatingDialoge(
+                                    context: context,
+                                    ref: ref,
+                                    productId: product.productid!,
+                                    ratingId: rating.ratingId,
+                                  );
+                                } else {
+                                  showCustomSnackbar(
+                                    context: context,
+                                    message:
+                                        "You can't edit other user's review",
+                                    type: ToastType.error,
+                                  );
+                                }
+                              },
+                              child: RatingTile(
+                                imageUrl: rating.image.isEmpty
+                                    ? AppImages.noProfile
+                                    : rating.image,
+                                name: rating.userName,
+                                rating: rating.rating,
+                                review: rating.comment,
+                              ),
                             );
                           },
                         ),

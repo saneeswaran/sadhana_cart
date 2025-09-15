@@ -99,14 +99,33 @@ class RatingService {
 
   static Future<bool> updateOwnRating({
     required String productId,
-    required String userName,
     required double rating,
     required String comment,
-    required String imageUrl,
+    required String ratingId,
   }) async {
     try {
+      final String currentUser = FirebaseAuth.instance.currentUser?.uid ?? '';
+      if (currentUser.isEmpty) {
+        log("User is not logged in");
+        return false;
+      }
+      final userDoc = await userRef.doc(currentUser).get();
+
+      final userName = userDoc.get("name");
+
+      if (!userDoc.exists) {
+        log("User document not found for userId: $currentUser");
+        return false;
+      }
+
+      final String imageUrl = userDoc.get("profileImage");
+      if (imageUrl.isEmpty) {
+        log("Profile image is missing for userId: $currentUser");
+        return false;
+      }
       final QuerySnapshot querySnapshot = await ratingRef
           .where("productid", isEqualTo: productId)
+          .where("ratingId", isEqualTo: ratingId)
           .where("userId", isEqualTo: currentUser)
           .get();
 

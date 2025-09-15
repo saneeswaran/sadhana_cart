@@ -49,12 +49,27 @@ class RatingNotifier extends StateNotifier<RatingState> {
     );
   }
 
-  void updaterating({required RatingModel rating}) {
-    state = state.copyWith(
-      ratings: state.ratings
-          .map((e) => e.ratingId == rating.ratingId ? rating : e)
-          .toList(),
+  Future<bool> updaterating({
+    required String ratingId,
+    required String comment,
+    required double rating,
+    required String productId,
+  }) async {
+    final bool isSuccess = await RatingService.updateOwnRating(
+      ratingId: ratingId,
+      comment: comment,
+      productId: productId,
+      rating: rating,
     );
+    if (isSuccess) {
+      state = state.copyWith(
+        isLoading: false,
+        ratings: await fetchProductRating(productId: productId),
+      );
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Future<List<RatingModel>> fetchProductRating({
