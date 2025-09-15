@@ -8,7 +8,6 @@ import 'package:sadhana_cart/core/common model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
-import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/skeletonizer/rating_tile_loader.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/edit_review.dart';
@@ -33,8 +32,6 @@ class ClothingProductsDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> productData = product.getDetailsByCategory();
-    final Map<String, dynamic> cleanProduct =
-        AvoidNullValues.removeNullValuesDeep(productData);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       bottomNavigationBar: Padding(
@@ -244,12 +241,12 @@ class ClothingProductsDetails extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            cleanProduct.containsValue("null")
+            productData.containsValue("null")
                 ? const SizedBox.shrink()
                 : CustomTileDropdown(
                     title: "Details",
                     value: Column(
-                      children: cleanProduct.entries
+                      children: productData.entries
                           .map(
                             (entry) => ProductDetailRow(
                               title: entry.key,

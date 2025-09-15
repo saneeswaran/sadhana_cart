@@ -1,10 +1,11 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
-import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
 import 'package:sadhana_cart/core/skeletonizer/rating_tile_loader.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/edit_review.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
@@ -25,8 +26,7 @@ class AccessoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Map<String, dynamic> productAdditionalData = product
         .getDetailsByCategory();
-    final Map<String, dynamic> cleanedData =
-        AvoidNullValues.removeNullValuesDeep(productAdditionalData);
+    log(product.productid.toString());
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -40,7 +40,7 @@ class AccessoriesScreen extends StatelessWidget {
             CustomTileDropdown(
               title: "Details",
               value: Column(
-                children: cleanedData.entries.map((entry) {
+                children: productAdditionalData.entries.map((entry) {
                   return ProductDetailRow(title: entry.key, value: entry.value);
                 }).toList(),
               ),

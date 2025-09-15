@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/skeletonizer/rating_star_loader.dart';
 import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
 
 class ProductPriceRating extends StatelessWidget {
@@ -59,7 +60,7 @@ class ProductPriceRating extends StatelessWidget {
                       );
                     },
                     error: (e, s) => const Text('error'),
-                    loading: () => const Text('loading'),
+                    loading: () => const RatingStarLoader(),
                   );
                 },
               ),

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
-import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
 import 'package:sadhana_cart/core/skeletonizer/rating_tile_loader.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/edit_review.dart';
 import 'package:sadhana_cart/core/ui_template/clothing/widget/clothing%20details/rating_tile.dart';
@@ -24,9 +23,6 @@ class OtherProductDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Map<String, dynamic> productData = product.getDetailsByCategory();
-    final Map<String, dynamic> cleanData = AvoidNullValues.removeNullValuesDeep(
-      productData,
-    );
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -40,7 +36,7 @@ class OtherProductDetails extends StatelessWidget {
             CustomTileDropdown(
               title: "Details",
               value: Column(
-                children: cleanData.entries.map((entry) {
+                children: productData.entries.map((entry) {
                   return ProductDetailRow(title: entry.key, value: entry.value);
                 }).toList(),
               ),
