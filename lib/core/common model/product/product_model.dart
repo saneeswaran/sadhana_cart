@@ -14,6 +14,7 @@
 import 'dart:convert';
 
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
+import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
 
 class ProductModel {
   // Common Fields
@@ -681,18 +682,21 @@ class ProductModel {
       'solematerial': solematerial,
       'toeshape': toeshape,
     };
-    final nonNullDetails = Map.fromEntries(
-      allDetails.entries.where((e) {
-        final value = e.value;
-        if (value == null) return false;
-        if (value is String && value.trim().isEmpty) return false;
-        if (value is List && value.isEmpty) return false;
-        return true;
-      }),
-    );
 
-    return nonNullDetails;
+    final details = AvoidNullValues.removeNullValuesDeep(allDetails);
+
+    return details;
   }
+
+  // final nonNullDetails = Map.fromEntries(
+  //   allDetails.entries.where((e) {
+  //     final value = e.value;
+  //     if (value == null) return false;
+  //     if (value is String && value.trim().isEmpty) return false;
+  //     if (value is List && value.isEmpty) return false;
+  //     return true;
+  //   }),
+  // );
 
   // this is our old code
 
