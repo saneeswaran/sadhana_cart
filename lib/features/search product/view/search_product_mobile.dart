@@ -93,7 +93,7 @@ class _SearchProductMobileState extends ConsumerState<SearchProductMobile>
           displayedProducts = results;
         });
 
-        log("✅ Search results within filter: ${results.length}");
+        log("Search results within filter: ${results.length}");
       } catch (e) {
         log("Search error: $e");
         setState(() {

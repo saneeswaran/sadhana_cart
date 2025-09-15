@@ -271,7 +271,7 @@ class ProductService {
         matchedProducts = products;
       }
 
-      log("🏁 Total matched products: ${matchedProducts.length}");
+      log("Total matched products: ${matchedProducts.length}");
       return matchedProducts;
     } catch (e, stackTrace) {
       log("❌ ProductService fetch error: $e", stackTrace: stackTrace);

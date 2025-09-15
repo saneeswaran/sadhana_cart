@@ -9,7 +9,7 @@ import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
 class SearchProductTile extends ConsumerWidget {
-  final ScrollController? controller; // ✅ Added
+  final ScrollController? controller; //  Added
   final List<ProductModel> products;
   final bool isLoadingMore;
   final void Function(ProductModel)? onTap;
@@ -31,7 +31,7 @@ class SearchProductTile extends ConsumerWidget {
     }
 
     return GridView.builder(
-      controller: controller, // ✅ use controller for pagination
+      controller: controller, // use controller for pagination
       physics: const BouncingScrollPhysics(),
       shrinkWrap: true,
       itemCount: isLoadingMore ? products.length + 1 : products.length,
