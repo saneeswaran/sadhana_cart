@@ -1,4 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, unused_local_variable
 //please don't think about why this product model have so many things
 //because client not willing to hire people to make changes in excel sheet
 //also baapstore are not willing to create form based on our database structure
@@ -572,9 +572,77 @@ class ProductModel {
   //this is the code will help you by getting products attributes by category
   Map<String, dynamic> getDetailsByCategory() {
     final clothingList = CategoryConstants.clothingCategory;
+    final mobileKeywords = CategoryConstants.mobileKeywords;
+    final laptopKeywords = CategoryConstants.laptopKeywords;
+    final electronicsKeywords = CategoryConstants.electronicsKeywords;
+    final accessoriesKeywords = CategoryConstants.accessoriesKeywords;
+    final homeKeywords = CategoryConstants.homeKeywords;
+    final furnnitureKeywords = CategoryConstants.furnitureKeywords;
+    final beautyKeywords = CategoryConstants.beautyKeywords;
+    final jewelleryKeywords = CategoryConstants.jewelleryKeywords;
+    final booksKeywords = CategoryConstants.bookKeywords;
+    final toyKeywords = CategoryConstants.toyKeywords;
+    final personalCareKeywords = CategoryConstants.personalCareKeywords;
+    final stationaryKeywords = CategoryConstants.stationeryKeywords;
+    final groceryKeywords = CategoryConstants.groceryKeywords;
+    final cosmeticsKeywords = CategoryConstants.cosmeticsKeywords;
+    final photoFrameKeywords = CategoryConstants.photoFrameKeywords;
+    final footWearKeyWords = CategoryConstants.footwearKeywords;
+
+    final lowerCategory = category?.toLowerCase() ?? "";
+
     final isClothing = clothingList.any(
-      (clothing) => category!.toLowerCase().contains(clothing.toLowerCase()),
+      (e) => lowerCategory.contains(e.toLowerCase()),
     );
+    final isMobile = mobileKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isLaptop = laptopKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isElectronics = electronicsKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isAccessories = accessoriesKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isHome = homeKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isFurniture = furnnitureKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isBeauty = beautyKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isJewellery = jewelleryKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isBook = booksKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isToy = toyKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isPersonalCare = personalCareKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isStationary = stationaryKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isGrocery = groceryKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isCosmetics = cosmeticsKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isPhotoFrame = photoFrameKeywords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+    final isFootWear = footWearKeyWords.any(
+      (e) => lowerCategory.contains(e.toLowerCase()),
+    );
+
     if (isClothing) {
       return {
         'material': material,
@@ -622,8 +690,7 @@ class ProductModel {
         'agegroup': agegroup,
         'waiststyle': waiststyle,
       };
-    } else if (category!.toLowerCase() == "mobile" ||
-        subcategory!.toLowerCase() == "mobile") {
+    } else if (isMobile) {
       return {
         'model': model,
         'mobilecolor': mobilecolor,
@@ -650,8 +717,7 @@ class ProductModel {
         'producttype': producttype,
         'type': type,
       };
-    } else if (category!.toLowerCase() == "electronics" ||
-        subcategory!.toLowerCase() == "electronics") {
+    } else if (isElectronics) {
       return {
         'resolution': resolution,
         'displaytype': displaytype,
@@ -676,8 +742,7 @@ class ProductModel {
         'highlight': highlight,
         'otherhighlights': otherhighlights,
       };
-    } else if (category!.toLowerCase() == "jewellery" ||
-        subcategory!.toLowerCase() == "jewellery") {
+    } else if (isJewellery) {
       return {
         'jewellerymaterial': jewellerymaterial,
         'purity': purity,
@@ -696,8 +761,7 @@ class ProductModel {
         'pattern': pattern,
         'style': style,
       };
-    } else if (category!.toLowerCase() == "books" ||
-        subcategory!.toLowerCase() == "books") {
+    } else if (isBook) {
       return {
         'title': title,
         'author': author,
@@ -709,8 +773,7 @@ class ProductModel {
         'binding': binding,
         'genre': genre,
       };
-    } else if (category!.toLowerCase() == "home_kitchen" ||
-        subcategory!.toLowerCase() == "home_kitchen") {
+    } else if (isHome) {
       return {
         'vendor': vendor,
         'hsncode': hsncode,
@@ -725,12 +788,7 @@ class ProductModel {
         'mountingtype': mountingtype,
         'type': type,
       };
-    } else if (category!.toLowerCase() == "personalcare" ||
-        category!.toLowerCase() == "beauty" ||
-        category!.toLowerCase() == "beauty&personalcare" ||
-        subcategory!.toLowerCase() == "personalcare" ||
-        subcategory!.toLowerCase() == "beauty" ||
-        subcategory!.toLowerCase() == "beauty&personalcare") {
+    } else if (isBeauty) {
       return {
         'shadecolor': shadecolor,
         'beautytype': beautytype,
@@ -740,8 +798,7 @@ class ProductModel {
         'beautyexpirydate': beautyexpirydate,
         'dermatologicallytested': dermatologicallytested,
       };
-    } else if (category!.toLowerCase() == "furniture" ||
-        subcategory!.toLowerCase() == "furniture") {
+    } else if (isFurniture) {
       return {
         'sizevariants': sizevariants,
         'dimension': dimension,
@@ -750,8 +807,7 @@ class ProductModel {
         'style': style,
         'roomtype': roomtype,
       };
-    } else if (category!.toLowerCase() == "grocery" ||
-        subcategory!.toLowerCase() == "grocery") {
+    } else if (isGrocery) {
       return {
         'weightvolume': weightvolume,
         'quantity': quantity,
@@ -760,8 +816,7 @@ class ProductModel {
         'storageinstruction': storageinstruction,
         'dietarypreference': dietarypreference,
       };
-    } else if (category!.toLowerCase() == "laptop" ||
-        subcategory!.toLowerCase() == "laptop") {
+    } else if (isLaptop) {
       return {
         'graphics': graphics,
         'screensize': screensize,
@@ -777,8 +832,7 @@ class ProductModel {
         'display': display,
         'resolution': resolution,
       };
-    } else if (category!.toLowerCase() == "footwear" ||
-        subcategory!.toLowerCase() == "footwear") {
+    } else if (isFootWear) {
       return {
         'footwearmaterial': footwearmaterial,
         'footweartype': footweartype,
