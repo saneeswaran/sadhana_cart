@@ -74,7 +74,9 @@ class ClothingProductsDetails extends StatelessWidget {
                           (c) => c.productid == product.productid,
                         );
 
-                        await cartNotifier.removeFromCart(cart: cartItem);
+                        await cartNotifier.removeFromCart(
+                          cartId: cartItem.cartId,
+                        );
 
                         if (context.mounted) {
                           showCustomSnackbar(

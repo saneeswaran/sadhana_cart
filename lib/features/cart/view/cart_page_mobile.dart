@@ -1,4 +1,5 @@
-// import statements...
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,42 +31,57 @@ class CartPageMobile extends ConsumerWidget {
 
           return Column(
             children: [
-              SizedBox(
-                height: size.height * 0.55,
-                width: size.width * 1,
+              Expanded(
                 child: ListView.builder(
                   itemCount: cartItems.length,
                   shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
                     final cart = cartItems[index];
 
-                    final cartModel = carts.firstWhere(
-                      (e) => e.productid == cart.productid,
-                      orElse: () {
-                        return CartModel(
-                          cartId: '',
-                          customerId: '',
-                          productid: cart.productid ?? '',
-                          quantity: 0,
-                          size: '',
-                        );
-                      },
-                    );
+                    final firstSizeVariant =
+                        (cart.sizevariants != null &&
+                            cart.sizevariants!.isNotEmpty)
+                        ? cart.sizevariants!.first
+                        : null;
+
+                    // Find the corresponding CartModel from state
+                    CartModel? cartModel;
+                    try {
+                      cartModel = carts.firstWhere(
+                        (e) =>
+                            e.productid == cart.productid &&
+                            (e.size?.toLowerCase() ?? '') ==
+                                (firstSizeVariant?.size.toLowerCase() ?? ''),
+                      );
+                    } catch (_) {
+                      cartModel = null;
+                    }
+
+                    // If cartModel is not found, skip rendering this item
+                    if (cartModel == null || cartModel.cartId.isEmpty) {
+                      log(
+                        "Skipping item: no cartModel found for ${cart.productid}",
+                      );
+                      return const SizedBox.shrink();
+                    }
 
                     final sizes = cartModel.size;
                     final selectedVariant = cart.sizevariants?.firstWhere(
-                      (e) => e.size == cartModel.size,
+                      (e) => e.size == cartModel!.size,
                       orElse: () => SizeVariant(size: '', stock: 0),
                     );
                     final maxStock = selectedVariant?.stock ?? 0;
-
                     final offerPrice = cart.offerprice ?? 0.0;
                     final specificProductPrice =
                         cartModel.quantity * offerPrice;
 
                     return Container(
-                      margin: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
+                      padding: const EdgeInsets.all(10),
                       height: size.height * 0.19,
                       width: size.width,
                       decoration: BoxDecoration(
@@ -81,12 +97,14 @@ class CartPageMobile extends ConsumerWidget {
                       ),
                       child: Row(
                         children: [
+                          // Product Image
                           Container(
                             height: size.height * 0.17,
                             width: size.width * 0.3,
                             decoration: BoxDecoration(
                               image:
-                                  cart.images != null && cart.images!.isNotEmpty
+                                  (cart.images != null &&
+                                      cart.images!.isNotEmpty)
                                   ? DecorationImage(
                                       image: CachedNetworkImageProvider(
                                         cart.images!.first,
@@ -97,16 +115,22 @@ class CartPageMobile extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(12),
                               color: Colors.grey.shade200,
                             ),
-                            child: cart.images == null || cart.images!.isEmpty
-                                ? const Icon(
-                                    Icons.image_not_supported,
-                                    size: 40,
+                            child: (cart.images == null || cart.images!.isEmpty)
+                                ? const Center(
+                                    child: Icon(
+                                      Icons.image_not_supported,
+                                      size: 40,
+                                    ),
                                   )
                                 : null,
                           ),
+
+                          // Product Info
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -119,6 +143,7 @@ class CartPageMobile extends ConsumerWidget {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
+                                  const SizedBox(height: 4),
                                   Text(
                                     "${Constants.indianCurrency} ${specificProductPrice.toStringAsFixed(2)}",
                                     style: const TextStyle(
@@ -127,16 +152,17 @@ class CartPageMobile extends ConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 5),
-                                  cart.sizevariants != null
-                                      ? Text(
-                                          "Size: $sizes",
-                                          style: const TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey,
-                                          ),
-                                        )
-                                      : const SizedBox.shrink(),
+                                  if (sizes?.isNotEmpty ?? false)
+                                    Text(
+                                      "Size: $sizes",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+
                                   const Spacer(),
+
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -150,12 +176,20 @@ class CartPageMobile extends ConsumerWidget {
                                       ),
                                       IconButton(
                                         onPressed: () async {
-                                          final cartNotifier = ref.read(
-                                            cartProvider.notifier,
+                                          log(
+                                            "Pressed delete button for cartId: ${cartModel!.cartId}",
                                           );
-                                          await cartNotifier.removeFromCart(
-                                            cart: cartModel,
-                                          );
+                                          if (cartModel.cartId.isNotEmpty) {
+                                            await ref
+                                                .read(cartProvider.notifier)
+                                                .removeFromCart(
+                                                  cartId: cartModel.cartId,
+                                                );
+                                          } else {
+                                            log(
+                                              "Cannot delete: cartId is empty.",
+                                            );
+                                          }
                                         },
                                         icon: const Icon(Icons.delete),
                                         color: Colors.black,
@@ -172,19 +206,27 @@ class CartPageMobile extends ConsumerWidget {
                   },
                 ),
               ),
-              const Spacer(),
-              Column(
-                children: [
-                  CheckOutDetails(cartItems),
-                  const SizedBox(height: 20),
-                  CustomElevatedButton(
-                    child: const Text(
-                      "Checkout",
-                      style: customElevatedButtonTextStyle,
+
+              // Checkout
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CheckOutDetails(cartItems),
+                    const SizedBox(height: 20),
+                    CustomElevatedButton(
+                      child: const Text(
+                        "Checkout",
+                        style: customElevatedButtonTextStyle,
+                      ),
+                      onPressed: () {},
                     ),
-                    onPressed: () {},
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           );

@@ -41,7 +41,7 @@ class CustomerService {
 
   static Future<bool> createUserProfile({
     required String name,
-    email,
+    required String email,
     required int contactNo,
   }) async {
     try {

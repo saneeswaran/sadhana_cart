@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/brand/brand_model.dart';
-import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/category/category_model.dart';
 import 'package:sadhana_cart/core/common%20model/favorite/favorite_model.dart';
 import 'package:sadhana_cart/core/common%20model/notification/notification_model.dart';
@@ -38,7 +37,6 @@ class MainHelper {
     Hive.registerAdapter<CategoryModel>(CategoryModelAdapter());
     Hive.registerAdapter<SearchFieldModel>(SearchFieldModelAdapter());
     Hive.registerAdapter<SubcategoryModel>(SubcategoryModelAdapter());
-    Hive.registerAdapter<CartModel>(CartModelAdapter());
     Hive.registerAdapter<FavoriteModel>(FavoriteModelAdapter());
     Hive.registerAdapter<BrandModel>(BrandModelAdapter());
     Hive.registerAdapter<NotificationModel>(NotificationModelAdapter());

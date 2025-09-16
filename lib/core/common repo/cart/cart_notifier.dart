@@ -31,14 +31,14 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     }
   }
 
-  Future<void> removeFromCart({required CartModel cart}) async {
-    final bool success = await CartService.deleteCart(cart: cart);
+  Future<void> removeFromCart({required String cartId}) async {
+    final success = await CartService.deleteCart(cartId: cartId);
 
     if (success) {
       final updated = await CartService.fetchCart();
       state = {...updated};
     } else {
-      state = state.where((e) => e.productid != cart.productid).toSet();
+      state = state.where((e) => e.cartId != cartId).toSet();
     }
   }
 
@@ -54,7 +54,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
       final updatedCart = cart.copyWith(quantity: cart.quantity + 1);
       state = {
         for (final c in state)
-          if (c.productid == cart.productid) updatedCart else c,
+          if (c.cartId == cart.cartId) updatedCart else c,
       };
     }
   }
@@ -64,7 +64,7 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
       final updatedCart = cart.copyWith(quantity: cart.quantity - 1);
       state = {
         for (final c in state)
-          if (c.productid == cart.productid) updatedCart else c,
+          if (c.cartId == cart.cartId) updatedCart else c,
       };
     }
   }
@@ -72,22 +72,19 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
   double getCartTotalAmount({required List<ProductModel> products}) {
     double total = 0.0;
 
-    for (var product in products) {
+    for (final product in products) {
       final price = product.offerprice ?? 0.0;
-      final quantity = state
-          .firstWhere(
-            (cart) => cart.productid == product.productid,
-            orElse: () => CartModel(
-              cartId: '',
-              customerId: '',
-              productid: product.productid ?? '',
-              quantity: 0,
-              size: '',
-            ),
-          )
-          .quantity;
 
-      total += price * quantity;
+      final matchingCarts = state.where(
+        (cart) => cart.productid == product.productid,
+      );
+
+      final subtotal = matchingCarts.fold<double>(
+        0.0,
+        (sum, item) => sum + (item.quantity * price),
+      );
+
+      total += subtotal;
     }
 
     return total;

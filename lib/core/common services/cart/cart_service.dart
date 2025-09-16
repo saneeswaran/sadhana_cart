@@ -64,14 +64,6 @@ class CartService {
           .map((e) => CartModel.fromMap(e.data() as Map<String, dynamic>))
           .toSet();
 
-      // sync with Hive
-      // for (final cart in data) {
-      //   await HiveHelper.deleteCart(key: cart.cartId);
-      // }
-      // for (final cart in data) {
-      //   await HiveHelper.addCart(cart: cart);
-      // }
-
       return data;
     } catch (e) {
       log("cart service fetch error: $e");
@@ -79,20 +71,17 @@ class CartService {
     }
   }
 
-  static Future<bool> deleteCart({required CartModel cart}) async {
+  static Future<bool> deleteCart({required String cartId}) async {
     try {
-      final DocumentSnapshot documentSnapshot = await cartRef
-          .doc(cart.cartId)
-          .get();
+      final DocumentSnapshot documentSnapshot = await cartRef.doc(cartId).get();
+      log("Fetched cart document for id: $cartId");
 
       if (documentSnapshot.exists) {
         await documentSnapshot.reference.delete();
-        // await HiveHelper.deleteCart(key: cart.cartId);
-
-        // update state
-        // ref.read(cartProvider.notifier).removeFromCart(cart: cart);
-
+        log("Deleted cart document: $cartId");
         return true;
+      } else {
+        log("Cart document does not exist: $cartId");
       }
     } catch (e) {
       log("cart service delete error: $e");
@@ -113,6 +102,7 @@ class CartService {
           continue;
         }
 
+        final seenProductKeys = <String>{};
         List<ProductModel> products = [];
 
         for (final doc in cartSnapshot.docs) {
@@ -120,6 +110,14 @@ class CartService {
             doc.data() as Map<String, dynamic>,
           );
           final productid = cartItem.productid;
+          final sizeKey = cartItem.size ?? '';
+
+          final uniqueKey = "$productid|$sizeKey";
+
+          if (seenProductKeys.contains(uniqueKey)) {
+            continue; // skip duplicate
+          }
+          seenProductKeys.add(uniqueKey);
 
           final productSnapshot = await productRef
               .where('productid', isEqualTo: productid)

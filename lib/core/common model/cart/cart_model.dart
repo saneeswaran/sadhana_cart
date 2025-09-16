@@ -1,23 +1,15 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'package:hive/hive.dart';
 
-part 'cart_model.g.dart';
-
-@HiveType(typeId: 5)
-class CartModel extends HiveObject {
-  @HiveField(0)
+class CartModel {
   final String cartId;
 
-  @HiveField(1)
   final String customerId;
 
-  @HiveField(2)
   final String productid;
 
-  @HiveField(3)
   int quantity = 1;
 
-  @HiveField(4)
   final String? size;
 
   CartModel({
@@ -74,5 +66,25 @@ class CartModel extends HiveObject {
   @override
   String toString() {
     return 'CartModel(cartId: $cartId, customerId: $customerId, productid: $productid, quantity: $quantity, size: $size)';
+  }
+
+  @override
+  bool operator ==(covariant CartModel other) {
+    if (identical(this, other)) return true;
+
+    return other.cartId == cartId &&
+        other.customerId == customerId &&
+        other.productid == productid &&
+        other.quantity == quantity &&
+        other.size == size;
+  }
+
+  @override
+  int get hashCode {
+    return cartId.hashCode ^
+        customerId.hashCode ^
+        productid.hashCode ^
+        quantity.hashCode ^
+        size.hashCode;
   }
 }
