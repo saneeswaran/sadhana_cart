@@ -8,6 +8,7 @@ import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common%20repo/order/order_notifier.dart';
 import 'package:sadhana_cart/core/enums/order_status_enums.dart';
+import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 
 class OrderService {
   static const String userCollection = 'users';
@@ -172,6 +173,65 @@ class OrderService {
     } catch (e) {
       log("Order Service fetch error: $e");
       return [];
+    }
+  }
+
+  /// Save purchased products under `/users/{uid}/purchasedProducts`
+  static Future<void> savePurchasedProducts({
+    required List<ProductModel> products,
+    required AddressModel address,
+    required String paymentMethod,
+  }) async {
+    try {
+      final userDocRef = FirebaseFirestore.instance
+          .collection(userCollection)
+          .doc(currentUser);
+
+      // Collection to hold purchased products
+      final purchasedRef = userDocRef.collection('orders');
+
+      for (final product in products) {
+        final productId = product.productid ?? '';
+
+        if (productId.isEmpty) {
+          log("Skipping product with empty productId");
+          continue;
+        }
+
+        final productDoc = purchasedRef.doc(productId);
+        final snapshot = await productDoc.get();
+
+        if (snapshot.exists) {
+          // If product already exists, update quantity (increment)
+          final currentData = snapshot.data() as Map<String, dynamic>;
+          final currentQuantity = currentData['quantity'] ?? 0;
+
+          await productDoc.update({
+            'productId': productId,
+            'quantity': currentQuantity + (product.quantity ?? 1),
+            'lastPurchasedAt': FieldValue.serverTimestamp(),
+            'paymentMethod': paymentMethod,
+            'address': address.toMap(), // <-- save latest address used
+          });
+
+          log("Updated purchased product: $productId with new quantity");
+        } else {
+          // If product doesn't exist, create new entry
+          await productDoc.set({
+            ...product.toMap(),
+            'quantity': product.quantity ?? 1,
+            'firstPurchasedAt': FieldValue.serverTimestamp(),
+            'lastPurchasedAt': FieldValue.serverTimestamp(),
+            'paymentMethod': paymentMethod,
+            'address': address.toMap(),
+          });
+
+          log("Added new purchased product: $productId");
+        }
+      }
+    } catch (e, stack) {
+      log("Error saving purchased products: $e");
+      log("Stack: $stack");
     }
   }
 }

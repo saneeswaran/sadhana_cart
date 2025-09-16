@@ -160,7 +160,10 @@ class _ChatSupportPageState extends ConsumerState<ChatSupportPage> {
                   ),
                   IconButton(
                     icon: _isSending
-                        ? const CircularProgressIndicator()
+                        ? const CircularProgressIndicator(
+                            strokeWidth: 4,
+                            color: Colors.blue,
+                          )
                         : const Icon(Icons.send, color: Colors.blue),
                     onPressed: _isSending ? null : _sendMessage,
                   ),

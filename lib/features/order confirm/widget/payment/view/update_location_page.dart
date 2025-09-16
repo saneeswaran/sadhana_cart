@@ -97,14 +97,6 @@ class _UpdateLocationPageState extends ConsumerState<UpdateLocationPage> {
                   child: Column(
                     spacing: 20,
                     children: [
-                      CustomTextFormField(
-                        controller: nameController,
-                        labelText: "Name",
-                        validator: ValidationHelper.validateTextField(
-                          text: "Name",
-                        ),
-                      ),
-
                       // Dropdown for Title
                       DropdownButtonFormField<String>(
                         value: selectedTitle,
@@ -129,6 +121,13 @@ class _UpdateLocationPageState extends ConsumerState<UpdateLocationPage> {
                           }
                           return null;
                         },
+                      ),
+                      CustomTextFormField(
+                        controller: nameController,
+                        labelText: "Name",
+                        validator: ValidationHelper.validateTextField(
+                          text: "Name",
+                        ),
                       ),
 
                       CustomTextFormField(
