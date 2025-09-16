@@ -70,6 +70,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please add an address first.")),
       );
+
       return;
     }
 
@@ -87,17 +88,22 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         );
 
         if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Order placed with COD")));
+        showCustomSnackbar(
+          context: context,
+          message: "Order placed successfully!",
+          type: ToastType.success,
+        );
+
         navigateToReplacement(
           context: context,
           screen: const PaymentSuccessPage(),
         );
       } catch (e) {
         log("COD error: $e");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to place COD order")),
+        showCustomSnackbar(
+          context: context,
+          message: "Order placed successfully!",
+          type: ToastType.error,
         );
       }
     } else if (_selectedMethod == PaymentEnum.online) {
@@ -143,7 +149,17 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? Container(
+                height: MediaQuery.of(context).size.height * 0.07,
+                width: MediaQuery.of(context).size.height * 0.07,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(32),
+                ),
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              )
             : CustomElevatedButton(
                 child: Text(
                   currentStep == 0 ? "Next" : "Confirm Payment",
@@ -242,7 +258,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                             child: CircleAvatar(
                               radius: 15,
                               backgroundColor: currentStep == 0
-                                  ? Colors.blue
+                                  ? Colors.black
                                   : Colors.grey,
                               child: const Text(
                                 "1",
@@ -261,7 +277,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                           CircleAvatar(
                             radius: 15,
                             backgroundColor: currentStep == 1
-                                ? Colors.blue
+                                ? Colors.black
                                 : Colors.grey,
                             child: const Text(
                               "2",
@@ -337,7 +353,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 16),
 
                           // User details
                           Container(
@@ -370,7 +386,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 14),
+                                      const SizedBox(height: 16),
                                       Row(
                                         children: [
                                           Icon(
@@ -425,6 +441,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                                   )
                                 : const Text("No address found"),
                           ),
+                          const SizedBox(height: 14),
                           GestureDetector(
                             onTap: () {
                               navigateTo(
