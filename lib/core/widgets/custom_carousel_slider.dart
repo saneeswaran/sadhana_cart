@@ -97,47 +97,50 @@ class CustomCarouselSlider extends ConsumerWidget {
                     (e) => e.productid == product.productid,
                   );
                   final String? existsFavoriteId = matchedFavorite?.favoriteId;
-
-                  return IconButton(
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: const CircleBorder(),
-                    ),
-                    onPressed: () async {
-                      try {
-                        if (!isFavorite) {
-                          await FavoriteService.addToFavorite(
-                            product: product,
-                            ref: ref,
-                          );
-                          if (context.mounted) {
-                            showCustomSnackbar(
-                              context: context,
-                              message: "Added to favorite",
-                              type: ToastType.success,
+                  final loader = ref.watch(favoriteLoadingProvider);
+                  return AbsorbPointer(
+                    absorbing: loader,
+                    child: IconButton(
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        shape: const CircleBorder(),
+                      ),
+                      onPressed: () async {
+                        try {
+                          if (!isFavorite) {
+                            await FavoriteService.addToFavorite(
+                              product: product,
+                              ref: ref,
                             );
-                          }
-                        } else if (existsFavoriteId != null) {
-                          await FavoriteService.deleteFavorite(
-                            favoriteId: existsFavoriteId,
-                            product: product,
-                            ref: ref,
-                          );
-                          if (context.mounted) {
-                            showCustomSnackbar(
-                              context: context,
-                              message: "Removed from favorite",
-                              type: ToastType.success,
+                            if (context.mounted) {
+                              showCustomSnackbar(
+                                context: context,
+                                message: "Added to favorite",
+                                type: ToastType.success,
+                              );
+                            }
+                          } else if (existsFavoriteId != null) {
+                            await FavoriteService.deleteFavorite(
+                              favoriteId: existsFavoriteId,
+                              product: product,
+                              ref: ref,
                             );
+                            if (context.mounted) {
+                              showCustomSnackbar(
+                                context: context,
+                                message: "Removed from favorite",
+                                type: ToastType.success,
+                              );
+                            }
                           }
+                        } catch (e) {
+                          log("Error toggling favorite: $e");
                         }
-                      } catch (e) {
-                        log("Error toggling favorite: $e");
-                      }
-                    },
-                    icon: Icon(
-                      isFavorite ? Icons.favorite : Icons.favorite_border,
-                      color: isFavorite ? Colors.red : Colors.black,
+                      },
+                      icon: Icon(
+                        isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: isFavorite ? Colors.red : Colors.black,
+                      ),
                     ),
                   );
                 },

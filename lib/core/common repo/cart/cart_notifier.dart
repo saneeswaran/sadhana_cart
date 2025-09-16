@@ -5,6 +5,7 @@ import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_with_product.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20services/cart/cart_service.dart';
+import 'package:sadhana_cart/core/disposable/disposable.dart';
 
 class CartNotifier extends StateNotifier<List<CartWithProduct>> {
   final Ref ref;
@@ -18,16 +19,20 @@ class CartNotifier extends StateNotifier<List<CartWithProduct>> {
   }
 
   Future<void> addToCart({required ProductModel product, String? size}) async {
+    ref.read(cartLoadingProvider.notifier).state = true;
     final bool success = await CartService.addToCart(size, product: product);
     if (success) {
       final carts = await CartService.fetchCartItemsWithProducts();
       state = [...carts];
+      ref.read(cartLoadingProvider.notifier).state = false;
     }
   }
 
   Future<void> removeFromCart({required String cartId}) async {
+    ref.read(cartLoadingProvider.notifier).state = true;
     if (cartId.trim().isEmpty) {
       log("removeFromCart: cartId empty, skipping");
+      ref.read(cartLoadingProvider.notifier).state = false;
       return;
     }
 
@@ -35,8 +40,10 @@ class CartNotifier extends StateNotifier<List<CartWithProduct>> {
     if (success) {
       final updatedCarts = await CartService.fetchCartItemsWithProducts();
       state = [...updatedCarts];
+      ref.read(cartLoadingProvider.notifier).state = false;
     } else {
       state = state.where((c) => c.cart.cartId != cartId).toList();
+      ref.read(cartLoadingProvider.notifier).state = false;
     }
   }
 

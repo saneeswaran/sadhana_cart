@@ -20,6 +20,7 @@ import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_rating_widget.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_tile_dropdown.dart';
+import 'package:sadhana_cart/core/widgets/loader.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_main_page.dart';
 import 'package:sadhana_cart/features/rating/view%20model/rating_notifier.dart';
@@ -50,43 +51,49 @@ class ClothingProductsDetails extends StatelessWidget {
                   final selectedSize = ref.watch(clothingSizeProvider);
                   final selected =
                       product.sizevariants?[selectedSize].size ?? "L";
-                  return CustomElevatedButton(
-                    child: Text(
-                      isAlreadyInCart ? "Remove" : "Add to Cart",
-                      style: customElevatedButtonTextStyle,
+                  final loader = ref.watch(cartLoadingProvider);
+                  return AbsorbPointer(
+                    absorbing: loader,
+                    child: CustomElevatedButton(
+                      child: loader
+                          ? const Loader()
+                          : Text(
+                              isAlreadyInCart ? "Remove" : "Add to Cart",
+                              style: customElevatedButtonTextStyle,
+                            ),
+                      onPressed: () async {
+                        if (!isAlreadyInCart) {
+                          await cartNotifier.addToCart(
+                            product: product,
+                            size: selected,
+                          );
+
+                          if (context.mounted) {
+                            showCustomSnackbar(
+                              context: context,
+                              message: "Added to cart",
+                              type: ToastType.success,
+                            );
+                          }
+                        } else {
+                          final cartItem = cartItems.firstWhere(
+                            (c) => c.cart.productid == product.productid,
+                          );
+
+                          await cartNotifier.removeFromCart(
+                            cartId: cartItem.cart.cartId,
+                          );
+
+                          if (context.mounted) {
+                            showCustomSnackbar(
+                              context: context,
+                              message: "Removed from cart",
+                              type: ToastType.success,
+                            );
+                          }
+                        }
+                      },
                     ),
-                    onPressed: () async {
-                      if (!isAlreadyInCart) {
-                        await cartNotifier.addToCart(
-                          product: product,
-                          size: selected,
-                        );
-
-                        if (context.mounted) {
-                          showCustomSnackbar(
-                            context: context,
-                            message: "Added to cart",
-                            type: ToastType.success,
-                          );
-                        }
-                      } else {
-                        final cartItem = cartItems.firstWhere(
-                          (c) => c.cart.productid == product.productid,
-                        );
-
-                        await cartNotifier.removeFromCart(
-                          cartId: cartItem.cart.cartId,
-                        );
-
-                        if (context.mounted) {
-                          showCustomSnackbar(
-                            context: context,
-                            message: "Removed from cart",
-                            type: ToastType.success,
-                          );
-                        }
-                      }
-                    },
                   );
                 },
               ),
