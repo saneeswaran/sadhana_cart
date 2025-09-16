@@ -58,13 +58,19 @@ class CartPageMobile extends ConsumerWidget {
                     style: customElevatedButtonTextStyle,
                   ),
                   onPressed: () {
-                    // navigateTo(
-                    //   context: context,
-                    //   screen: PaymentMainForListOfProduct(
-                    //     products: product,
-                    //     totalAmount: totalAmount,
-                    //   ),
-                    // );
+                    final notifier = ref.watch(cartProvider.notifier);
+                    final model = ref.watch(cartProvider);
+                    final product = cart.map((e) => e.product).toList();
+                    final carts = model.map((e) => e.cart).toList();
+                    final totalAmount = notifier.getCartTotalAmount();
+                    navigateTo(
+                      context: context,
+                      screen: PaymentMainForListOfProduct(
+                        products: product,
+                        totalAmount: totalAmount,
+                        cart: carts,
+                      ),
+                    );
                   },
                 ),
               ],

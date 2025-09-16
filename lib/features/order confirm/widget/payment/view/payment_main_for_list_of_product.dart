@@ -3,12 +3,15 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
+import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/skeletonizer/address_tile_loader.dart';
 import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
@@ -16,16 +19,19 @@ import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_state.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_success_page.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/update_location_page.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/shipping/widget/saved_address_page.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
+import 'package:sadhana_cart/features/profile/widget/address/widget/user_address_tile.dart';
 
 class PaymentMainForListOfProduct extends ConsumerStatefulWidget {
   final List<ProductModel> products;
+  final List<CartModel> cart;
   final double totalAmount;
   const PaymentMainForListOfProduct({
     super.key,
+    required this.cart,
     required this.products,
     required this.totalAmount,
   });
@@ -139,16 +145,18 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     // Watch address state
     final addressState = ref.watch(addressprovider);
     final AddressModel? address = addressState.addresses.isNotEmpty
-        ? addressState.addresses.last
+        ? addressState.addresses.first
         : null;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Checkout"),
+        title: const Text(
+          "Checkout",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -250,7 +258,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                             child: CircleAvatar(
                               radius: 15,
                               backgroundColor: currentStep == 0
-                                  ? Colors.blue
+                                  ? AppColor.dartPrimaryColor
                                   : Colors.grey,
                               child: const Text(
                                 "1",
@@ -269,7 +277,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                           CircleAvatar(
                             radius: 15,
                             backgroundColor: currentStep == 1
-                                ? Colors.blue
+                                ? AppColor.dartPrimaryColor
                                 : Colors.grey,
                             child: const Text(
                               "2",
@@ -297,160 +305,98 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Product Tile
-                          ListView.builder(
-                            itemBuilder: (context, index) {
-                              final product = widget.products[index];
-                              return Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey.shade300,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 90,
-                                      width: 60,
-                                      color: Colors.grey.shade300,
-                                      child:
-                                          product.images != null &&
-                                              product.images!.isNotEmpty
-                                          ? Image.network(
-                                              product.images![0],
-                                              fit: BoxFit.fitHeight,
-                                            )
-                                          : null,
-                                    ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            product.name ?? "Product Name",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            "₹ ${product.price ?? 0}",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 20),
-
-                          // User details
-                          Container(
-                            width: size.width,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade300),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: addressState.isLoading
-                                ? const Center(
-                                    child: CircularProgressIndicator(),
-                                  )
-                                : address != null
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.person_outlined,
-                                            color: Colors.grey[600],
-                                          ),
-                                          Text(
-                                            " ${address.name}",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 14),
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.phone_outlined,
-                                            color: Colors.grey[600],
-                                          ),
-                                          Text(
-                                            " ${address.phoneNumber}",
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 14),
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.location_city,
-                                            color: Colors.grey[600],
-                                          ),
-                                          Flexible(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  address.title ?? "",
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  "${address.streetName},${address.city},${address.state},${address.pinCode}"
-                                                      .replaceAll(
-                                                        ',',
-                                                        ',\u200B',
-                                                      ),
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                  ),
-                                                  softWrap: true,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: widget.products.length,
+                              physics: const BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                final product = widget.products[index];
+                                final cart = widget.cart[index];
+                                final pricePerItem = product.offerprice ?? 0.0;
+                                final specificProductPrice =
+                                    cart.quantity * pricePerItem;
+                                return Container(
+                                  margin: const EdgeInsets.all(5),
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 2),
                                       ),
                                     ],
-                                  )
-                                : const Text("No address found"),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 90,
+                                        width: 60,
+                                        child:
+                                            product.images != null &&
+                                                product.images!.isNotEmpty
+                                            ? Image.network(
+                                                product.images![0],
+                                                fit: BoxFit.fitHeight,
+                                              )
+                                            : null,
+                                      ),
+                                      const SizedBox(width: 16),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              product.name ?? "Product Name",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              "₹ ${pricePerItem.toStringAsFixed(2)} x ${cart.quantity} = ₹ ${specificProductPrice.toStringAsFixed(2)}",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
                           ),
+                          // User details
+                          addressState.isLoading
+                              ? const AddressTileLoader()
+                              : address != null
+                              ? UserAddressTile(
+                                  address: address,
+                                  margin: const EdgeInsets.symmetric(
+                                    vertical: 2,
+                                    horizontal: 4,
+                                  ),
+                                )
+                              : const Text("No Saved address found"),
+                          const SizedBox(height: 10),
                           GestureDetector(
                             onTap: () {
                               navigateTo(
                                 context: context,
-                                screen: const UpdateLocationPage(),
+                                screen: const SavedAddressPage(),
                               );
                             },
                             child: Container(
                               padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
-                                border: Border.all(color: Colors.grey.shade300),
+                                border: Border.all(color: AppColor.tileColor),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Row(
@@ -463,7 +409,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                                   ),
                                   Icon(
                                     Icons.edit_location_alt_outlined,
-                                    color: Colors.blue,
+                                    color: AppColor.dartPrimaryColor,
                                   ),
                                 ],
                               ),
