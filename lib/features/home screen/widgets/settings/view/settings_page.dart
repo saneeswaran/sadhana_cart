@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/common%20services/chat_support/chat_service.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/settings/view/chat_support_page.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/settings/widgets/notification_page.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/settings/widgets/settings_tile.dart';
@@ -28,22 +29,32 @@ class SettingsPage extends StatelessWidget {
       log("openChatSupport: Chat obtained with ID: $chatId");
 
       // Close loading indicator
-      Navigator.pop(context);
+      if (context.mounted) {
+        navigateBack(context: context);
+      }
       log("openChatSupport: Loading indicator dismissed");
 
       // Navigate to chat page
       log("openChatSupport: Navigating to ChatSupportPage");
-      navigateTo(
-        context: context,
-        screen: ChatSupportPage(chatId: chatId),
-      );
+      if (context.mounted) {
+        navigateTo(
+          context: context,
+          screen: ChatSupportPage(chatId: chatId),
+        );
+      }
       log("openChatSupport: Navigation complete");
     } catch (e, stackTrace) {
-      Navigator.pop(context);
+      if (context.mounted) {
+        navigateBack(context: context);
+      }
       log("openChatSupport: Failed to open chat - $e", stackTrace: stackTrace);
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Failed to open chat: $e")));
+      if (context.mounted) {
+        showCustomSnackbar(
+          context: context,
+          message: e.toString(),
+          type: ToastType.error,
+        );
+      }
     }
 
     log("openChatSupport: End");

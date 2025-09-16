@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:sadhana_cart/core/common%20model/chat/chat_model.dart';
 import 'package:sadhana_cart/core/common%20services/chat_support/chat_notifier.dart';
-import 'package:sadhana_cart/core/common%20services/chat_support/chat_service.dart';
 import 'package:sadhana_cart/core/helper/dat_time_helper.dart';
+import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 
 class ChatSupportPage extends ConsumerStatefulWidget {
   final String chatId;
@@ -50,9 +49,13 @@ class _ChatSupportPageState extends ConsumerState<ChatSupportPage> {
         }
       });
     } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Failed to send message: $e")));
+      if (mounted) {
+        showCustomSnackbar(
+          context: context,
+          message: e.toString(),
+          type: ToastType.error,
+        );
+      }
     } finally {
       setState(() => _isSending = false);
     }

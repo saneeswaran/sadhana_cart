@@ -50,9 +50,8 @@ class ChatService {
         .orderBy('timestamp')
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => Message.fromMap(doc.data() as Map<String, dynamic>))
-              .toList(),
+          (snapshot) =>
+              snapshot.docs.map((doc) => Message.fromMap(doc.data())).toList(),
         );
   }
 }
