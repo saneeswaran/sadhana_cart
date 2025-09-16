@@ -22,12 +22,12 @@ class PaymentController extends StateNotifier<PaymentState> {
     super.dispose();
   }
 
-  void startPayment({required int amount}) {
+  void startPayment({required double amount}) {
     state = state.copyWith(isLoading: true);
     amount = amount * 100;
     var options = {
       'key': 'rzp_test_RCgP4dyI1pibjj',
-      'amount': amount, // in paise
+      'amount': amount,
       'name': 'Sadhana Cart',
       'description': 'Order Payment',
       'prefill': {'contact': '1234567890', 'email': 'abcd@gmail.com'},
@@ -52,7 +52,5 @@ class PaymentController extends StateNotifier<PaymentState> {
     state = state.copyWith(isLoading: false, error: response.message);
   }
 
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    // Optional handling for wallets
-  }
+  void _handleExternalWallet(ExternalWalletResponse response) {}
 }

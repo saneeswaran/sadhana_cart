@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
@@ -20,15 +21,21 @@ import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/paym
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
 
-class PaymentMainPage extends ConsumerStatefulWidget {
-  final ProductModel product;
-  const PaymentMainPage({super.key, required this.product});
+class PaymentMainForListOfProduct extends ConsumerStatefulWidget {
+  final List<ProductModel> products;
+  final double totalAmount;
+  const PaymentMainForListOfProduct({
+    super.key,
+    required this.products,
+    required this.totalAmount,
+  });
 
   @override
-  ConsumerState<PaymentMainPage> createState() => _PaymentMainPageState();
+  ConsumerState<PaymentMainForListOfProduct> createState() =>
+      _PaymentMainPageState();
 }
 
-class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
+class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
   int currentStep = 0;
   String? _selectedMethod;
 
@@ -48,21 +55,24 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
   @override
   void initState() {
     super.initState();
-    // Fetch addresses
     Future.microtask(() {
       ref.read(addressprovider.notifier).updateAddress();
     });
   }
 
   Future<void> _handlePayment() async {
+    final cartNotifier = ref.watch(cartProvider.notifier);
+    final totalAmount = cartNotifier.getCartTotalAmount();
     final addressState = ref.read(addressprovider);
     final AddressModel? address = addressState.addresses.isNotEmpty
         ? addressState.addresses.last
         : null;
 
     if (address == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please add an address first.")),
+      showCustomSnackbar(
+        context: context,
+        message: "Please add an address first.",
+        type: ToastType.info,
       );
       return;
     }
@@ -76,7 +86,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
       // Add order to Firestore
       final success = await OrderService.addOrder(
-        totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
+        totalAmount: totalAmount,
         address:
             "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
         phoneNumber: address.phoneNumber ?? 0,
@@ -84,7 +94,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         longitude: address.longitude,
         orderDate: DateTime.now().toString(),
         quantity: 1,
-        products: [widget.product],
+        products: widget.products,
         createdAt: Timestamp.now(),
         ref: ref,
       );
@@ -123,17 +133,13 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       }
 
       final paymentController = ref.read(paymentProvider.notifier);
-      paymentController.startPayment(
-        amount: (widget.product.offerprice ?? 0).toDouble(),
-      );
+      paymentController.startPayment(amount: totalAmount.toDouble());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final product = widget.product;
-
     // Watch address state
     final addressState = ref.watch(addressprovider);
     final AddressModel? address = addressState.addresses.isNotEmpty
@@ -186,7 +192,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
               if (address != null) {
                 final success = await OrderService.addOrder(
-                  totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
+                  totalAmount: widget.totalAmount,
                   address:
                       "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
                   phoneNumber: address.phoneNumber ?? 0,
@@ -194,15 +200,13 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                   longitude: address.longitude,
                   orderDate: DateTime.now().toString(),
                   quantity: 1,
-                  products: [widget.product],
+                  products: widget.products,
                   createdAt: Timestamp.now(),
                   ref: ref,
                 );
 
                 if (success) {
-                  log(
-                    "Order placed successfully for product: ${widget.product.name}",
-                  );
+                  log("Order placed successfully");
 
                   if (context.mounted) {
                     showCustomSnackbar(
@@ -212,9 +216,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                     );
                   }
                 } else {
-                  log(
-                    "Failed to place order for product: ${widget.product.name}",
-                  );
+                  log("Failed to place order");
                   if (context.mounted) {
                     showCustomSnackbar(
                       context: context,
@@ -295,53 +297,60 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Product Tile
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade300),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  height: 90,
-                                  width: 60,
-                                  color: Colors.grey.shade300,
-                                  child:
-                                      product.images != null &&
-                                          product.images!.isNotEmpty
-                                      ? Image.network(
-                                          product.images![0],
-                                          fit: BoxFit.fitHeight,
-                                        )
-                                      : null,
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        product.name ?? "Product Name",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        "₹ ${product.price ?? 0}",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
+                          ListView.builder(
+                            itemBuilder: (context, index) {
+                              final product = widget.products[index];
+                              return Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.shade300,
                                   ),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
-                              ],
-                            ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      height: 90,
+                                      width: 60,
+                                      color: Colors.grey.shade300,
+                                      child:
+                                          product.images != null &&
+                                              product.images!.isNotEmpty
+                                          ? Image.network(
+                                              product.images![0],
+                                              fit: BoxFit.fitHeight,
+                                            )
+                                          : null,
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            product.name ?? "Product Name",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            "₹ ${product.price ?? 0}",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                           const SizedBox(height: 20),
 
@@ -481,7 +490,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                           PaymentOptionTile(
                             title: "Cash On Delivery",
                             description: "Pay when you receive your product",
-                            price: "₹${product.price ?? 0}",
+                            price: "₹${widget.totalAmount}",
                             selected: _selectedMethod == PaymentEnum.cash.label,
                             onTap: () {
                               setState(() {
@@ -493,7 +502,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                           PaymentOptionTile(
                             title: "Online Payment",
                             description: "Pay now using card or UPI",
-                            price: "₹${product.price ?? 0}",
+                            price: "₹${widget.totalAmount}",
                             selected:
                                 _selectedMethod == PaymentEnum.online.label,
                             onTap: () {

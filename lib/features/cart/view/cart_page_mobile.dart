@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common repo/cart/cart_notifier.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/features/cart/widget/cart_tile.dart';
 import 'package:sadhana_cart/features/cart/widget/check_out_details.dart';
+import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_main_for_list_of_product.dart';
 
 class CartPageMobile extends ConsumerWidget {
   final PreferredSizeWidget? appBar;
@@ -55,7 +57,15 @@ class CartPageMobile extends ConsumerWidget {
                     "Checkout",
                     style: customElevatedButtonTextStyle,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    // navigateTo(
+                    //   context: context,
+                    //   screen: PaymentMainForListOfProduct(
+                    //     products: product,
+                    //     totalAmount: totalAmount,
+                    //   ),
+                    // );
+                  },
                 ),
               ],
             ),
