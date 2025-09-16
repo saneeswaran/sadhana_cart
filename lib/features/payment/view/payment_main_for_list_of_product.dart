@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
@@ -21,6 +20,7 @@ import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_success_page.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/shipping/widget/saved_address_page.dart';
+import 'package:sadhana_cart/features/payment/service/payment_service.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
 import 'package:sadhana_cart/features/profile/widget/address/widget/user_address_tile.dart';
@@ -66,83 +66,6 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
     });
   }
 
-  Future<void> _handlePayment() async {
-    final cartNotifier = ref.watch(cartProvider.notifier);
-    final totalAmount = cartNotifier.getCartTotalAmount();
-    final addressState = ref.read(addressprovider);
-    final AddressModel? address = addressState.addresses.isNotEmpty
-        ? addressState.addresses.last
-        : null;
-
-    if (address == null) {
-      showCustomSnackbar(
-        context: context,
-        message: "Please add an address first.",
-        type: ToastType.info,
-      );
-      return;
-    }
-
-    if (_selectedMethod == PaymentEnum.cash.label) {
-      showCustomSnackbar(
-        context: context,
-        message: "Payment Selected: Cash On Delivery",
-        type: ToastType.info,
-      );
-
-      // Add order to Firestore
-      final success = await OrderService.addOrder(
-        totalAmount: totalAmount,
-        address:
-            "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
-        phoneNumber: address.phoneNumber ?? 0,
-        latitude: address.lattitude,
-        longitude: address.longitude,
-        orderDate: DateTime.now().toString(),
-        quantity: 1,
-        products: widget.products,
-        createdAt: Timestamp.now(),
-        ref: ref,
-      );
-
-      if (success) {
-        log("Order placed successfully (Cash On Delivery)");
-        if (!mounted) return;
-        showCustomSnackbar(
-          context: context,
-          message: "Order placed successfully!",
-          type: ToastType.success,
-        );
-      } else {
-        log(" Failed to place order (Cash On Delivery)");
-        if (!mounted) return;
-        showCustomSnackbar(
-          context: context,
-          message: "Failed to place order",
-          type: ToastType.error,
-        );
-      }
-
-      navigateToReplacement(
-        context: context,
-        screen: const PaymentSuccessPage(),
-      );
-    } else if (_selectedMethod == PaymentEnum.online.label) {
-      final acceptedTerms = ref.read(orderAcceptTerms);
-      if (!acceptedTerms) {
-        showCustomSnackbar(
-          context: context,
-          message: "Please accept Terms & Conditions",
-          type: ToastType.info,
-        );
-        return;
-      }
-
-      final paymentController = ref.read(paymentProvider.notifier);
-      paymentController.startPayment(amount: totalAmount.toDouble());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     // Watch address state
@@ -174,7 +97,13 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
               _goToStep(1);
             } else {
               if (_selectedMethod != null) {
-                _handlePayment();
+                PaymentService.handlePayment(
+                  context: context,
+                  selectedMethod: _selectedMethod!,
+                  products: widget.products,
+                  quantity: 1,
+                  ref: ref,
+                );
               } else {
                 showCustomSnackbar(
                   context: context,

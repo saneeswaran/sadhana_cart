@@ -2,30 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/skeletonizer/cart_loader.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/features/cart/widget/cart_tile.dart';
 import 'package:sadhana_cart/features/cart/widget/check_out_details.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_main_for_list_of_product.dart';
+import 'package:sadhana_cart/features/payment/view/payment_main_for_list_of_product.dart';
 
-class CartPageMobile extends ConsumerWidget {
+class CartPageMobile extends ConsumerStatefulWidget {
   final PreferredSizeWidget? appBar;
   const CartPageMobile({super.key, this.appBar});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<CartPageMobile> createState() => _CartPageMobileState();
+}
+
+class _CartPageMobileState extends ConsumerState<CartPageMobile> {
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(cartProvider.notifier).loadCart();
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
-    if (cart.isEmpty) {
+
+    if (cart.isLoading) {
+      return const CartLoader();
+    }
+
+    if (cart.cart.isEmpty) {
       return const Center(child: Text("Your cart is empty"));
     }
+
     return Scaffold(
-      appBar: appBar,
+      appBar: widget.appBar,
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: cart.length,
+              itemCount: cart.cart.length,
               itemBuilder: (context, index) {
-                final cw = cart[index];
+                final cw = cart.cart[index];
                 final cartItem = cw.cart;
                 final product = cw.product;
 
@@ -50,7 +70,7 @@ class CartPageMobile extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CheckOutDetails(cartItems: cart),
+                CheckOutDetails(cartItems: cart.cart),
                 const SizedBox(height: 20),
                 CustomElevatedButton(
                   child: const Text(
@@ -60,8 +80,8 @@ class CartPageMobile extends ConsumerWidget {
                   onPressed: () {
                     final notifier = ref.watch(cartProvider.notifier);
                     final model = ref.watch(cartProvider);
-                    final product = cart.map((e) => e.product).toList();
-                    final carts = model.map((e) => e.cart).toList();
+                    final product = cart.cart.map((e) => e.product).toList();
+                    final carts = model.cart.map((e) => e.cart).toList();
                     final totalAmount = notifier.getCartTotalAmount();
                     navigateTo(
                       context: context,

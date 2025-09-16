@@ -50,7 +50,7 @@ class AccessoriesScreen extends StatelessWidget {
                 builder: (context, ref, child) {
                   final cartItems = ref.watch(cartProvider);
                   final cartNotifier = ref.read(cartProvider.notifier);
-                  final bool isAlreadyInCart = cartItems.any(
+                  final bool isAlreadyInCart = cartItems.cart.any(
                     (c) => c.cart.productid == product.productid,
                   );
                   final loader = ref.watch(cartLoadingProvider);
@@ -75,7 +75,7 @@ class AccessoriesScreen extends StatelessWidget {
                             );
                           }
                         } else {
-                          final cartItem = cartItems.firstWhere(
+                          final cartItem = cartItems.cart.firstWhere(
                             (c) => c.cart.productid == product.productid,
                           );
 
