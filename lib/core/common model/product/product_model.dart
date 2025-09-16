@@ -45,10 +45,10 @@ class ProductModel {
   final String? careinstruction;
   final List<String>? sizeoptions;
   final String? hsncode;
-  final num? weight;
-  final num? length;
-  final num? width;
-  final num? height;
+  final String? weight;
+  final String? length;
+  final String? width;
+  final String? height;
   final String? fittype;
   final String? gender;
   final String? necktype;
@@ -74,10 +74,10 @@ class ProductModel {
   final String? specialfeatures;
   final String? straptype;
   final String? style;
-  final bool? transparent;
+  final String? transparent;
   final String? type;
   final String? worktype;
-  final bool? blouseavailability;
+  final String? blouseavailability;
   final String? patterncoverage;
   final String? age;
   final String? agegroup;
@@ -111,7 +111,7 @@ class ProductModel {
   // Jewellery
   final String? jewellerymaterial;
   final String? purity;
-  final num? jewelleryweight;
+  final String? jewelleryweight;
   final String? jewellerycolor;
   final String? jewellerysize;
   final String? gemstone;
@@ -139,7 +139,7 @@ class ProductModel {
   final String? skinhairtype;
   final String? beautyweightvolume;
   final String? beautyexpirydate;
-  final bool? dermatologicallytested;
+  final String? dermatologicallytested;
 
   // Furniture
   final String? dimension;
@@ -150,7 +150,7 @@ class ProductModel {
   // Grocery
   final String? weightvolume;
   final String? quantity;
-  final bool? organic;
+  final String? organic;
   final String? expirydate;
   final String? storageinstruction;
   final String? dietarypreference;
