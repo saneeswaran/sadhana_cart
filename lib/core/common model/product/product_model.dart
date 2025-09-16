@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 //please don't think about why this product model have so many things
 //because client not willing to hire people to make changes in excel sheet
 //also baapstore are not willing to create form based on our database structure
@@ -12,6 +13,8 @@
 //we mention datetime, timestamp also string.... because of the bulk upload option.. it don't have any option
 //if any developer see this means please don't curse us...
 import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/helper/avoid_null_values.dart';
@@ -1264,4 +1267,264 @@ class ProductModel {
   //     if (toeshape != null) 'toeshape': toeshape,
   //   };
   // }
+
+  @override
+  bool operator ==(covariant ProductModel other) {
+    if (identical(this, other)) return true;
+
+    return other.productid == productid &&
+        other.name == name &&
+        other.description == description &&
+        other.category == category &&
+        other.subcategory == subcategory &&
+        other.basesku == basesku &&
+        other.brand == brand &&
+        other.price == price &&
+        other.offerprice == offerprice &&
+        other.stock == stock &&
+        listEquals(other.images, images) &&
+        other.sellerid == sellerid &&
+        listEquals(other.sizevariants, sizevariants) &&
+        other.timestamp == timestamp &&
+        other.date == date &&
+        other.material == material &&
+        other.fit == fit &&
+        other.pattern == pattern &&
+        other.sleevetype == sleevetype &&
+        other.careinstruction == careinstruction &&
+        listEquals(other.sizeoptions, sizeoptions) &&
+        other.hsncode == hsncode &&
+        other.weight == weight &&
+        other.length == length &&
+        other.width == width &&
+        other.height == height &&
+        other.fittype == fittype &&
+        other.gender == gender &&
+        other.necktype == necktype &&
+        other.occasion == occasion &&
+        other.stitchtype == stitchtype &&
+        other.vendor == vendor &&
+        other.variantsku == variantsku &&
+        other.closuretype == closuretype &&
+        other.embroiderystyle == embroiderystyle &&
+        other.lining == lining &&
+        other.model == model &&
+        other.neckstyle == neckstyle &&
+        other.padtype == padtype &&
+        other.pockets == pockets &&
+        other.printtype == printtype &&
+        other.productlength == productlength &&
+        other.producttype == producttype &&
+        other.risestyle == risestyle &&
+        other.sidetype == sidetype &&
+        other.sleeve == sleeve &&
+        other.sleevestyle == sleevestyle &&
+        other.slittype == slittype &&
+        other.specialfeatures == specialfeatures &&
+        other.straptype == straptype &&
+        other.style == style &&
+        other.transparent == transparent &&
+        other.type == type &&
+        other.worktype == worktype &&
+        other.blouseavailability == blouseavailability &&
+        other.patterncoverage == patterncoverage &&
+        other.age == age &&
+        other.agegroup == agegroup &&
+        other.waiststyle == waiststyle &&
+        other.mobilecolor == mobilecolor &&
+        other.ram == ram &&
+        other.storage == storage &&
+        other.battery == battery &&
+        other.camera == camera &&
+        other.processor == processor &&
+        other.display == display &&
+        other.os == os &&
+        other.connectivity == connectivity &&
+        other.warranty == warranty &&
+        other.color == color &&
+        other.designoptions == designoptions &&
+        other.resolution == resolution &&
+        other.displaytype == displaytype &&
+        other.smartfeatures == smartfeatures &&
+        other.energyrating == energyrating &&
+        other.powerconsumption == powerconsumption &&
+        other.expdate == expdate &&
+        other.mfgdate == mfgdate &&
+        other.highlight == highlight &&
+        other.otherhighlights == otherhighlights &&
+        other.jewellerymaterial == jewellerymaterial &&
+        other.purity == purity &&
+        other.jewelleryweight == jewelleryweight &&
+        other.jewellerycolor == jewellerycolor &&
+        other.jewellerysize == jewellerysize &&
+        other.gemstone == gemstone &&
+        other.certification == certification &&
+        other.title == title &&
+        other.author == author &&
+        other.publisher == publisher &&
+        other.edition == edition &&
+        other.language == language &&
+        other.isbn == isbn &&
+        other.pages == pages &&
+        other.binding == binding &&
+        other.genre == genre &&
+        other.framematerial == framematerial &&
+        other.mountingtype == mountingtype &&
+        other.shadecolor == shadecolor &&
+        other.beautytype == beautytype &&
+        listEquals(other.ingredients, ingredients) &&
+        other.skinhairtype == skinhairtype &&
+        other.beautyweightvolume == beautyweightvolume &&
+        other.beautyexpirydate == beautyexpirydate &&
+        other.dermatologicallytested == dermatologicallytested &&
+        other.dimension == dimension &&
+        other.weightcapacity == weightcapacity &&
+        other.assembly == assembly &&
+        other.roomtype == roomtype &&
+        other.weightvolume == weightvolume &&
+        other.quantity == quantity &&
+        other.organic == organic &&
+        other.expirydate == expirydate &&
+        other.storageinstruction == storageinstruction &&
+        other.dietarypreference == dietarypreference &&
+        other.graphics == graphics &&
+        other.screensize == screensize &&
+        other.operatingsystem == operatingsystem &&
+        other.port == port &&
+        other.footwearmaterial == footwearmaterial &&
+        other.footweartype == footweartype &&
+        other.shoesize == shoesize &&
+        other.heelheight == heelheight &&
+        other.solematerial == solematerial &&
+        other.toeshape == toeshape;
+  }
+
+  @override
+  int get hashCode {
+    return productid.hashCode ^
+        name.hashCode ^
+        description.hashCode ^
+        category.hashCode ^
+        subcategory.hashCode ^
+        basesku.hashCode ^
+        brand.hashCode ^
+        price.hashCode ^
+        offerprice.hashCode ^
+        stock.hashCode ^
+        images.hashCode ^
+        sellerid.hashCode ^
+        sizevariants.hashCode ^
+        timestamp.hashCode ^
+        date.hashCode ^
+        material.hashCode ^
+        fit.hashCode ^
+        pattern.hashCode ^
+        sleevetype.hashCode ^
+        careinstruction.hashCode ^
+        sizeoptions.hashCode ^
+        hsncode.hashCode ^
+        weight.hashCode ^
+        length.hashCode ^
+        width.hashCode ^
+        height.hashCode ^
+        fittype.hashCode ^
+        gender.hashCode ^
+        necktype.hashCode ^
+        occasion.hashCode ^
+        stitchtype.hashCode ^
+        vendor.hashCode ^
+        variantsku.hashCode ^
+        closuretype.hashCode ^
+        embroiderystyle.hashCode ^
+        lining.hashCode ^
+        model.hashCode ^
+        neckstyle.hashCode ^
+        padtype.hashCode ^
+        pockets.hashCode ^
+        printtype.hashCode ^
+        productlength.hashCode ^
+        producttype.hashCode ^
+        risestyle.hashCode ^
+        sidetype.hashCode ^
+        sleeve.hashCode ^
+        sleevestyle.hashCode ^
+        slittype.hashCode ^
+        specialfeatures.hashCode ^
+        straptype.hashCode ^
+        style.hashCode ^
+        transparent.hashCode ^
+        type.hashCode ^
+        worktype.hashCode ^
+        blouseavailability.hashCode ^
+        patterncoverage.hashCode ^
+        age.hashCode ^
+        agegroup.hashCode ^
+        waiststyle.hashCode ^
+        mobilecolor.hashCode ^
+        ram.hashCode ^
+        storage.hashCode ^
+        battery.hashCode ^
+        camera.hashCode ^
+        processor.hashCode ^
+        display.hashCode ^
+        os.hashCode ^
+        connectivity.hashCode ^
+        warranty.hashCode ^
+        color.hashCode ^
+        designoptions.hashCode ^
+        resolution.hashCode ^
+        displaytype.hashCode ^
+        smartfeatures.hashCode ^
+        energyrating.hashCode ^
+        powerconsumption.hashCode ^
+        expdate.hashCode ^
+        mfgdate.hashCode ^
+        highlight.hashCode ^
+        otherhighlights.hashCode ^
+        jewellerymaterial.hashCode ^
+        purity.hashCode ^
+        jewelleryweight.hashCode ^
+        jewellerycolor.hashCode ^
+        jewellerysize.hashCode ^
+        gemstone.hashCode ^
+        certification.hashCode ^
+        title.hashCode ^
+        author.hashCode ^
+        publisher.hashCode ^
+        edition.hashCode ^
+        language.hashCode ^
+        isbn.hashCode ^
+        pages.hashCode ^
+        binding.hashCode ^
+        genre.hashCode ^
+        framematerial.hashCode ^
+        mountingtype.hashCode ^
+        shadecolor.hashCode ^
+        beautytype.hashCode ^
+        ingredients.hashCode ^
+        skinhairtype.hashCode ^
+        beautyweightvolume.hashCode ^
+        beautyexpirydate.hashCode ^
+        dermatologicallytested.hashCode ^
+        dimension.hashCode ^
+        weightcapacity.hashCode ^
+        assembly.hashCode ^
+        roomtype.hashCode ^
+        weightvolume.hashCode ^
+        quantity.hashCode ^
+        organic.hashCode ^
+        expirydate.hashCode ^
+        storageinstruction.hashCode ^
+        dietarypreference.hashCode ^
+        graphics.hashCode ^
+        screensize.hashCode ^
+        operatingsystem.hashCode ^
+        port.hashCode ^
+        footwearmaterial.hashCode ^
+        footweartype.hashCode ^
+        shoesize.hashCode ^
+        heelheight.hashCode ^
+        solematerial.hashCode ^
+        toeshape.hashCode;
+  }
 }

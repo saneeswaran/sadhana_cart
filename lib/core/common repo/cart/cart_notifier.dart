@@ -6,23 +6,22 @@ import 'package:sadhana_cart/core/common%20model/cart/cart_with_product.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20services/cart/cart_service.dart';
 
-class CartNotifier extends StateNotifier<Set<CartWithProduct>> {
+class CartNotifier extends StateNotifier<List<CartWithProduct>> {
   final Ref ref;
-  CartNotifier(this.ref) : super({}) {
+  CartNotifier(this.ref) : super([]) {
     _loadCart();
   }
 
   Future<void> _loadCart() async {
     final carts = await CartService.fetchCartItemsWithProducts();
-    state = {...carts};
+    state = [...carts];
   }
 
   Future<void> addToCart({required ProductModel product, String? size}) async {
     final bool success = await CartService.addToCart(size, product: product);
     if (success) {
       final carts = await CartService.fetchCartItemsWithProducts();
-      state = {...carts};
-      ref.invalidate(cartItemsWithProductProvider);
+      state = [...carts];
     }
   }
 
@@ -35,52 +34,46 @@ class CartNotifier extends StateNotifier<Set<CartWithProduct>> {
     final bool success = await CartService.deleteCart(cartId: cartId);
     if (success) {
       final updatedCarts = await CartService.fetchCartItemsWithProducts();
-      state = {...updatedCarts};
-      ref.invalidate(cartItemsWithProductProvider);
+      state = [...updatedCarts];
     } else {
-      state = state.where((c) => c.cart.cartId != cartId).toSet();
-      ref.invalidate(cartItemsWithProductProvider);
+      state = state.where((c) => c.cart.cartId != cartId).toList();
     }
   }
 
   void increaseQuantity({required CartModel cart}) {
-    final cartWithProduct = state.firstWhere(
-      (c) => c.cart.cartId == cart.cartId,
-      orElse: () => throw Exception("Cart item not found"),
-    );
+    final index = state.indexWhere((c) => c.cart.cartId == cart.cartId);
+    if (index == -1) return;
 
-    final maxStock = cartWithProduct.product.stock ?? 0;
+    final current = state[index];
+    final maxStock = current.product.stock ?? 0;
 
     if (cart.quantity < maxStock) {
       final updatedCart = cart.copyWith(quantity: cart.quantity + 1);
+      log(updatedCart.toString());
+      final updatedItem = CartWithProduct(
+        cart: updatedCart,
+        product: current.product,
+      );
 
-      state = {
-        for (final c in state)
-          if (c.cart.cartId == cart.cartId)
-            CartWithProduct(cart: updatedCart, product: cartWithProduct.product)
-          else
-            c,
-      };
+      final updatedState = [...state];
+      updatedState[index] = updatedItem;
+      state = updatedState;
     }
   }
 
   void decreaseQuantity({required CartModel cart}) {
-    if (cart.quantity > 1) {
-      final cartWithProduct = state.firstWhere(
-        (c) => c.cart.cartId == cart.cartId,
-        orElse: () => throw Exception("Cart item not found"),
-      );
+    final index = state.indexWhere((c) => c.cart.cartId == cart.cartId);
+    if (index == -1 || cart.quantity <= 1) return;
+    final current = state[index];
+    final updatedCart = cart.copyWith(quantity: cart.quantity - 1);
+    final updatedItem = CartWithProduct(
+      cart: updatedCart,
+      product: current.product,
+    );
 
-      final updatedCart = cart.copyWith(quantity: cart.quantity - 1);
-
-      state = {
-        for (final c in state)
-          if (c.cart.cartId == cart.cartId)
-            CartWithProduct(cart: updatedCart, product: cartWithProduct.product)
-          else
-            c,
-      };
-    }
+    final updatedState = [...state];
+    updatedState[index] = updatedItem;
+    state = updatedState;
   }
 
   double getCartTotalAmount() {
@@ -95,14 +88,8 @@ class CartNotifier extends StateNotifier<Set<CartWithProduct>> {
   }
 }
 
-final cartProvider = StateNotifierProvider<CartNotifier, Set<CartWithProduct>>((
-  ref,
-) {
-  return CartNotifier(ref);
-});
-
-final cartItemsWithProductProvider = FutureProvider<List<CartWithProduct>>((
-  ref,
-) async {
-  return await CartService.fetchCartItemsWithProducts();
-});
+final cartProvider = StateNotifierProvider<CartNotifier, List<CartWithProduct>>(
+  (ref) {
+    return CartNotifier(ref).._loadCart();
+  },
+);
