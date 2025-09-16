@@ -44,7 +44,7 @@ class ClothingProductsDetails extends StatelessWidget {
                   final cartItems = ref.watch(cartProvider);
                   final cartNotifier = ref.read(cartProvider.notifier);
                   final bool isAlreadyInCart = cartItems.any(
-                    (c) => c.productid == product.productid,
+                    (c) => c.cart.productid == product.productid,
                   );
 
                   final selectedSize = ref.watch(clothingSizeProvider);
@@ -71,11 +71,11 @@ class ClothingProductsDetails extends StatelessWidget {
                         }
                       } else {
                         final cartItem = cartItems.firstWhere(
-                          (c) => c.productid == product.productid,
+                          (c) => c.cart.productid == product.productid,
                         );
 
                         await cartNotifier.removeFromCart(
-                          cartId: cartItem.cartId,
+                          cartId: cartItem.cart.cartId,
                         );
 
                         if (context.mounted) {

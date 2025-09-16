@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
+import 'package:sadhana_cart/core/common%20model/cart/cart_with_product.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 
 class CheckOutDetails extends ConsumerWidget {
-  final List<ProductModel> products;
-  const CheckOutDetails(this.products, {super.key});
+  final List<CartWithProduct> cartItems;
+
+  const CheckOutDetails({super.key, required this.cartItems});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final totalAmount = ref
-        .watch(cartProvider.notifier)
-        .getCartTotalAmount(products: products);
+    final totalAmount = cartItems.fold<double>(
+      0.0,
+      (sum, item) =>
+          sum + ((item.product.offerprice ?? 0.0) * item.cart.quantity),
+    );
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -33,7 +35,7 @@ class CheckOutDetails extends ConsumerWidget {
 
           _customRowText(
             title: "Shipping",
-            value: "Freeship",
+            value: "Free",
             valueColor: Colors.black,
           ),
           const SizedBox(height: 8),

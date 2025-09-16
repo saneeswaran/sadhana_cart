@@ -3,27 +3,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/skeletonizer/cart_loader.dart';
 import 'package:sadhana_cart/core/widgets/loader.dart';
 
-class CartItemTile extends ConsumerWidget {
+class CartItemTile extends ConsumerStatefulWidget {
   const CartItemTile({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cartProducts = ref.watch(getCurrentUserCartProducts);
+  ConsumerState<CartItemTile> createState() => _CartItemTileState();
+}
+
+class _CartItemTileState extends ConsumerState<CartItemTile> {
+  @override
+  void initState() {
+    Future.microtask(() {});
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cartProducts = ref.watch(cartItemsWithProductProvider);
     final Size size = MediaQuery.of(context).size;
+
+    if (cartProducts.isLoading) {
+      return const CartLoader();
+    }
+
+    if (cartProducts.hasError) {
+      return Center(child: Text(cartProducts.error.toString()));
+    }
     return cartProducts.when(
-      data: (cart) {
+      data: (carts) {
+        if (carts.isEmpty) {
+          return const Center(child: Text("Your cart is empty"));
+        }
         return SizedBox(
           height: size.height * 0.5,
           width: size.width * 1,
           child: ListView.builder(
-            itemCount: cart.length,
+            itemCount: carts.length,
             shrinkWrap: true,
             physics: const ClampingScrollPhysics(),
             itemBuilder: (context, index) {
-              final car = cart[index];
-              final variant = car.sizevariants?[index];
+              final product = carts[index].product;
+              final variant = product.sizevariants?[index];
               //outside container
               return Container(
                 margin: const EdgeInsets.all(10),
@@ -48,7 +71,7 @@ class CartItemTile extends ConsumerWidget {
                       width: size.width * 0.3,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: CachedNetworkImageProvider(car.images![0]),
+                          image: CachedNetworkImageProvider(product.images![0]),
                           fit: BoxFit.cover,
                         ),
                         borderRadius: BorderRadius.circular(12),
@@ -61,7 +84,7 @@ class CartItemTile extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            car.name!,
+                            product.name!,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -71,7 +94,7 @@ class CartItemTile extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            "${Constants.indianCurrency} ${car.offerprice}",
+                            "${Constants.indianCurrency} ${product.offerprice}",
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
