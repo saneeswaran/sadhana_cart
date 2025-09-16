@@ -42,7 +42,7 @@ class GoogleLoginService {
       final user = userCred.user;
       await CustomerService.createUserProfile(
         name: user!.displayName!,
-        email: user.email!,
+        email: user.email ?? "",
         contactNo: int.parse(user.phoneNumber ?? '0'),
       );
       log('Google Sign-In successful for ${user.email}');

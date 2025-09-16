@@ -45,8 +45,13 @@ class CustomerService {
     required int contactNo,
   }) async {
     try {
-      final String referralCode =
-          "${name.substring(0, 6).toUpperCase()} ${contactNo.toString().substring(0, 4)}";
+      final String safeName = name.length >= 6 ? name.substring(0, 6) : name;
+      final String safeContact = contactNo.toString().length >= 4
+          ? contactNo.toString().substring(0, 4)
+          : contactNo.toString();
+
+      final String referralCode = "${safeName.toUpperCase()}$safeContact";
+
       final CustomerModel customerModel = CustomerModel(
         customerId: customerId,
         name: name,
@@ -55,6 +60,7 @@ class CustomerService {
         referralCode: referralCode,
         referredBy: null,
       );
+
       await customerRef.doc(customerId).set(customerModel.toMap());
       return true;
     } catch (e) {
@@ -151,21 +157,15 @@ class CustomerService {
   static Future<CustomerModel?> getCurrentUserProfile() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) throw Exception("User not logged in");
+      if (user == null) return null;
 
-      final querySnapshot = await customerRef
-          .where("id", isEqualTo: user.uid)
-          .get();
+      final doc = await customerRef.doc(user.uid).get();
+      if (!doc.exists) return null;
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
-        return CustomerModel.fromMap(data);
-      }
-
-      return null;
+      return CustomerModel.fromMap(doc.data() as Map<String, dynamic>);
     } catch (e) {
       log('Error fetching user profile: $e');
       return null;
-    } finally {}
+    }
   }
 }
