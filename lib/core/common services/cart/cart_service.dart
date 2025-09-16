@@ -16,9 +16,9 @@ class CartService {
   static final CollectionReference productRef = FirebaseFirestore.instance
       .collection("products");
 
-  static Future<bool> addToCart({
+  static Future<bool> addToCart(
+    String? size, {
     required ProductModel product,
-    required String size,
   }) async {
     try {
       final query = await cartRef
@@ -48,7 +48,6 @@ class CartService {
         );
 
         await cartRef.doc(docRef.id).set(cartModel.toMap());
-        // await HiveHelper.addCart(cart: cartModel);
       }
       return true;
     } catch (e) {

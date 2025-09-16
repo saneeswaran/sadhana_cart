@@ -22,14 +22,8 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
     }
   }
 
-  Future<void> addToCart({
-    required ProductModel product,
-    required String size,
-  }) async {
-    final bool success = await CartService.addToCart(
-      product: product,
-      size: size,
-    );
+  Future<void> addToCart({required ProductModel product, String? size}) async {
+    final bool success = await CartService.addToCart(product: product, size);
 
     if (success) {
       final updated = await CartService.fetchCart();
@@ -78,15 +72,24 @@ class CartNotifier extends StateNotifier<Set<CartModel>> {
   double getCartTotalAmount({required List<ProductModel> products}) {
     double total = 0.0;
 
-    for (final cart in state) {
-      final cartProduct = products.firstWhere(
-        (product) => product.productid == cart.productid,
-      );
-      final product = cartProduct;
+    for (var product in products) {
       final price = product.offerprice ?? 0.0;
-      final qty = cart.quantity;
-      total += price * qty;
+      final quantity = state
+          .firstWhere(
+            (cart) => cart.productid == product.productid,
+            orElse: () => CartModel(
+              cartId: '',
+              customerId: '',
+              productid: product.productid ?? '',
+              quantity: 0,
+              size: '',
+            ),
+          )
+          .quantity;
+
+      total += price * quantity;
     }
+
     return total;
   }
 }
