@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common repo/cart/cart_notifier.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/skeletonizer/cart_loader.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
@@ -49,7 +50,9 @@ class _CartPageMobileState extends ConsumerState<CartPageMobile> {
                 final cartItem = cw.cart;
                 final product = cw.product;
 
-                final selectedSize = cartItem.sizeVariant?.size ?? "";
+                final selectedSize =
+                    cartItem.sizeVariant ??
+                    SizeVariant(size: "", color: "", stock: 0);
                 final offerPrice = product.offerprice ?? 0.0;
                 final quantity = cartItem.quantity;
                 final priceForItem = offerPrice * quantity;

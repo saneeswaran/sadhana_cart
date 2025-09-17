@@ -126,8 +126,9 @@ class OrderService {
       // Transaction: update stock & save order
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final currentTotalStock = data.stock ?? 0;
-        if (currentTotalStock < quantity)
+        if (currentTotalStock < quantity) {
           throw Exception("Insufficient total stock");
+        }
         transaction.update(productRefDoc, {
           'stock': currentTotalStock - quantity,
         });
@@ -136,8 +137,9 @@ class OrderService {
           if (variant.size == selectedVariant!.size &&
               (variant.color ?? '') == (selectedVariant.color ?? '')) {
             final newStock = (variant.stock) - quantity;
-            if (newStock < 0)
+            if (newStock < 0) {
               throw Exception("Insufficient stock for selected size");
+            }
             return {
               'size': variant.size,
               'color': variant.color,
@@ -178,9 +180,11 @@ class OrderService {
 
       if (querySnapshot.docs.isNotEmpty) {
         log("Found ${querySnapshot.docs.length} orders for user: $currentUser");
-        return querySnapshot.docs
+        final data = querySnapshot.docs
             .map((e) => OrderModel.fromMap(e.data() as Map<String, dynamic>))
             .toList();
+        log("order data : $data");
+        return data;
       } else {
         log("No orders found for user: $currentUser");
         return [];
@@ -191,7 +195,6 @@ class OrderService {
     }
   }
 
-  /// Save purchased products under `/users/{uid}/purchasedProducts`
   static Future<void> savePurchasedProducts({
     required List<ProductModel> products,
     required AddressModel address,

@@ -284,55 +284,71 @@ class ProductService {
   static Future<bool> decreaseStockForProducts(
     List<OrderProductModel> orderedProducts,
   ) async {
-    for (final orderProduct in orderedProducts) {
-      final product = productRef.doc(orderProduct.productid);
+    try {
+      WriteBatch batch = FirebaseFirestore.instance.batch();
 
-      try {
-        final snapshot = await product.get();
+      for (final orderProduct in orderedProducts) {
+        final productQuerySnapshot = await productRef
+            .where('productid', isEqualTo: orderProduct.productid)
+            .limit(1)
+            .get();
 
-        if (!snapshot.exists) {
+        if (productQuerySnapshot.docs.isEmpty) {
           log("Product not found: ${orderProduct.productid}");
           continue;
         }
 
-        final productData = snapshot.data() as Map<String, dynamic>;
-        final currentStock = productData['stock'] ?? 0;
+        final productDoc = productQuerySnapshot.docs.first;
+        final productData = ProductModel.fromMap(
+          productDoc.data() as Map<String, dynamic>,
+        );
 
-        final newStock = currentStock - orderProduct.quantity;
-        final updatedSizeVariants =
-            (productData['sizevariants'] as List<dynamic>).map((variant) {
-              final sizeVariant = SizeVariant.fromMap(variant);
+        final currentStock = productData.stock ?? 0;
+        final newStock = currentStock - orderProduct.quantity!;
 
-              final match = orderProduct.sizevariants?.firstWhere(
-                (v) => v.size == sizeVariant.size,
-                orElse: () =>
-                    SizeVariant(size: "", stock: 0, color: '', skuSuffix: ''),
-              );
+        if (newStock < 0) {
+          log("Not enough stock for ${orderProduct.name}");
+          continue;
+        }
 
-              if (match?.size.isNotEmpty ?? false) {
-                final updatedStock = (sizeVariant.stock - match!.stock).clamp(
-                  0,
-                  sizeVariant.stock,
-                );
-                return {'size': sizeVariant.size, 'stock': updatedStock};
-              }
+        // 🔧 Correctly update size variants and convert to Map
+        final updatedSizeVariants = productData.sizevariants!.map((variant) {
+          final match = orderProduct.sizevariants?.firstWhere(
+            (v) => v.size == variant.size,
+            orElse: () =>
+                SizeVariant(size: "", stock: 0, color: '', skuSuffix: ''),
+          );
 
-              return variant;
-            }).toList();
+          if (match?.size.isNotEmpty ?? false) {
+            final updatedStock = (variant.stock - match!.stock).clamp(
+              0,
+              variant.stock,
+            );
+            return SizeVariant(
+              size: variant.size,
+              stock: updatedStock,
+              color: variant.color,
+              skuSuffix: variant.skuSuffix,
+            ).toMap();
+          }
 
-        await product.update({
-          'stock': newStock.clamp(0, currentStock),
+          return variant.toMap();
+        }).toList();
+
+        batch.update(productDoc.reference, {
+          'stock': newStock,
           'sizevariants': updatedSizeVariants,
         });
 
         log("Stock updated for ${orderProduct.name}");
-        return true;
-      } catch (e, st) {
-        log("Error updating stock for ${orderProduct.name}: $e");
-        log(st.toString());
-        return false;
       }
+
+      await batch.commit();
+      return true;
+    } catch (e, st) {
+      log("Error updating stock: $e");
+      log(st.toString());
+      return false;
     }
-    return false;
   }
 }

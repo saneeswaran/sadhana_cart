@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
-import 'package:sadhana_cart/core/constants/app_images.dart';
+import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
+import 'package:sadhana_cart/core/enums/order_status_enums.dart';
 import 'package:sadhana_cart/features/order/widgets/my%20orders/widget/ordered_product_tile.dart';
 
 class OrderDetailsPage extends StatelessWidget {
-  const OrderDetailsPage({super.key});
+  final OrderModel order;
+  const OrderDetailsPage({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final orderStatus = order.orderStatus;
+    final image = OrderStatusEnums.values
+        .firstWhere((e) => e.label == orderStatus)
+        .image;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -50,10 +56,7 @@ class OrderDetailsPage extends StatelessWidget {
                     SizedBox(
                       height: size.height * 0.1,
                       width: size.width * 0.3,
-                      child: Image.asset(
-                        AppImages.orderDeliveredWhite,
-                        fit: BoxFit.contain,
-                      ),
+                      child: Image.asset(image, fit: BoxFit.contain),
                     ),
                   ],
                 ),
@@ -61,7 +64,7 @@ class OrderDetailsPage extends StatelessWidget {
               const SizedBox(height: 20),
               //basic details
               Container(
-                height: size.height * 0.2,
+                height: size.height * 0.3,
                 width: size.width * 1,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -83,7 +86,7 @@ class OrderDetailsPage extends StatelessWidget {
                       _customText(
                         title: "Order Number",
                         titleColor: AppColor.orderStatusColor,
-                        value: "1234567890",
+                        value: "${order.orderId}",
                         valueColor: Colors.black,
                       ),
                       _customText(
@@ -95,8 +98,9 @@ class OrderDetailsPage extends StatelessWidget {
                       _customText(
                         title: "Delivery Address: ",
                         titleColor: AppColor.orderStatusColor,
-                        value: "Pune, Maharashtra,",
+                        value: order.address,
                         valueColor: Colors.black,
+                        maxLines: 3,
                       ),
                     ],
                   ),
@@ -119,28 +123,31 @@ class OrderDetailsPage extends StatelessWidget {
     required String value,
     Color? valueColor = const Color(0xff777E90),
     FontWeight? valueFontWeight = FontWeight.normal,
+    int? maxLines = 1,
   }) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: titleColor,
             fontSize: fontSize,
             fontWeight: titleFontWeight,
           ),
         ),
-        Text(
-          value,
-          maxLines: 1,
-          overflow: TextOverflow.clip,
-          style: TextStyle(
-            color: valueColor,
-            fontSize: 16,
-            fontWeight: valueFontWeight,
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: maxLines,
+            overflow: TextOverflow.ellipsis,
+            softWrap: true,
+            style: TextStyle(
+              color: valueColor,
+              fontSize: 16,
+              fontWeight: valueFontWeight,
+            ),
           ),
         ),
       ],

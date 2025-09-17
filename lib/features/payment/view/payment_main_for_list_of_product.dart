@@ -176,7 +176,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
         if (context.mounted) {
           showCustomSnackbar(
             context: context,
-            message: "Order placed and stock updated",
+            message: "Order placed Successfully",
             type: ToastType.success,
           );
           navigateToReplacement(

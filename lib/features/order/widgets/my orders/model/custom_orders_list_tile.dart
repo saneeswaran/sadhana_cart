@@ -5,6 +5,7 @@ import 'package:sadhana_cart/core/constants/constants.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/custom_outline_button.dart';
 import 'package:sadhana_cart/features/order/widgets/my%20orders/view/order_details_page.dart';
+import 'package:sadhana_cart/features/order/widgets/my%20orders/widget/order_details_loader.dart';
 
 class CustomOrdersListTile extends ConsumerStatefulWidget {
   const CustomOrdersListTile({super.key});
@@ -25,31 +26,33 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
 
   @override
   Widget build(BuildContext context) {
-    // final orders = ref.watch(orderProvider);
-    // if (orders.loading) {
-    //   return const OrderDetailsLoader();
-    // }
+    final orders = ref.watch(orderProvider);
+    if (orders.isLoading) {
+      return const OrderDetailsLoader();
+    }
 
-    // if (orders.orders.isEmpty) {
-    //   return const Scaffold(
-    //     body: Center(
-    //       child: Text(
-    //         "No orders found",
-    //         style: TextStyle(
-    //           color: Colors.black,
-    //           fontSize: 16,
-    //           fontWeight: FontWeight.bold,
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
+    if (orders.orders.isEmpty) {
+      return const Scaffold(
+        body: Center(
+          child: Text(
+            "No orders found",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      );
+    }
     final Size size = MediaQuery.of(context).size;
     return ListView.builder(
-      itemCount: 5,
+      itemCount: orders.orders.length,
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
+        final order = orders.orders[index];
+        final date = order.orderDate.toDate();
         //outside container
         return Container(
           margin: const EdgeInsets.all(12),
@@ -70,24 +73,24 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
           child: Column(
             spacing: 25,
             children: [
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "OrderID",
+                    order.orderId!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    "Date",
+                    "${date.day}/${date.month}/${date.year}",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xff777E90),
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -109,7 +112,7 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                     title: "Quantity: ",
                     titleFontWeight: FontWeight.bold,
                     titleColor: const Color(0xff777e90),
-                    value: "3",
+                    value: order.quantity.toString(),
                     valueColor: Colors.black,
                     valueFontWeight: FontWeight.bold,
                   ),
@@ -117,7 +120,7 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                     title: "Subtotal:   ",
                     titleFontWeight: FontWeight.bold,
                     titleColor: const Color(0xff777e90),
-                    value: "${Constants.indianCurrency} 110",
+                    value: "${Constants.indianCurrency} ${order.totalAmount}",
                     valueColor: Colors.black,
                     valueFontWeight: FontWeight.bold,
                   ),
@@ -126,9 +129,9 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Pending",
-                    style: TextStyle(
+                  Text(
+                    order.orderStatus!,
+                    style: const TextStyle(
                       color: Colors.red,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -142,7 +145,7 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                     onPressed: () {
                       navigateTo(
                         context: context,
-                        screen: const OrderDetailsPage(),
+                        screen: OrderDetailsPage(order: order),
                       );
                     },
                   ),

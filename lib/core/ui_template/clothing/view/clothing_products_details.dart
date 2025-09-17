@@ -233,7 +233,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                   }
 
                                   final bool sizeHaveMoreContent =
-                                      sizeItem.size.length > 2 ? false : true;
+                                      sizeItem.size.length > 3 ? false : true;
 
                                   return GestureDetector(
                                     onTap: () {

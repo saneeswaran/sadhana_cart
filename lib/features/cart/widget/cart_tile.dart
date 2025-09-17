@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
@@ -13,7 +14,7 @@ class CartTile extends ConsumerWidget {
   final ProductModel product;
   final CartModel cart;
   final num priceForItem;
-  final String? selectedSize;
+  final SizeVariant? selectedSize;
   const CartTile({
     super.key,
     required this.product,
@@ -102,10 +103,10 @@ class CartTile extends ConsumerWidget {
                     ),
                     const SizedBox(height: 5),
                     if (selectedSize != null &&
-                        selectedSize!.isNotEmpty &&
-                        selectedSize != "nan")
+                        selectedSize!.size.isNotEmpty &&
+                        selectedSize!.size != "nan")
                       Text(
-                        "Size: $selectedSize",
+                        "Size: ${selectedSize!.size}",
                         style: const TextStyle(
                           fontSize: 14,
                           color: Colors.grey,
