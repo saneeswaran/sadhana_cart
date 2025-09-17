@@ -36,6 +36,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
   // Loading
   bool isLoading = false;
+  bool isPaymentProcessing = false;
 
   final PageController _pageController = PageController();
 
@@ -167,12 +168,12 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       }
 
       final paymentController = ref.read(paymentProvider.notifier);
+
+      // Reset
+      paymentController.resetPaymentState();
       paymentController.startPayment(
         amount: (widget.product.offerprice ?? 0).toDouble(),
       );
-
-      // ⚠ Do NOT call addSingleOrder here!
-      // Wait for ref.listen<PaymentState> in the UI to detect success
     }
   }
 
@@ -235,24 +236,30 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       body: Consumer(
         builder: (context, ref, _) {
           ref.listen<PaymentState>(paymentProvider, (previous, next) async {
-            if (next.success) {
-              debugPrint("Online Payment Success!");
+            if (next.success && next.paymentId != null) {
+              // Payment was successful
+              log(
+                "Payment confirmed on PaymentMainPage! Payment ID: ${next.paymentId}",
+              );
 
-              // Prepare order details
+              // Here you can call addSingleOrder
               final addressState = ref.read(addressprovider);
               final AddressModel? address = addressState.addresses.isNotEmpty
                   ? addressState.addresses.last
                   : null;
-              final orderProduct = OrderProductModel(
-                productid: widget.product.productid!,
-                name: widget.product.name!,
-                price: (widget.product.offerprice ?? 0.0).toDouble(),
-                stock: widget.product.stock ?? 0,
-                quantity: int.tryParse(widget.product.quantity.toString()) ?? 1,
-                sizevariants: widget.product.sizevariants,
-              );
 
               if (address != null) {
+                // Convert ProductModel to OrderProductModel
+                final orderProduct = OrderProductModel(
+                  productid: widget.product.productid!,
+                  name: widget.product.name!,
+                  price: (widget.product.offerprice ?? 0.0).toDouble(),
+                  stock: widget.product.stock ?? 0,
+                  quantity:
+                      int.tryParse(widget.product.quantity.toString()) ?? 1,
+                  sizevariants: widget.product.sizevariants,
+                );
+
                 final success = await OrderService.addSingleOrder(
                   totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
                   phoneNumber: address.phoneNumber ?? 0,
@@ -262,45 +269,46 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                   longitude: address.longitude,
                   quantity:
                       int.tryParse(widget.product.quantity.toString()) ?? 1,
-                  product: orderProduct, // single product, not a list
+                  product: orderProduct,
                   createdAt: Timestamp.now(),
                   ref: ref,
-                  selectedSizeFromUser:
-                      widget.selectedSize ?? "", // pass size if needed
+                  selectedSizeFromUser: widget.selectedSize ?? "",
                 );
 
                 if (success) {
-                  log(
-                    "Order placed successfully for product: ${widget.product.name}",
+                  setState(() {
+                    isPaymentProcessing = true;
+                  });
+                  showCustomSnackbar(
+                    context: context,
+                    message: "Order placed successfully!",
+                    type: ToastType.success,
                   );
-
-                  if (context.mounted) {
-                    showCustomSnackbar(
-                      context: context,
-                      message: "Order placed successfully",
-                      type: ToastType.success,
-                    );
-                  }
+                  navigateToReplacement(
+                    context: context,
+                    screen: const PaymentSuccessPage(),
+                  );
                 } else {
-                  log(
-                    "Failed to place order for product: ${widget.product.name}",
+                  setState(() {
+                    isPaymentProcessing = false;
+                  });
+                  showCustomSnackbar(
+                    context: context,
+                    message: "Failed to place order. Try again.",
+                    type: ToastType.error,
                   );
-                  if (context.mounted) {
-                    showCustomSnackbar(
-                      context: context,
-                      message: "Failed to place order",
-                      type: ToastType.error,
-                    );
-                  }
                 }
               }
-
-              if (context.mounted) {
-                navigateToReplacement(
-                  context: context,
-                  screen: const PaymentSuccessPage(),
-                );
-              }
+            } else if (next.error != null) {
+              // Payment failed or cancelled
+              log(
+                "Payment failed or cancelled on PaymentMainPage: ${next.error}",
+              );
+              showCustomSnackbar(
+                context: context,
+                message: "Payment was not completed.",
+                type: ToastType.error,
+              );
             }
           });
           return Column(
