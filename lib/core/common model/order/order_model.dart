@@ -1,5 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class OrderModel {
@@ -70,6 +73,11 @@ class OrderModel {
 
   factory OrderModel.fromJson(String source) =>
       OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'OrderModel(quantity: $quantity, userId: $userId, totalAmount: $totalAmount, address: $address, phoneNumber: $phoneNumber, latitude: $latitude, longitude: $longitude, orderStatus: $orderStatus, orderDate: $orderDate, orderId: $orderId, createdAt: $createdAt, products: $products)';
+  }
 }
 
 class OrderProductModel {
@@ -125,4 +133,9 @@ class OrderProductModel {
 
   factory OrderProductModel.fromJson(String source) =>
       OrderProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'OrderProductModel(id: $id, productid: $productid, name: $name, price: $price, stock: $stock, quantity: $quantity, sizevariants: $sizevariants)';
+  }
 }

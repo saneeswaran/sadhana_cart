@@ -3,14 +3,9 @@ import 'package:sadhana_cart/core/enums/order_status_enums.dart';
 import 'package:sadhana_cart/core/widgets/custom_order_status_button.dart';
 import 'package:sadhana_cart/features/order/widgets/my%20orders/model/custom_orders_list_tile.dart';
 
-class MyOrdersPage extends StatefulWidget {
+class MyOrdersPage extends StatelessWidget {
   const MyOrdersPage({super.key});
 
-  @override
-  State<MyOrdersPage> createState() => _MyOrdersPageState();
-}
-
-class _MyOrdersPageState extends State<MyOrdersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
