@@ -79,8 +79,10 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         : null;
 
     if (address == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please add an address first.")),
+      showCustomSnackbar(
+        context: context,
+        message: "Please select address first!",
+        type: ToastType.info,
       );
       setState(() {
         isLoading = false;
@@ -157,8 +159,10 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
       final acceptedTerms = ref.read(orderAcceptTerms);
       if (!acceptedTerms) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please accept Terms & Conditions")),
+        showCustomSnackbar(
+          context: context,
+          message: "Please accept terms",
+          type: ToastType.info,
         );
         return;
       }
@@ -168,7 +172,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       // Reset
       paymentController.resetPaymentState();
       paymentController.startPayment(
-        amount: (widget.product.price ?? 0).toDouble(),
+        amount: (widget.product.offerprice ?? 0).toDouble(),
       );
     }
   }
@@ -405,7 +409,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
-                                        "₹ ${product.price ?? 0}",
+                                        "₹ ${product.offerprice ?? 0}",
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -556,7 +560,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                           PaymentOptionTile(
                             title: "Cash On Delivery",
                             description: "Pay when you receive your product",
-                            price: "₹${product.price ?? 0}",
+                            price: "₹${product.offerprice ?? 0}",
                             selected: _selectedMethod == PaymentEnum.cash,
                             onTap: () {
                               setState(() {
@@ -568,7 +572,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                           PaymentOptionTile(
                             title: "Online Payment",
                             description: "Pay now using card or UPI",
-                            price: "₹${product.price ?? 0}",
+                            price: "₹${product.offerprice ?? 0}",
                             selected: _selectedMethod == PaymentEnum.online,
                             onTap: () {
                               setState(() {

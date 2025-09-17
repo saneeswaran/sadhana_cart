@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
@@ -76,11 +77,11 @@ class ClothingProductsDetails extends StatelessWidget {
                     (c) => c.cart.productid == product.productid,
                   );
 
-                  final selectedSizeIndex = ref.watch(clothingSizeProvider);
-                  final selected =
-                      product.sizevariants?[selectedSizeIndex].size ?? "L";
+                  final selectedSize = ref.watch(clothingSizeProvider);
                   final loader = ref.watch(cartLoadingProvider);
-
+                  final SizeVariant sizeVariant =
+                      product.sizevariants?[selectedSize] ??
+                      SizeVariant(size: "", stock: 0);
                   return AbsorbPointer(
                     absorbing: loader,
                     child: CustomElevatedButton(
@@ -94,8 +95,7 @@ class ClothingProductsDetails extends StatelessWidget {
                         if (!isAlreadyInCart) {
                           // Check stock before adding to cart
                           final stock =
-                              product.sizevariants?[selectedSizeIndex].stock ??
-                              0;
+                              product.sizevariants?[selectedSize].stock ?? 0;
                           if (stock <= 0) {
                             log("Cannot add to cart. Stock not available.");
                             showCustomSnackbar(
@@ -108,7 +108,7 @@ class ClothingProductsDetails extends StatelessWidget {
 
                           await cartNotifier.addToCart(
                             product: product,
-                            size: selected,
+                            sizevariant: sizeVariant,
                           );
 
                           if (context.mounted) {

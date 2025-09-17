@@ -15,6 +15,7 @@ class AppImages {
 
   //lottie
   static const String successLottie = "assets/lottie/success.json";
+  static const String failedLottie = "assets/lottie/failed.json";
 
   //order status
   static const String orderCompleted = "assets/order/order_completed.png";
