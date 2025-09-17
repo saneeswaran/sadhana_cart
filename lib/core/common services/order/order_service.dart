@@ -237,8 +237,8 @@ class OrderService {
             final orderedVariants = orderedProduct.sizevariants ?? [];
 
             final updatedVariants = sizeVariants.map((variant) {
-              final variantSize = variant['size'];
-              final variantColor = variant['color'];
+              final variantSize = variant.size;
+              final variantColor = variant.color;
 
               final matchingOrderedVariant = orderedVariants.firstWhere(
                 (ordered) =>
@@ -251,7 +251,7 @@ class OrderService {
                 ),
               );
 
-              final currentStock = variant['stock'] ?? 0;
+              final currentStock = variant.size;
               final stockToSubtract = matchingOrderedVariant.stock;
               final newStock = (currentStock as int) - stockToSubtract;
 
@@ -282,7 +282,7 @@ class OrderService {
             });
 
             log(
-              "Stock updated for product: $productId, New Total Stock for variants: ${sizeVariants}",
+              "Stock updated for product: $productId, New Total Stock for variants: $sizeVariants",
             );
           }
         }
