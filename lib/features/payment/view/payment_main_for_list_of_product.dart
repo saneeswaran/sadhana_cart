@@ -11,6 +11,7 @@ import 'package:sadhana_cart/core/common model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common services/order/order_service.dart';
 import 'package:sadhana_cart/core/common services/product/product_service.dart';
 import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
+import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
@@ -161,6 +162,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
 
         if (stockUpdated) {
           log("Stock updated successfully");
+          ref.read(cartProvider.notifier).resetCart(cart: widget.cart);
         } else {
           log("Stock update failed");
           if (context.mounted) {

@@ -58,107 +58,104 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
             .firstWhere((e) => e.label == order.orderStatus)
             .color;
         //outside container
-        return GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.all(12),
-            padding: const EdgeInsets.all(20),
-            height: size.height * 0.3,
-            width: size.width * 1,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade300,
-                  blurRadius: 5,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              spacing: 25,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      order.orderId!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+        return Container(
+          margin: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(20),
+          height: size.height * 0.3,
+          width: size.width * 1,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade300,
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            spacing: 25,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    order.orderId!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      "${date.day}/${date.month}/${date.year}",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Color(0xff777E90),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  ),
+                  Text(
+                    "${date.day}/${date.month}/${date.year}",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xff777E90),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
                     ),
-                  ],
-                ),
-                _customText(
-                  title: "Tracking Number:   ",
-                  titleFontWeight: FontWeight.bold,
-                  titleColor: const Color(0xff777e90),
-                  value: "1234567890",
-                  valueColor: Colors.black,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _customText(
-                      title: "Quantity: ",
-                      titleFontWeight: FontWeight.bold,
-                      titleColor: const Color(0xff777e90),
-                      value: order.quantity.toString(),
-                      valueColor: Colors.black,
-                      valueFontWeight: FontWeight.bold,
+                  ),
+                ],
+              ),
+              _customText(
+                title: "Tracking Number:   ",
+                titleFontWeight: FontWeight.bold,
+                titleColor: const Color(0xff777e90),
+                value: "1234567890",
+                valueColor: Colors.black,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _customText(
+                    title: "Quantity: ",
+                    titleFontWeight: FontWeight.bold,
+                    titleColor: const Color(0xff777e90),
+                    value: order.quantity.toString(),
+                    valueColor: Colors.black,
+                    valueFontWeight: FontWeight.bold,
+                  ),
+                  _customText(
+                    title: "Subtotal:   ",
+                    titleFontWeight: FontWeight.bold,
+                    titleColor: const Color(0xff777e90),
+                    value: "${Constants.indianCurrency} ${order.totalAmount}",
+                    valueColor: Colors.black,
+                    valueFontWeight: FontWeight.bold,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    order.orderStatus!,
+                    style: TextStyle(
+                      color: matchingColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    _customText(
-                      title: "Subtotal:   ",
-                      titleFontWeight: FontWeight.bold,
-                      titleColor: const Color(0xff777e90),
-                      value: "${Constants.indianCurrency} ${order.totalAmount}",
-                      valueColor: Colors.black,
-                      valueFontWeight: FontWeight.bold,
+                  ),
+                  CustomOutlineButton(
+                    child: const Text(
+                      "Details",
+                      style: customOutlinedButtonStyle,
                     ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      order.orderStatus!,
-                      style: TextStyle(
-                        color: matchingColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    CustomOutlineButton(
-                      child: const Text(
-                        "Details",
-                        style: customOutlinedButtonStyle,
-                      ),
-                      onPressed: () {
-                        navigateTo(
-                          context: context,
-                          screen: OrderDetailsPage(order: order),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                    onPressed: () {
+                      navigateTo(
+                        context: context,
+                        screen: OrderDetailsPage(order: order),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
         );
       },

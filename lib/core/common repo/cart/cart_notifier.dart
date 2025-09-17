@@ -1,5 +1,4 @@
 import 'dart:developer' show log;
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_state.dart';
@@ -67,7 +66,7 @@ class CartNotifier extends StateNotifier<CartState> {
     if (index == -1) return;
 
     final current = state.cart[index];
-    final maxStock = current.cart.sizeVariant!.stock;
+    final maxStock = current.product.sizevariants?[index].stock ?? 0;
 
     if (cart.quantity < maxStock) {
       final updatedCart = cart.copyWith(quantity: cart.quantity + 1);
@@ -107,6 +106,15 @@ class CartNotifier extends StateNotifier<CartState> {
     }
 
     return total;
+  }
+
+  void resetCart({required List<CartModel> cart}) async {
+    final bool isSuccess = await CartService.removeAllPaidCartItems(cart: cart);
+    if (isSuccess) {
+      state = state.copyWith(cart: []);
+    } else {
+      log("reset cart failed");
+    }
   }
 }
 
