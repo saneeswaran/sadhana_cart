@@ -73,7 +73,12 @@ class _ChatSupportPageState extends ConsumerState<ChatSupportPage> {
           children: [
             Expanded(
               child: messages.isEmpty
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const Center(
+                      child: Text(
+                        "How can I support you?",
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                      ),
+                    )
                   : ListView.builder(
                       controller: _scrollController,
                       itemCount: messages.length,
@@ -148,6 +153,7 @@ class _ChatSupportPageState extends ConsumerState<ChatSupportPage> {
                       textCapitalization: TextCapitalization.sentences,
                       decoration: const InputDecoration(
                         hintText: 'Type a message...',
+                        hintStyle: TextStyle(color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(20)),
                         ),
