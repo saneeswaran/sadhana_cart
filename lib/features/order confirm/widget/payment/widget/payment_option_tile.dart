@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sadhana_cart/core/colors/app_color.dart';
 
 class PaymentOptionTile extends StatelessWidget {
   final String title;
@@ -26,7 +27,7 @@ class PaymentOptionTile extends StatelessWidget {
           color: Colors.grey.shade100,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? Colors.blue : Colors.grey.shade300,
+            color: selected ? AppColor.dartPrimaryColor : Colors.grey.shade300,
             width: 2,
           ),
         ),
@@ -62,7 +63,7 @@ class PaymentOptionTile extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: selected ? Colors.blue : Colors.grey,
+                  color: selected ? AppColor.dartPrimaryColor : Colors.grey,
                   width: 2,
                 ),
               ),
@@ -73,7 +74,7 @@ class PaymentOptionTile extends StatelessWidget {
                         width: 12,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.blue,
+                          color: AppColor.dartPrimaryColor,
                         ),
                       ),
                     )

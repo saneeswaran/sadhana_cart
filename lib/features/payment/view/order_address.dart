@@ -33,8 +33,8 @@ class _OrderAddressState extends ConsumerState<OrderAddress> {
         address.addresses.isEmpty
             ? CustomIconButton(icon: Icons.add, onPressed: () {})
             : UserAddressTile(
-                address: addressModel ?? address.addresses.first,
                 margin: const EdgeInsets.symmetric(vertical: 8),
+                address: addressModel ?? address.addresses.first,
               ),
         GestureDetector(
           onTap: () async {

@@ -13,6 +13,9 @@ class AppImages {
 
   static const String appLogo = "assets/images/logo.png";
 
+  //lottie
+  static const String successLottie = "assets/lottie/success.json";
+
   //order status
   static const String orderCompleted = "assets/order/order_completed.png";
   static const String orderPending = "assets/order/order_pending.png";

@@ -36,6 +36,7 @@ class AllProductsTile extends ConsumerWidget {
             GestureDetector(
               onTap: () {
                 log(product.category ?? "No Category");
+                log(product.productid!);
                 navigateToProductDesignBasedOnCategory(
                   context: context,
                   categoryName: product.category?.toLowerCase() ?? "",

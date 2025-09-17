@@ -4,10 +4,12 @@ import 'package:sadhana_cart/features/profile/widget/address/model/address_model
 class UserAddressTile extends StatelessWidget {
   final AddressModel address;
   final EdgeInsetsGeometry? margin;
+  final double? height;
   const UserAddressTile({
     super.key,
     required this.address,
     this.margin = const EdgeInsets.all(16),
+    this.height,
   });
 
   @override
@@ -17,7 +19,7 @@ class UserAddressTile extends StatelessWidget {
     return Container(
       margin: margin,
       padding: const EdgeInsets.all(12),
-      height: size.height * 0.15,
+      height: height ?? size.height * 0.15,
       width: size.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
