@@ -11,7 +11,6 @@ import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
-import 'package:sadhana_cart/core/skeletonizer/address_tile_loader.dart';
 import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
@@ -20,11 +19,10 @@ import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_state.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_success_page.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/shipping/widget/saved_address_page.dart';
 import 'package:sadhana_cart/features/payment/service/payment_service.dart';
+import 'package:sadhana_cart/features/payment/view/order_address.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
-import 'package:sadhana_cart/features/profile/widget/address/widget/user_address_tile.dart';
 
 class PaymentMainForListOfProduct extends ConsumerStatefulWidget {
   final List<ProductModel> products;
@@ -70,11 +68,6 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
   @override
   Widget build(BuildContext context) {
     final List<OrderProductModel> orderProduct = [];
-    // Watch address state
-    final addressState = ref.watch(addressprovider);
-    final AddressModel? address = addressState.addresses.isNotEmpty
-        ? addressState.addresses.first
-        : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -321,47 +314,8 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                             ),
                           ),
                           // User details
-                          addressState.isLoading
-                              ? const AddressTileLoader()
-                              : address != null
-                              ? UserAddressTile(
-                                  address: address,
-                                  margin: const EdgeInsets.symmetric(
-                                    vertical: 2,
-                                    horizontal: 4,
-                                  ),
-                                )
-                              : const Text("No Saved address found"),
-                          const SizedBox(height: 10),
-                          GestureDetector(
-                            onTap: () {
-                              navigateTo(
-                                context: context,
-                                screen: const SavedAddressPage(),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(16),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColor.tileColor),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Edit Address",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  Icon(
-                                    Icons.edit_location_alt_outlined,
-                                    color: AppColor.dartPrimaryColor,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          const OrderAddress(),
+                          //edit address
                         ],
                       ),
                     ),
