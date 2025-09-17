@@ -26,7 +26,7 @@ class OrderService {
       .collection(productCollection);
 
   /// Adds a new order and updates product stock
-  static Future<bool> addOrder({
+  static Future<bool> addMultipleProductOrder({
     required double totalAmount,
     required int phoneNumber,
     required String address,
@@ -59,39 +59,42 @@ class OrderService {
         products: products,
       );
 
+      final Map<String, DocumentSnapshot> productDocs = {};
+      for (final orderedProduct in products) {
+        final productId = orderedProduct.productid;
+
+        final querySnapshot = await productRef
+            .where("productid", isEqualTo: productId)
+            .limit(1)
+            .get();
+
+        if (querySnapshot.docs.isEmpty) {
+          log("Product not found in Firestore: $productId");
+          throw Exception("Product not found: $productId");
+        }
+
+        productDocs[productId] = querySnapshot.docs.first;
+      }
+
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         log("Running Firestore transaction for order: ${orderDoc.id}");
 
         for (final orderedProduct in products) {
           final productId = orderedProduct.productid;
-
-          if (productId.isEmpty) {
-            log("Invalid product ID in order.");
-            throw Exception("Invalid product ID in order.");
-          }
-
-          final productRefDoc = productRef.doc(productId);
-          final productSnapshot = await transaction.get(productRefDoc);
-
-          if (!productSnapshot.exists) {
-            log("Product not found in Firestore: $productId");
-            throw Exception("Product not found: $productId");
-          }
+          final productDoc = productDocs[productId]!;
 
           final data = ProductModel.fromMap(
-            productSnapshot.data() as Map<String, dynamic>,
+            productDoc.data() as Map<String, dynamic>,
           );
 
-          log("Updating stock for product: $productId");
-
           final currentTotalStock = data.stock ?? 0;
-          final List<dynamic> sizeVariants = data.sizevariants ?? [];
+          final List<SizeVariant> sizeVariants = data.sizevariants ?? [];
           final List<SizeVariant> orderedVariants =
               orderedProduct.sizevariants ?? [];
 
           final updatedVariants = sizeVariants.map((variant) {
-            final variantSize = variant['size'];
-            final variantColor = variant['color'];
+            final variantSize = variant.size;
+            final variantColor = variant.color;
 
             final matchingOrderedVariant = orderedVariants.firstWhere(
               (ordered) =>
@@ -101,9 +104,9 @@ class OrderService {
                   SizeVariant(size: variantSize, color: variantColor, stock: 0),
             );
 
-            final currentStock = variant['stock'] ?? 0;
+            final currentStock = variant.stock;
             final stockToSubtract = matchingOrderedVariant.stock;
-            final newStock = (currentStock as int) - stockToSubtract;
+            final newStock = (currentStock) - stockToSubtract;
 
             if (newStock < 0) {
               log(
@@ -126,22 +129,20 @@ class OrderService {
             (int sum, v) => sum + v.stock,
           );
 
-          transaction.update(productRefDoc, {
+          transaction.update(productDoc.reference, {
             'stock': currentTotalStock - totalStockToSubtract,
-            'sizeVariants': updatedVariants,
+            'sizevariants': updatedVariants,
           });
 
-          log(
-            "Stock updated for product: $productId, New Total Stock: ${currentTotalStock - totalStockToSubtract}",
-          );
+          log("Updated stock for product: $productId");
         }
 
         // Save order document
         transaction.set(orderDoc, orderModel.toMap());
-        log("Order written to Firestore document: ${orderDoc.id}");
+        log("Order saved: ${orderDoc.id}");
       });
 
-      // Update local provider
+      // Update local state
       ref.read(orderProvider.notifier).addOrder(order: orderModel);
 
       log(

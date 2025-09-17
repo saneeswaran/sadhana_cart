@@ -30,14 +30,7 @@ class GeolocationHelper {
       final bool permissionGranted =
           await PermissionHelper.checkLocationPermission();
       if (permissionGranted) {
-        final Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high,
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.high,
-            distanceFilter: 10,
-          ),
-        );
-
+        final LatLng position = await GeolocationHelper.getCurrrentLocation();
         final List<Placemark> placeMark = await placemarkFromCoordinates(
           position.latitude,
           position.longitude,

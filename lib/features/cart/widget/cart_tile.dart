@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,7 @@ import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/constants.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 
 class CartTile extends ConsumerWidget {
   final ProductModel product;
@@ -23,7 +26,15 @@ class CartTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Size size = MediaQuery.of(context).size;
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        log("Product tapped: ${product.productid}");
+        log("Product category: ${product.category}");
+        navigateToProductDesignBasedOnCategory(
+          context: context,
+          categoryName: product.category ?? '',
+          product: product,
+        );
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         padding: const EdgeInsets.all(10),

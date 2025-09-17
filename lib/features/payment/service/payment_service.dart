@@ -47,7 +47,7 @@ class PaymentService {
       );
 
       // Add order to Firestore
-      final success = await OrderService.addOrder(
+      final success = await OrderService.addMultipleProductOrder(
         totalAmount: totalAmount,
         address:
             "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",

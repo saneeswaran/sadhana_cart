@@ -28,6 +28,9 @@ class _AddAddressPageState extends State<AddAddressPage> {
   final zipCodeController = TextEditingController();
   final phoneNumberController = TextEditingController();
 
+  double? lattitude;
+  double? longitude;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +47,8 @@ class _AddAddressPageState extends State<AddAddressPage> {
         cityController.text = addressModel.city;
         stateController.text = addressModel.state;
         zipCodeController.text = addressModel.pinCode.toString();
+        lattitude = addressModel.lattitude;
+        longitude = addressModel.longitude;
       });
     }
   }
@@ -209,8 +214,8 @@ class _AddAddressPageState extends State<AddAddressPage> {
                               ),
                               icon: icon,
                               ref: ref,
-                              lattitude: 0.0,
-                              longitude: 0.0,
+                              lattitude: lattitude ?? 0.0,
+                              longitude: longitude ?? 0.0,
                             );
                             if (isSuccess && context.mounted) {
                               Navigator.pop(context);

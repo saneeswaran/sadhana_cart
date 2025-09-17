@@ -155,7 +155,7 @@ class ProductService {
   }) async {
     try {
       final QuerySnapshot querySnapshot = await productRef
-          .orderBy("rating", descending: true)
+          .orderBy("productid", descending: true)
           .limit(limit)
           .get();
 

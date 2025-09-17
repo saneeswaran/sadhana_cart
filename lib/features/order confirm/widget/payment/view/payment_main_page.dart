@@ -203,14 +203,13 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                   : null;
 
               if (address != null) {
-                final success = await OrderService.addOrder(
+                final success = await OrderService.addSingleOrder(
                   totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
                   address:
                       "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
                   phoneNumber: address.phoneNumber ?? 0,
                   latitude: address.lattitude,
                   longitude: address.longitude,
-                  orderDate: DateTime.now().toString(),
                   quantity: 1,
                   products: [model],
                   createdAt: Timestamp.now(),
