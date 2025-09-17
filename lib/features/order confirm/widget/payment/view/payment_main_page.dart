@@ -23,7 +23,8 @@ import 'package:sadhana_cart/features/profile/widget/address/view%20model/addres
 
 class PaymentMainPage extends ConsumerStatefulWidget {
   final ProductModel product;
-  const PaymentMainPage({super.key, required this.product});
+  final String? selectedSize;
+  const PaymentMainPage({super.key, required this.product, this.selectedSize});
 
   @override
   ConsumerState<PaymentMainPage> createState() => _PaymentMainPageState();
@@ -56,12 +57,21 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
     Future.microtask(() {
       ref.read(addressprovider.notifier).updateAddress();
     });
+    final product = widget.product;
+    log("UserSelected size: ${widget.selectedSize}");
+    log("Product selected for purchase: ${product.toMap()}");
+    log("Product ID: ${product.productid}");
+    log("Stock: ${product.stock}");
+    log(
+      "Size Variants: ${product.sizevariants?.map((v) => 'Size: ${v.size}, Color: ${v.color}, Stock: ${v.stock}').join(' | ')}",
+    );
   }
 
   Future<void> _handlePayment() async {
     setState(() {
       isLoading = true;
     });
+
     final addressState = ref.read(addressprovider);
     final AddressModel? address = addressState.addresses.isNotEmpty
         ? addressState.addresses.last
@@ -73,47 +83,79 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         message: "Please select address first!",
         type: ToastType.info,
       );
-
+      setState(() {
+        isLoading = false;
+      });
       return;
     }
 
-    if (_selectedMethod == PaymentEnum.cash) {
-      // COD flow (save order + purchased products)
-      try {
-        // Log only the selected product
-        log("Purchased Product Details: ${widget.product.toMap()}");
+    // Convert ProductModel to OrderProductModel
+    final orderProduct = OrderProductModel(
+      productid: widget.product.productid!,
+      name: widget.product.name!,
+      price: (widget.product.offerprice ?? 0.0).toDouble(),
+      stock: widget.product.stock ?? 0,
+      quantity: int.tryParse(widget.product.quantity.toString()) ?? 1,
+      sizevariants: widget.product.sizevariants,
+    );
 
-        // Save purchased product into Firestore
-        await OrderService.savePurchasedProducts(
-          products: [widget.product],
-          address: address,
-          paymentMethod: "COD",
+    if (_selectedMethod == PaymentEnum.cash) {
+      // COD flow
+      try {
+        log("Placing COD order for product: ${widget.product.toMap()}");
+
+        final success = await OrderService.addSingleOrder(
+          totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
+          phoneNumber: address.phoneNumber ?? 0,
+          address:
+              "${address.title ?? ''}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
+          latitude: address.lattitude,
+          longitude: address.longitude,
+          quantity: (widget.product.quantity as int?) ?? 1,
+          product: orderProduct,
+          createdAt: Timestamp.now(),
+          ref: ref,
+          selectedSizeFromUser: widget.selectedSize.toString(),
         );
 
         if (!mounted) return;
-        showCustomSnackbar(
-          context: context,
-          message: "Order placed successfully!",
-          type: ToastType.success,
-        );
 
-        navigateToReplacement(
-          context: context,
-          screen: const PaymentSuccessPage(),
-        );
+        if (success) {
+          showCustomSnackbar(
+            context: context,
+            message: "Order placed successfully!",
+            type: ToastType.success,
+          );
+
+          navigateToReplacement(
+            context: context,
+            screen: const PaymentSuccessPage(),
+          );
+        } else {
+          showCustomSnackbar(
+            context: context,
+            message: "Failed to place order. Try again.",
+            type: ToastType.error,
+          );
+        }
       } catch (e) {
         log("COD error: $e");
         showCustomSnackbar(
           context: context,
-          message: "Order placed successfully!",
+          message: "Error placing order.",
           type: ToastType.error,
         );
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
       }
     } else if (_selectedMethod == PaymentEnum.online) {
-      setState(() {
-        isLoading = false;
-      });
       // Online payment flow
+      setState(() {
+        isLoading = false; // Payment UI will handle loading
+      });
+
       final acceptedTerms = ref.read(orderAcceptTerms);
       if (!acceptedTerms) {
         showCustomSnackbar(
@@ -128,6 +170,9 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       paymentController.startPayment(
         amount: (widget.product.offerprice ?? 0).toDouble(),
       );
+
+      // ⚠ Do NOT call addSingleOrder here!
+      // Wait for ref.listen<PaymentState> in the UI to detect success
     }
   }
 
@@ -189,13 +234,6 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       ),
       body: Consumer(
         builder: (context, ref, _) {
-          final OrderProductModel model = OrderProductModel(
-            productid: widget.product.productid!,
-            name: widget.product.name!,
-            price: (widget.product.offerprice ?? 0.0).toDouble(),
-            stock: widget.product.stock ?? 0,
-            quantity: 1,
-          );
           ref.listen<PaymentState>(paymentProvider, (previous, next) async {
             if (next.success) {
               debugPrint("Online Payment Success!");
@@ -205,19 +243,30 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
               final AddressModel? address = addressState.addresses.isNotEmpty
                   ? addressState.addresses.last
                   : null;
+              final orderProduct = OrderProductModel(
+                productid: widget.product.productid!,
+                name: widget.product.name!,
+                price: (widget.product.offerprice ?? 0.0).toDouble(),
+                stock: widget.product.stock ?? 0,
+                quantity: int.tryParse(widget.product.quantity.toString()) ?? 1,
+                sizevariants: widget.product.sizevariants,
+              );
 
               if (address != null) {
                 final success = await OrderService.addSingleOrder(
                   totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
+                  phoneNumber: address.phoneNumber ?? 0,
                   address:
                       "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
-                  phoneNumber: address.phoneNumber ?? 0,
                   latitude: address.lattitude,
                   longitude: address.longitude,
-                  quantity: 1,
-                  products: [model],
+                  quantity:
+                      int.tryParse(widget.product.quantity.toString()) ?? 1,
+                  product: orderProduct, // single product, not a list
                   createdAt: Timestamp.now(),
                   ref: ref,
+                  selectedSizeFromUser:
+                      widget.selectedSize ?? "", // pass size if needed
                 );
 
                 if (success) {

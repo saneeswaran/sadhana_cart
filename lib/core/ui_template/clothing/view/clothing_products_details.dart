@@ -31,10 +31,38 @@ class ClothingProductsDetails extends StatelessWidget {
 
   const ClothingProductsDetails({super.key, required this.product});
 
+  void checkStockAndProceed({
+    required BuildContext context,
+    required WidgetRef ref,
+    required ProductModel product,
+    required void Function(ProductModel, int, String) onStockAvailable,
+  }) {
+    final selectedSizeIndex = ref.read(clothingSizeProvider);
+    final selectedSize = product.sizevariants?[selectedSizeIndex];
+
+    if (selectedSize == null || (selectedSize.stock) <= 0) {
+      log("Stock not available for size: ${selectedSize?.size ?? 'Unknown'}");
+      showCustomSnackbar(
+        context: context,
+        message: "Stock not available for selected size",
+        type: ToastType.error,
+      );
+      return;
+    }
+
+    log(
+      "Stock available (${selectedSize.stock}) for size: ${selectedSize.size}, proceeding",
+    );
+
+    // Pass size string to callback
+    onStockAvailable(product, selectedSizeIndex, selectedSize.size);
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Map<String, dynamic> productData = product.getDetailsByCategory();
-    final Size size = MediaQuery.of(context).size;
+    final productData = product.getDetailsByCategory();
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
@@ -50,10 +78,10 @@ class ClothingProductsDetails extends StatelessWidget {
                   );
 
                   final selectedSize = ref.watch(clothingSizeProvider);
-                  final SizeVariant selected =
-                      product.sizevariants?[selectedSize] ??
-                      SizeVariant(size: "", stock: 0, color: '', skuSuffix: '');
+                  final selected =
+                      product.sizevariants?[selectedSize].size ?? "L";
                   final loader = ref.watch(cartLoadingProvider);
+
                   return AbsorbPointer(
                     absorbing: loader,
                     child: CustomElevatedButton(
@@ -65,6 +93,20 @@ class ClothingProductsDetails extends StatelessWidget {
                             ),
                       onPressed: () async {
                         if (!isAlreadyInCart) {
+                          // Check stock before adding to cart
+                          final stock =
+                              product.sizevariants?[selectedSizeIndex].stock ??
+                              0;
+                          if (stock <= 0) {
+                            log("Cannot add to cart. Stock not available.");
+                            showCustomSnackbar(
+                              context: context,
+                              message: "Stock not available for selected size",
+                              type: ToastType.error,
+                            );
+                            return;
+                          }
+
                           await cartNotifier.addToCart(
                             product: product,
                             sizevariant: selected,
@@ -102,16 +144,31 @@ class ClothingProductsDetails extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: CustomElevatedButton(
-                child: const Text(
-                  "Buy now",
-                  style: customElevatedButtonTextStyle,
-                ),
-                onPressed: () {
-                  log(product.toString());
-                  navigateTo(
-                    context: context,
-                    screen: PaymentMainPage(product: product),
+              child: Consumer(
+                builder: (context, ref, child) {
+                  return CustomElevatedButton(
+                    child: const Text(
+                      "Buy now",
+                      style: customElevatedButtonTextStyle,
+                    ),
+                    onPressed: () {
+                      checkStockAndProceed(
+                        context: context,
+                        ref: ref,
+                        product: product,
+                        onStockAvailable:
+                            (product, selectedSizeIndex, selectedSize) {
+                              navigateTo(
+                                context: context,
+                                screen: PaymentMainPage(
+                                  product: product,
+                                  selectedSize:
+                                      selectedSize, // pass selected size here
+                                ),
+                              );
+                            },
+                      );
+                    },
                   );
                 },
               ),
@@ -128,7 +185,8 @@ class ClothingProductsDetails extends StatelessWidget {
               child: Column(children: [ProductPriceRating(product: product)]),
             ),
             const SizedBox(height: 20),
-            // Sizes
+
+            /// Sizes
             Consumer(
               builder: (context, ref, child) {
                 final selectedSizeIndex = ref.watch(clothingSizeProvider);
@@ -141,15 +199,11 @@ class ClothingProductsDetails extends StatelessWidget {
                           variant.size.trim().isNotEmpty,
                     );
 
-                if (!hasValidSizes) {
-                  return const SizedBox.shrink();
-                }
+                if (!hasValidSizes) return const SizedBox.shrink();
 
                 return Column(
                   children: [
-                    hasValidSizes
-                        ? const CustomDivider()
-                        : const SizedBox.shrink(),
+                    const CustomDivider(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
@@ -180,10 +234,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                   }
 
                                   final bool sizeHaveMoreContent =
-                                      sizeItem.size
-                                          .allMatches(sizeItem.size)
-                                          .length <
-                                      3;
+                                      sizeItem.size.length > 2 ? false : true;
 
                                   return GestureDetector(
                                     onTap: () {
@@ -236,22 +287,18 @@ class ClothingProductsDetails extends StatelessWidget {
                         ],
                       ),
                     ),
-                    hasValidSizes
-                        ? const CustomDivider()
-                        : const SizedBox.shrink(),
+                    const CustomDivider(),
                   ],
                 );
               },
             ),
-
             const SizedBox(height: 20),
             CustomTileDropdown(
               title: "Description",
               value: Text(product.description!),
             ),
             const SizedBox(height: 20),
-
-            productData.containsValue("null") || productData.isEmpty
+            productData.containsValue("null")
                 ? const SizedBox.shrink()
                 : CustomTileDropdown(
                     title: "Details",
@@ -274,81 +321,75 @@ class ClothingProductsDetails extends StatelessWidget {
                 );
 
                 return ratingAsync.when(
-                  loading: () {
-                    return const RatingTileLoader();
-                  },
-                  error: (error, stack) {
-                    return Center(child: Text("Error: ${error.toString()}"));
-                  },
-                  data: (ratingList) {
-                    return Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${ratingList.length} Ratings",
-                                style: const TextStyle(
-                                  color: AppColor.primaryColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                  loading: () => const RatingTileLoader(),
+                  error: (error, stack) =>
+                      Center(child: Text("Error: ${error.toString()}")),
+                  data: (ratingList) => Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${ratingList.length} Ratings",
+                              style: const TextStyle(
+                                color: AppColor.primaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
-                              CustomTextButton(
-                                text: "Write a Review",
-                                onPressed: () {
-                                  showRatingDialog(
-                                    context: context,
-                                    productId: product.productid!,
-                                    ref: ref,
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                        ListView.builder(
-                          itemCount: ratingList.length,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            final currentUser =
-                                FirebaseAuth.instance.currentUser!.uid;
-                            final rating = ratingList[index];
-                            return GestureDetector(
-                              onTap: () {
-                                if (rating.userId == currentUser) {
-                                  showEditRatingDialoge(
-                                    context: context,
-                                    ref: ref,
-                                    productId: product.productid!,
-                                    ratingId: rating.ratingId,
-                                  );
-                                } else {
-                                  showCustomSnackbar(
-                                    context: context,
-                                    message:
-                                        "You can't edit other user's review",
-                                    type: ToastType.error,
-                                  );
-                                }
+                            ),
+                            CustomTextButton(
+                              text: "Write a Review",
+                              onPressed: () {
+                                showRatingDialog(
+                                  context: context,
+                                  productId: product.productid!,
+                                  ref: ref,
+                                );
                               },
-                              child: RatingTile(
-                                imageUrl: rating.image.isEmpty
-                                    ? AppImages.noProfile
-                                    : rating.image,
-                                name: rating.userName,
-                                rating: rating.rating,
-                                review: rating.comment,
-                              ),
-                            );
-                          },
+                            ),
+                          ],
                         ),
-                      ],
-                    );
-                  },
+                      ),
+                      ListView.builder(
+                        itemCount: ratingList.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          final currentUser =
+                              FirebaseAuth.instance.currentUser!.uid;
+                          final rating = ratingList[index];
+                          return GestureDetector(
+                            onTap: () {
+                              if (rating.userId == currentUser) {
+                                showEditRatingDialoge(
+                                  context: context,
+                                  ref: ref,
+                                  productId: product.productid!,
+                                  ratingId: rating.ratingId,
+                                );
+                              } else {
+                                showCustomSnackbar(
+                                  context: context,
+                                  message: "You can't edit other user's review",
+                                  type: ToastType.error,
+                                );
+                              }
+                            },
+                            child: RatingTile(
+                              imageUrl: rating.image.isEmpty
+                                  ? AppImages.noProfile
+                                  : rating.image,
+                              name: rating.userName,
+                              rating: rating.rating,
+                              review: rating.comment,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 );
               },
             ),

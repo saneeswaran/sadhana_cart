@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/common%20services/chat_support/chat_service.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
@@ -23,10 +24,16 @@ class SettingsPage extends StatelessWidget {
     log("openChatSupport: Loading indicator shown");
 
     try {
-      // Get or create chat
-      log("openChatSupport: Attempting to get or create chat for user");
-      final chatId = await ChatService.getOrCreateChatForUser();
-      log("openChatSupport: Chat obtained with ID: $chatId");
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser == null) throw Exception("User not logged in");
+
+      // support is your admin id (adjust as needed)
+      const supportId = "support";
+
+      // Get or create conversation between user and support
+      log("openChatSupport: Attempting to get or create conversation for user");
+      final chatId = await ChatService.getOrCreateConversation(supportId);
+      log("openChatSupport: Conversation obtained with ID: $chatId");
 
       // Close loading indicator
       if (context.mounted) {
