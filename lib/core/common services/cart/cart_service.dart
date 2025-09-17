@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_with_product.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class CartService {
   static const String user = 'users';
@@ -18,14 +19,14 @@ class CartService {
       .collection("products");
 
   static Future<bool> addToCart(
-    String? size, {
+    SizeVariant? sizeVariant, {
     required ProductModel product,
   }) async {
     try {
       Query query = cartRef.where("productid", isEqualTo: product.productid);
 
-      if (size != null && size.trim().isNotEmpty) {
-        query = query.where("size", isEqualTo: size);
+      if (sizeVariant!.size.trim().isNotEmpty) {
+        query = query.where("size", isEqualTo: sizeVariant.size);
       }
 
       final querySnapshot = await query.limit(1).get();
@@ -46,7 +47,7 @@ class CartService {
           customerId: currentUserId,
           productid: product.productid!,
           quantity: 1,
-          size: size,
+          sizeVariant: sizeVariant,
         );
 
         await cartRef.doc(docRef.id).set(cartModel.toMap());

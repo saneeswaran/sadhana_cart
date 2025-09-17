@@ -5,6 +5,7 @@ import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_state.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_with_product.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common%20services/cart/cart_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 
@@ -24,9 +25,15 @@ class CartNotifier extends StateNotifier<CartState> {
     }
   }
 
-  Future<void> addToCart({required ProductModel product, String? size}) async {
+  Future<void> addToCart({
+    required ProductModel product,
+    SizeVariant? sizevariant,
+  }) async {
     ref.read(cartLoadingProvider.notifier).state = true;
-    final bool success = await CartService.addToCart(size, product: product);
+    final bool success = await CartService.addToCart(
+      sizevariant,
+      product: product,
+    );
     if (success) {
       final carts = await CartService.fetchCartItemsWithProducts();
       state = state.copyWith(cart: [...carts]);
@@ -60,7 +67,7 @@ class CartNotifier extends StateNotifier<CartState> {
     if (index == -1) return;
 
     final current = state.cart[index];
-    final maxStock = current.product.sizevariants?[index].stock ?? 0;
+    final maxStock = current.cart.sizeVariant!.stock;
 
     if (cart.quantity < maxStock) {
       final updatedCart = cart.copyWith(quantity: cart.quantity + 1);

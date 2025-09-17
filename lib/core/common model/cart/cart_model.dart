@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
+
 class CartModel {
   final String cartId;
 
@@ -9,15 +11,13 @@ class CartModel {
   final String productid;
 
   int quantity = 1;
-
-  final String? size;
-
+  final SizeVariant? sizeVariant;
   CartModel({
     required this.cartId,
     required this.customerId,
     required this.productid,
     required this.quantity,
-    required this.size,
+    this.sizeVariant,
   });
 
   CartModel copyWith({
@@ -25,36 +25,40 @@ class CartModel {
     String? customerId,
     String? productid,
     int? quantity,
-    String? sizeVariant,
+
+    SizeVariant? sizeVariant,
   }) {
     return CartModel(
       cartId: cartId ?? this.cartId,
       customerId: customerId ?? this.customerId,
       productid: productid ?? this.productid,
       quantity: quantity ?? this.quantity,
-      size: sizeVariant ?? size,
+
+      sizeVariant: sizeVariant ?? this.sizeVariant,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'cartId': cartId,
       'customerId': customerId,
       'productid': productid,
       'quantity': quantity,
-      'sizeVariant': size,
+
+      'sizeVariant': sizeVariant?.toMap(),
     };
   }
 
   factory CartModel.fromMap(Map<String, dynamic> map) {
     return CartModel(
-      cartId: map['cartId'].toString(),
-      customerId: map['customerId'].toString(),
-      productid: map['productid'].toString(),
-      quantity: map['quantity'] is int
-          ? map['quantity']
-          : int.tryParse(map['quantity'].toString()) ?? 1,
-      size: map['sizeVariant']?.toString(),
+      cartId: map['cartId'] as String,
+      customerId: map['customerId'] as String,
+      productid: map['productid'] as String,
+      quantity: map['quantity'] as int,
+
+      sizeVariant: map['sizeVariant'] != null
+          ? SizeVariant.fromMap(map['sizeVariant'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -65,7 +69,7 @@ class CartModel {
 
   @override
   String toString() {
-    return 'CartModel(cartId: $cartId, customerId: $customerId, productid: $productid, quantity: $quantity, size: $size)';
+    return 'CartModel(cartId: $cartId, customerId: $customerId, productid: $productid, quantity: $quantity, sizeVariant: $sizeVariant)';
   }
 
   @override
@@ -76,7 +80,7 @@ class CartModel {
         other.customerId == customerId &&
         other.productid == productid &&
         other.quantity == quantity &&
-        other.size == size;
+        other.sizeVariant == sizeVariant;
   }
 
   @override
@@ -85,6 +89,6 @@ class CartModel {
         customerId.hashCode ^
         productid.hashCode ^
         quantity.hashCode ^
-        size.hashCode;
+        sizeVariant.hashCode;
   }
 }

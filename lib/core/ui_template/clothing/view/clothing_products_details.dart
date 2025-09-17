@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
@@ -49,8 +50,9 @@ class ClothingProductsDetails extends StatelessWidget {
                   );
 
                   final selectedSize = ref.watch(clothingSizeProvider);
-                  final selected =
-                      product.sizevariants?[selectedSize].size ?? "L";
+                  final SizeVariant selected =
+                      product.sizevariants?[selectedSize] ??
+                      SizeVariant(size: "", stock: 0, color: '', skuSuffix: '');
                   final loader = ref.watch(cartLoadingProvider);
                   return AbsorbPointer(
                     absorbing: loader,
@@ -65,7 +67,7 @@ class ClothingProductsDetails extends StatelessWidget {
                         if (!isAlreadyInCart) {
                           await cartNotifier.addToCart(
                             product: product,
-                            size: selected,
+                            sizevariant: selected,
                           );
 
                           if (context.mounted) {
