@@ -3,55 +3,92 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sadhana_cart/core/common%20model/chat/chat_model.dart';
 
 class ChatService {
-  static final chatsRef = FirebaseFirestore.instance.collection('chats');
+  static final conversationsRef = FirebaseFirestore.instance.collection(
+    'conversations',
+  );
 
-  // Get existing chat or create a new one
-  static Future<String> getOrCreateChatForUser() async {
+  /// Generate or return an existing conversation document
+  static Future<String> getOrCreateConversation(String recipientId) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) throw Exception("User not logged in");
 
-    // Check if a chat already exists
-    final query = await chatsRef
-        .where('members', arrayContains: user.uid)
-        .get();
+    final conversationId = user.uid.hashCode <= recipientId.hashCode
+        ? "${user.uid}_$recipientId"
+        : "${recipientId}_${user.uid}";
 
-    if (query.docs.isNotEmpty) {
-      return query.docs.first.id; // return existing chatId
+    final docRef = conversationsRef.doc(conversationId);
+    final doc = await docRef.get();
+
+    if (!doc.exists) {
+      // Create conversation document
+      await docRef.set({
+        'participants': [user.uid, recipientId],
+        'lastMessage': '',
+        'lastTimestamp': FieldValue.serverTimestamp(),
+      });
     }
 
-    // If first time, create a new chat
-    final docRef = await chatsRef.add({
-      'members': [user.uid, 'support'],
-      'createdAt': FieldValue.serverTimestamp(),
-    });
-    return docRef.id;
+    return conversationId;
   }
 
-  // Send a message
-  static Future<void> sendMessage(
-    String chatId,
-    String userId,
-    String text,
-  ) async {
-    final message = {
-      'text': text,
-      'senderId': userId,
-      'timestamp': FieldValue.serverTimestamp(),
-      'isRead': false,
+  /// Send a message in a conversation
+  static Future<void> sendMessage({
+    required String conversationId,
+    required String senderId,
+    required String senderName,
+    required String recipientId,
+    required String recipientName,
+    required String message,
+    String senderType = "user", // or "admin"
+  }) async {
+    final msgData = {
+      "senderId": senderId,
+      "senderName": senderName,
+      "recipientId": recipientId,
+      "recipientName": recipientName,
+      "senderType": senderType,
+      "message": message,
+      "status": "sent",
+      "timestamp": FieldValue.serverTimestamp(),
     };
-    await chatsRef.doc(chatId).collection('messages').add(message);
+
+    final messagesRef = conversationsRef
+        .doc(conversationId)
+        .collection('messages');
+
+    await messagesRef.add(msgData);
+
+    // Update conversation with last message
+    await conversationsRef.doc(conversationId).update({
+      'lastMessage': message,
+      'lastTimestamp': FieldValue.serverTimestamp(),
+    });
   }
 
-  // Stream messages
-  static Stream<List<Message>> getMessages(String chatId) {
-    return chatsRef
-        .doc(chatId)
-        .collection('messages')
-        .orderBy('timestamp')
+  /// Stream all messages in a conversation
+  static Stream<List<Message>> getMessages(String conversationId) {
+    final messagesRef = conversationsRef
+        .doc(conversationId)
+        .collection('messages');
+
+    return messagesRef
+        .orderBy("timestamp")
         .snapshots()
         .map(
           (snapshot) =>
               snapshot.docs.map((doc) => Message.fromMap(doc.data())).toList(),
         );
+  }
+
+  /// Stream all conversations for the current user
+  static Stream<List<Map<String, dynamic>>> getUserConversations() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) throw Exception("User not logged in");
+
+    return conversationsRef
+        .where('participants', arrayContains: user.uid)
+        .orderBy('lastTimestamp', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc.data()).toList());
   }
 }

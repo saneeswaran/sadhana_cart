@@ -135,7 +135,7 @@ class OrderService {
         final updatedVariants = data.sizevariants!.map((variant) {
           if (variant.size == selectedVariant!.size &&
               (variant.color ?? '') == (selectedVariant.color ?? '')) {
-            final newStock = (variant.stock ?? 0) - quantity;
+            final newStock = (variant.stock) - quantity;
             if (newStock < 0)
               throw Exception("Insufficient stock for selected size");
             return {

@@ -22,6 +22,14 @@ class _ChatSupportPageState extends ConsumerState<ChatSupportPage> {
   @override
   void initState() {
     super.initState();
+    // final user = FirebaseAuth.instance.currentUser;
+    // if (user != null) {
+    //   log("ChatSupportPage: Current User UID: ${user.uid}");
+    //   log("ChatSupportPage: Current User Name: ${user.displayName}");
+    //   log("ChatSupportPage: Current User Email: ${user.email}");
+    // } else {
+    //   log("ChatSupportPage: No user is logged in");
+    // }
     // Start listening messages
     ref.read(chatProvider.notifier).listenMessages(widget.chatId);
   }
@@ -35,7 +43,15 @@ class _ChatSupportPageState extends ConsumerState<ChatSupportPage> {
     try {
       await ref
           .read(chatProvider.notifier)
-          .sendMessage(widget.chatId, currentUserId, text);
+          .sendMessage(
+            conversationId: widget.chatId,
+            senderId: currentUserId,
+            senderName:
+                FirebaseAuth.instance.currentUser?.displayName ?? "User",
+            recipientId: "support", // adjust as needed
+            recipientName: "Support",
+            messageText: text,
+          );
 
       _messageController.clear();
 
@@ -114,7 +130,7 @@ class _ChatSupportPageState extends ConsumerState<ChatSupportPage> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
-                                    message.text,
+                                    message.message,
                                     style: TextStyle(
                                       color: isMe
                                           ? Colors.white
@@ -122,7 +138,6 @@ class _ChatSupportPageState extends ConsumerState<ChatSupportPage> {
                                     ),
                                   ),
                                 ),
-                                // const SizedBox(height: 2),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 8,

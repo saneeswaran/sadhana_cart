@@ -94,7 +94,6 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       price: (widget.product.offerprice ?? 0.0).toDouble(),
       stock: widget.product.stock ?? 0,
       quantity: int.tryParse(widget.product.quantity.toString()) ?? 1,
-
       sizevariants: widget.product.sizevariants,
     );
 
@@ -111,7 +110,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
           latitude: address.lattitude,
           longitude: address.longitude,
           quantity: (widget.product.quantity as int?) ?? 1,
-          product: orderProduct, // single object, not a list
+          product: orderProduct,
           createdAt: Timestamp.now(),
           ref: ref,
           selectedSizeFromUser: widget.selectedSize.toString(),
@@ -150,8 +149,9 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         });
       }
     } else if (_selectedMethod == PaymentEnum.online) {
+      // Online payment flow
       setState(() {
-        isLoading = false;
+        isLoading = false; // Payment UI will handle loading
       });
 
       final acceptedTerms = ref.read(orderAcceptTerms);
@@ -166,6 +166,9 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       paymentController.startPayment(
         amount: (widget.product.price ?? 0).toDouble(),
       );
+
+      // ⚠ Do NOT call addSingleOrder here!
+      // Wait for ref.listen<PaymentState> in the UI to detect success
     }
   }
 
