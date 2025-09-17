@@ -3,12 +3,14 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:sadhana_cart/core/colors/app_color.dart';
-import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
+import 'package:sadhana_cart/core/common model/cart/cart_model.dart';
+import 'package:sadhana_cart/core/common model/product/product_model.dart';
+import 'package:sadhana_cart/core/common model/product/size_variant.dart';
+import 'package:sadhana_cart/core/common services/order/order_service.dart';
+import 'package:sadhana_cart/core/common services/product/product_service.dart';
 import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
-import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
-import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
@@ -16,14 +18,14 @@ import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_state.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_success_page.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
+import 'package:sadhana_cart/features/order confirm/widget/payment/controller/payment_controller.dart';
+import 'package:sadhana_cart/features/order confirm/widget/payment/controller/payment_state.dart';
+import 'package:sadhana_cart/features/order confirm/widget/payment/view/payment_success_page.dart';
+import 'package:sadhana_cart/features/order confirm/widget/payment/widget/payment_option_tile.dart';
 import 'package:sadhana_cart/features/payment/service/payment_service.dart';
 import 'package:sadhana_cart/features/payment/view/order_address.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
-import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
+import 'package:sadhana_cart/features/profile/widget/address/view model/address_notifier.dart';
 
 class PaymentMainForListOfProduct extends ConsumerStatefulWidget {
   final List<ProductModel> products;
@@ -31,11 +33,11 @@ class PaymentMainForListOfProduct extends ConsumerStatefulWidget {
   final double totalAmount;
 
   const PaymentMainForListOfProduct({
-    super.key,
+    Key? key,
     required this.cart,
     required this.products,
     required this.totalAmount,
-  });
+  }) : super(key: key);
 
   @override
   ConsumerState<PaymentMainForListOfProduct> createState() =>
@@ -69,36 +71,34 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
 
   @override
   Widget build(BuildContext context) {
-    // Build orderProduct list here once per build
+    // Build orderProduct list here once
     final List<OrderProductModel> orderProduct = [];
-
     for (int i = 0; i < widget.cart.length; i++) {
-      final CartModel cartItem = widget.cart[i];
-      final ProductModel product = widget.products[i];
+      final cartItem = widget.cart[i];
+      final product = widget.products[i];
 
       final pricePerItem = product.offerprice ?? 0.0;
       final totalPrice = cartItem.quantity * pricePerItem;
 
-      final OrderProductModel model = OrderProductModel(
-        productid: product.productid!,
-        name: product.name!,
-        price: totalPrice.toDouble(),
-        stock: product.stock ?? 0,
-        quantity: cartItem.quantity,
-        sizevariants: [
-          SizeVariant(size: cartItem.size ?? "", stock: cartItem.quantity),
-        ],
+      orderProduct.add(
+        OrderProductModel(
+          productid: product.productid!,
+          name: product.name!,
+          price: totalPrice.toDouble(),
+          stock: product.stock ?? 0,
+          quantity: cartItem.quantity,
+          sizevariants: [
+            SizeVariant(size: cartItem.size ?? "", stock: cartItem.quantity),
+          ],
+        ),
       );
-
-      orderProduct.add(model);
     }
 
-    // Listen to payment state changes
     ref.listen<PaymentState>(paymentProvider, (previous, next) async {
       if (next.success) {
-        debugPrint("Online Payment Success!");
+        debugPrint("Payment succeeded!");
 
-        // Make sure addresses are up to date
+        // Ensure address is ready
         final addressState = ref.read(addressprovider);
         if (addressState.addresses.isEmpty) {
           await ref.read(addressprovider.notifier).updateAddress();
@@ -108,43 +108,8 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
             ? updatedAddressState.addresses.first
             : null;
 
-        if (address != null) {
-          final success = await OrderService.addMultipleProductOrder(
-            totalAmount: widget.totalAmount,
-            address:
-                "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
-            phoneNumber: address.phoneNumber ?? 0,
-            latitude: address.lattitude,
-            longitude: address.longitude,
-            orderDate: DateTime.now().toString(),
-            quantity: 1,
-            products: orderProduct,
-            createdAt: Timestamp.now(),
-            ref: ref,
-          );
-
-          if (success) {
-            log("Order placed successfully");
-
-            if (context.mounted) {
-              showCustomSnackbar(
-                context: context,
-                message: "Order placed successfully",
-                type: ToastType.success,
-              );
-            }
-          } else {
-            log("Failed to place order");
-            if (context.mounted) {
-              showCustomSnackbar(
-                context: context,
-                message: "Failed to place order",
-                type: ToastType.error,
-              );
-            }
-          }
-        } else {
-          log("Address is null or empty");
+        if (address == null) {
+          log("Address is null. Cannot place order.");
           if (context.mounted) {
             showCustomSnackbar(
               context: context,
@@ -152,9 +117,66 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
               type: ToastType.error,
             );
           }
+          return;
+        }
+
+        // Place order
+        final placed = await OrderService.addMultipleProductOrder(
+          totalAmount: widget.totalAmount,
+          address:
+              "${address.title}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
+          phoneNumber: address.phoneNumber ?? 0,
+          latitude: address.lattitude,
+          longitude: address.longitude,
+          orderDate: DateTime.now().toString(),
+          quantity: widget.cart.fold<int>(
+            0,
+            (int sum, c) => sum + c.quantity,
+          ), // sum quantities
+          products: orderProduct,
+          createdAt: Timestamp.now(),
+          ref: ref,
+        );
+
+        if (!placed) {
+          log("Order placement failed");
+          if (context.mounted) {
+            showCustomSnackbar(
+              context: context,
+              message: "Failed to place order",
+              type: ToastType.error,
+            );
+          }
+          return;
+        }
+
+        log("Order placed successfully");
+
+        // Decrease stock after successful order
+        bool stockUpdated = await ProductService.decreaseStockForProducts(
+          orderProduct,
+        );
+
+        if (stockUpdated) {
+          log("Stock updated successfully");
+        } else {
+          log("Stock update failed");
+          if (context.mounted) {
+            showCustomSnackbar(
+              context: context,
+              message: "Stock update failed",
+              type: ToastType.error,
+            );
+          }
+          // maybe rollback or notify admin
         }
 
         if (context.mounted) {
+          showCustomSnackbar(
+            context: context,
+            message: "Order placed and stock updated",
+            type: ToastType.success,
+          );
           navigateToReplacement(
             context: context,
             screen: const PaymentSuccessPage(),
@@ -190,7 +212,10 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                   context: context,
                   selectedMethod: _selectedMethod!,
                   products: orderProduct,
-                  quantity: 1,
+                  quantity: widget.cart.fold<int>(
+                    0,
+                    (int sum, c) => sum + c.quantity,
+                  ),
                   ref: ref,
                 );
               } else {
@@ -254,29 +279,27 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
             ),
           ),
 
-          // PageView with steps
           Expanded(
             child: PageView(
               physics: const NeverScrollableScrollPhysics(),
               controller: _pageController,
               children: [
-                // Step 1: Product + User Details
+                // Step 1: show products + address form
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Product Tile
                       Expanded(
                         child: ListView.builder(
                           itemCount: widget.products.length,
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             final product = widget.products[index];
-                            final cart = widget.cart[index];
+                            final cartItem = widget.cart[index];
                             final pricePerItem = product.offerprice ?? 0.0;
-                            final specificProductPrice =
-                                cart.quantity * pricePerItem;
+                            final specificPrice =
+                                pricePerItem * cartItem.quantity;
                             return Container(
                               margin: const EdgeInsets.all(5),
                               padding: const EdgeInsets.all(16),
@@ -303,7 +326,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                                             product.images![0],
                                             fit: BoxFit.fitHeight,
                                           )
-                                        : null,
+                                        : const SizedBox.shrink(),
                                   ),
                                   const SizedBox(width: 16),
                                   Expanded(
@@ -320,7 +343,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
-                                          "₹ ${pricePerItem.toStringAsFixed(2)} x ${cart.quantity} = ₹ ${specificProductPrice.toStringAsFixed(2)}",
+                                          "₹ ${pricePerItem.toStringAsFixed(2)} x ${cartItem.quantity} = ₹ ${specificPrice.toStringAsFixed(2)}",
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -335,15 +358,11 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                           },
                         ),
                       ),
-
-                      // User details / Address widget
                       const OrderAddress(),
-                      // You can add an edit address button here if needed
                     ],
                   ),
                 ),
-
-                // Step 2: Payment Method
+                // Step 2: Payment method selection
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -385,12 +404,14 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                         children: [
                           const SizedBox(width: 20),
                           Consumer(
-                            builder: (context, ref, child) {
-                              final value = ref.watch(orderAcceptTerms);
+                            builder: (context, listenRef, child) {
+                              final value = listenRef.watch(orderAcceptTerms);
                               return CustomCheckBox(
                                 value: value,
                                 onChanged: (newValue) {
-                                  ref.read(orderAcceptTerms.notifier).state =
+                                  listenRef
+                                          .read(orderAcceptTerms.notifier)
+                                          .state =
                                       newValue!;
                                 },
                               );
@@ -403,7 +424,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                           CustomTextButton(
                             text: "Terms and Conditions",
                             onPressed: () {
-                              // Implement navigation to terms page here
+                              // open terms and conditions
                             },
                           ),
                         ],

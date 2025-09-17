@@ -2,8 +2,10 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_fetch_result.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/features/rating/service/rating_service.dart';
 
@@ -219,7 +221,7 @@ class ProductService {
   static Future<List<ProductModel>> getProductsByMoneyFilter({
     int? min,
     int? max,
-    double? rating, // double rating
+    double? rating,
   }) async {
     try {
       log("Starting product filter: min=$min, max=$max, rating=$rating");
@@ -274,8 +276,63 @@ class ProductService {
       log("Total matched products: ${matchedProducts.length}");
       return matchedProducts;
     } catch (e, stackTrace) {
-      log("❌ ProductService fetch error: $e", stackTrace: stackTrace);
+      log(" ProductService fetch error: $e", stackTrace: stackTrace);
       return [];
     }
+  }
+
+  static Future<bool> decreaseStockForProducts(
+    List<OrderProductModel> orderedProducts,
+  ) async {
+    for (final orderProduct in orderedProducts) {
+      final product = productRef.doc(orderProduct.productid);
+
+      try {
+        final snapshot = await product.get();
+
+        if (!snapshot.exists) {
+          log("Product not found: ${orderProduct.productid}");
+          continue;
+        }
+
+        final productData = snapshot.data() as Map<String, dynamic>;
+        final currentStock = productData['stock'] ?? 0;
+
+        final newStock = currentStock - orderProduct.quantity;
+        final updatedSizeVariants =
+            (productData['sizevariants'] as List<dynamic>).map((variant) {
+              final sizeVariant = SizeVariant.fromMap(variant);
+
+              final match = orderProduct.sizevariants?.firstWhere(
+                (v) => v.size == sizeVariant.size,
+                orElse: () =>
+                    SizeVariant(size: "", stock: 0, color: '', skuSuffix: ''),
+              );
+
+              if (match?.size.isNotEmpty ?? false) {
+                final updatedStock = (sizeVariant.stock - match!.stock).clamp(
+                  0,
+                  sizeVariant.stock,
+                );
+                return {'size': sizeVariant.size, 'stock': updatedStock};
+              }
+
+              return variant;
+            }).toList();
+
+        await product.update({
+          'stock': newStock.clamp(0, currentStock),
+          'sizevariants': updatedSizeVariants,
+        });
+
+        log("Stock updated for ${orderProduct.name}");
+        return true;
+      } catch (e, st) {
+        log("Error updating stock for ${orderProduct.name}: $e");
+        log(st.toString());
+        return false;
+      }
+    }
+    return false;
   }
 }

@@ -60,7 +60,7 @@ class CartNotifier extends StateNotifier<CartState> {
     if (index == -1) return;
 
     final current = state.cart[index];
-    final maxStock = current.product.stock ?? 0;
+    final maxStock = current.product.sizevariants?[index].stock ?? 0;
 
     if (cart.quantity < maxStock) {
       final updatedCart = cart.copyWith(quantity: cart.quantity + 1);
