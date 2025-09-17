@@ -70,17 +70,33 @@ class OrderService {
     required double latitude,
     required double longitude,
     required int quantity,
-    required List<OrderProductModel> products,
+    required OrderProductModel product,
     required Timestamp createdAt,
     required WidgetRef ref,
+    required String selectedSizeFromUser,
   }) async {
     try {
-      log("Starting addOrder for user: $currentUser");
-      log("Total Amount: $totalAmount, Products Count: ${products.length}");
+      // Find user-selected size variant safely
+      SizeVariant? selectedVariant;
+      if (product.sizevariants != null) {
+        try {
+          selectedVariant = product.sizevariants!.firstWhere(
+            (v) => v.size == selectedSizeFromUser,
+          );
+        } catch (_) {
+          selectedVariant = null;
+        }
+      }
+
+      if (selectedVariant == null) {
+        log(
+          "Selected size '$selectedSizeFromUser' not found for product ${product.productid}",
+        );
+        return false;
+      }
 
       final orderDoc = orderRef.doc();
-
-      final OrderModel orderModel = OrderModel(
+      final orderModel = OrderModel(
         quantity: quantity,
         userId: currentUser,
         totalAmount: totalAmount,
@@ -92,124 +108,65 @@ class OrderService {
         orderDate: Timestamp.now(),
         orderId: orderDoc.id,
         createdAt: createdAt,
-        products: products,
+        products: [product],
       );
 
+      // Fetch product from Firestore
+      final productQuery = await productRef
+          .where('productid', isEqualTo: product.productid)
+          .limit(1)
+          .get();
+      if (productQuery.docs.isEmpty) throw Exception("Product not found");
+
+      final productRefDoc = productRef.doc(productQuery.docs.first.id);
+      final data = ProductModel.fromMap(
+        productQuery.docs.first.data() as Map<String, dynamic>,
+      );
+
+      // Transaction: update stock & save order
       await FirebaseFirestore.instance.runTransaction((transaction) async {
-        log("Running Firestore transaction for order: ${orderDoc.id}");
+        final currentTotalStock = data.stock ?? 0;
+        if (currentTotalStock < quantity)
+          throw Exception("Insufficient total stock");
+        transaction.update(productRefDoc, {
+          'stock': currentTotalStock - quantity,
+        });
 
-        for (final orderedProduct in products) {
-          final productId = orderedProduct.productid;
-
-          if (productId.isEmpty) {
-            log("Invalid product ID in order.");
-            throw Exception("Invalid product ID in order.");
+        final updatedVariants = data.sizevariants!.map((variant) {
+          if (variant.size == selectedVariant!.size &&
+              (variant.color ?? '') == (selectedVariant.color ?? '')) {
+            final newStock = (variant.stock ?? 0) - quantity;
+            if (newStock < 0)
+              throw Exception("Insufficient stock for selected size");
+            return {
+              'size': variant.size,
+              'color': variant.color,
+              'stock': newStock,
+            };
           }
+          return {
+            'size': variant.size,
+            'color': variant.color,
+            'stock': variant.stock,
+          };
+        }).toList();
 
-          final productRefDoc = productRef.doc(productId);
-          final productSnapshot = await transaction.get(productRefDoc);
+        transaction.update(productRefDoc, {'sizevariants': updatedVariants});
 
-          if (!productSnapshot.exists) {
-            log("Product not found in Firestore: $productId");
-            throw Exception("Product not found: $productId");
-          }
-
-          final data = ProductModel.fromMap(
-            productSnapshot.data() as Map<String, dynamic>,
-          );
-
-          log("Updating stock for product: $productId");
-
-          // If the product does not have size variants, update the product's stock directly
-          if (data.sizevariants == null || data.sizevariants!.isEmpty) {
-            final currentTotalStock = data.stock ?? 0;
-
-            if (currentTotalStock < orderedProduct.quantity) {
-              log(
-                "Insufficient stock for product $productId. Current stock: $currentTotalStock, Requested quantity: ${orderedProduct.quantity}",
-              );
-              throw Exception("Insufficient stock for product $productId");
-            }
-
-            // Update stock for the product without size variants
-            transaction.update(productRefDoc, {
-              'stock': currentTotalStock - orderedProduct.quantity,
-            });
-
-            log(
-              "Stock updated for product: $productId, New Total Stock: ${currentTotalStock - orderedProduct.quantity}",
-            );
-          } else {
-            // If the product has size variants, update stock for each variant
-            final sizeVariants = data.sizevariants!;
-            final orderedVariants = orderedProduct.sizevariants ?? [];
-
-            final updatedVariants = sizeVariants.map((variant) {
-              final variantSize = variant.size;
-              final variantColor = variant.color;
-
-              final matchingOrderedVariant = orderedVariants.firstWhere(
-                (ordered) =>
-                    ordered.size == variantSize &&
-                    (ordered.color ?? '') == (variantColor ?? ''),
-                orElse: () => SizeVariant(
-                  size: variantSize,
-                  color: variantColor,
-                  stock: 0,
-                ),
-              );
-
-              final currentStock = variant.size;
-              final stockToSubtract = matchingOrderedVariant.stock;
-              final newStock = (currentStock as int) - stockToSubtract;
-
-              if (newStock < 0) {
-                log(
-                  "Insufficient stock for product $productId, size ${matchingOrderedVariant.size}",
-                );
-                throw Exception(
-                  "Insufficient stock for product $productId, size ${matchingOrderedVariant.size}",
-                );
-              }
-
-              return {
-                'size': variantSize,
-                'color': variantColor,
-                'stock': newStock,
-              };
-            }).toList();
-
-            final totalStockToSubtract = orderedVariants.fold<int>(
-              0,
-              (int sum, v) => sum + v.stock,
-            );
-
-            transaction.update(productRefDoc, {
-              'sizevariants': updatedVariants,
-              // Do not update product stock directly as size variants control the stock
-            });
-
-            log(
-              "Stock updated for product: $productId, New Total Stock for variants: $sizeVariants",
-            );
-          }
-        }
-
-        // Save order document
-        transaction.set(orderDoc, orderModel.toMap());
-        log("Order written to Firestore document: ${orderDoc.id}");
+        final userOrderRef = FirebaseFirestore.instance
+            .collection(userCollection)
+            .doc(currentUser)
+            .collection('orders')
+            .doc(orderDoc.id);
+        transaction.set(userOrderRef, orderModel.toMap());
       });
 
-      // Update local provider
+      // Update provider
       ref.read(orderProvider.notifier).addOrder(order: orderModel);
 
-      log(
-        "Order placed successfully for user: $currentUser, Order ID: ${orderDoc.id}",
-      );
       return true;
     } catch (e, stack) {
-      log("Order Service Error: $e");
-      log("Stack Trace: $stack");
+      log("addSingleOrder error: $e\n$stack");
       return false;
     }
   }
