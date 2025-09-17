@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
+import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
@@ -68,6 +69,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
 
   @override
   Widget build(BuildContext context) {
+    final List<OrderProductModel> orderProduct = [];
     // Watch address state
     final addressState = ref.watch(addressprovider);
     final AddressModel? address = addressState.addresses.isNotEmpty
@@ -100,7 +102,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                 PaymentService.handlePayment(
                   context: context,
                   selectedMethod: _selectedMethod!,
-                  products: widget.products,
+                  products: orderProduct,
                   quantity: 1,
                   ref: ref,
                 );
@@ -117,11 +119,27 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
       ),
       body: Consumer(
         builder: (context, ref, _) {
+          for (int i = 0; i < widget.cart.length; i++) {
+            final CartModel cartItem = widget.cart[i];
+            final ProductModel product = widget.products[i];
+
+            final pricePerItem = product.offerprice ?? 0.0;
+            final totalPrice = cartItem.quantity * pricePerItem;
+
+            final OrderProductModel model = OrderProductModel(
+              productid: product.productid!,
+              name: product.name!,
+              price: totalPrice.toDouble(),
+              stock: product.stock ?? 0,
+              quantity: cartItem.quantity,
+            );
+
+            orderProduct.add(model);
+          }
           ref.listen<PaymentState>(paymentProvider, (previous, next) async {
             if (next.success) {
               debugPrint("Online Payment Success!");
 
-              // Prepare order details
               final addressState = ref.read(addressprovider);
               final AddressModel? address = addressState.addresses.isNotEmpty
                   ? addressState.addresses.last
@@ -137,7 +155,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
                   longitude: address.longitude,
                   orderDate: DateTime.now().toString(),
                   quantity: 1,
-                  products: widget.products,
+                  products: orderProduct,
                   createdAt: Timestamp.now(),
                   ref: ref,
                 );

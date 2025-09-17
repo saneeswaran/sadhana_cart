@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
@@ -19,7 +19,7 @@ class PaymentService {
   static Future<void> handlePayment({
     required BuildContext context,
     required String selectedMethod,
-    required List<ProductModel> products,
+    required List<OrderProductModel> products,
     required int quantity,
     required WidgetRef ref,
   }) async {

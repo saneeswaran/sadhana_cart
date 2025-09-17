@@ -1,8 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
+import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class OrderModel {
   final int quantity;
@@ -13,10 +14,10 @@ class OrderModel {
   final double latitude;
   final double longitude;
   String orderStatus;
-  final String orderDate;
+  final Timestamp orderDate;
   final String orderId;
   final Timestamp createdAt;
-  final List<ProductModel> products;
+  final List<OrderProductModel> products;
   OrderModel({
     required this.quantity,
     required this.userId,
@@ -31,36 +32,6 @@ class OrderModel {
     required this.createdAt,
     required this.products,
   });
-
-  OrderModel copyWith({
-    String? userId,
-    double? totalAmount,
-    String? address,
-    int? phoneNumber,
-    double? latitude,
-    double? longitude,
-    String? orderStatus,
-    String? orderDate,
-    String? orderId,
-    Timestamp? createdAt,
-    List<ProductModel>? products,
-    int? quantity,
-  }) {
-    return OrderModel(
-      quantity: quantity ?? this.quantity,
-      userId: userId ?? this.userId,
-      totalAmount: totalAmount ?? this.totalAmount,
-      address: address ?? this.address,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      orderStatus: orderStatus ?? this.orderStatus,
-      orderDate: orderDate ?? this.orderDate,
-      orderId: orderId ?? this.orderId,
-      createdAt: createdAt ?? this.createdAt,
-      products: products ?? this.products,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -89,12 +60,12 @@ class OrderModel {
       latitude: map['latitude'] as double,
       longitude: map['longitude'] as double,
       orderStatus: map['orderStatus'] as String,
-      orderDate: map['orderDate'] as String,
+      orderDate: map['orderDate'] as Timestamp,
       orderId: map['orderId'] as String,
       createdAt: map['createdAt'] as Timestamp,
-      products: List<ProductModel>.from(
-        (map['products'] as List<int>).map<ProductModel>(
-          (x) => ProductModel.fromMap(x as Map<String, dynamic>),
+      products: List<OrderProductModel>.from(
+        (map['products'] as List<int>).map<OrderProductModel>(
+          (x) => OrderProductModel.fromMap(x as Map<String, dynamic>),
         ),
       ),
     );
@@ -104,4 +75,58 @@ class OrderModel {
 
   factory OrderModel.fromJson(String source) =>
       OrderModel.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+class OrderProductModel {
+  final String? id;
+  final String productid;
+  final String name;
+  final double price;
+  int stock;
+  final int quantity;
+  final List<SizeVariant>? sizevariants;
+  OrderProductModel({
+    this.id,
+    required this.productid,
+    required this.name,
+    required this.price,
+    required this.stock,
+    required this.quantity,
+    this.sizevariants,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'productid': productid,
+      'name': name,
+      'price': price,
+      'stock': stock,
+      'quantity': quantity,
+      'sizevariants': sizevariants?.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory OrderProductModel.fromMap(Map<String, dynamic> map) {
+    return OrderProductModel(
+      id: map['id'] as String,
+      productid: map['productid'] as String,
+      name: map['name'] as String,
+      price: map['price'] as double,
+      stock: map['stock'] as int,
+      quantity: map['quantity'] as int,
+      sizevariants: map['sizevariants'] != null
+          ? List<SizeVariant>.from(
+              (map['sizevariants'] as List<int>).map<SizeVariant?>(
+                (x) => SizeVariant.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory OrderProductModel.fromJson(String source) =>
+      OrderProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

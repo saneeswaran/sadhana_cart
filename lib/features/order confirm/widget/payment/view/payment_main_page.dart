@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
@@ -184,6 +185,13 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       ),
       body: Consumer(
         builder: (context, ref, _) {
+          final OrderProductModel model = OrderProductModel(
+            productid: widget.product.productid!,
+            name: widget.product.name!,
+            price: (widget.product.offerprice ?? 0.0).toDouble(),
+            stock: widget.product.stock ?? 0,
+            quantity: 1,
+          );
           ref.listen<PaymentState>(paymentProvider, (previous, next) async {
             if (next.success) {
               debugPrint("Online Payment Success!");
@@ -204,7 +212,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                   longitude: address.longitude,
                   orderDate: DateTime.now().toString(),
                   quantity: 1,
-                  products: [widget.product],
+                  products: [model],
                   createdAt: Timestamp.now(),
                   ref: ref,
                 );
