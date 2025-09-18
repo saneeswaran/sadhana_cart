@@ -304,11 +304,11 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
               log(
                 "Payment failed or cancelled on PaymentMainPage: ${next.error}",
               );
-              showCustomSnackbar(
-                context: context,
-                message: "Payment was not completed.",
-                type: ToastType.error,
-              );
+              // showCustomSnackbar(
+              //   context: context,
+              //   message: "Payment was not completed.",
+              //   type: ToastType.error,
+              // );
             }
           });
           return Column(
