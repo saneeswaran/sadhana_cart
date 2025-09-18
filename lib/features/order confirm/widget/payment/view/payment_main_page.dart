@@ -266,17 +266,53 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       // --- STORE ONLY order_id AND status ---
       if (apiResult != null &&
           apiResult['order_id'] != null &&
-          apiResult['status'] != null) {
+          apiResult['status'] != null &&
+          address != null) {
+        // Convert ProductModel to OrderProductModel
+        final orderProduct = OrderProductModel(
+          productid: widget.product.productid!,
+          name: widget.product.name!,
+          price: (widget.product.offerprice ?? 0.0).toDouble(),
+          stock: widget.product.stock ?? 0,
+          quantity: int.tryParse(widget.product.quantity.toString()) ?? 1,
+          sizevariants: widget.product.sizevariants,
+        );
+
+        // Prepare your OrderService data
+        final success = await OrderService.addSingleOrder(
+          totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
+          phoneNumber: address.phoneNumber ?? 0,
+          address:
+              "${address.title ?? ''}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
+          latitude: address.lattitude,
+          longitude: address.longitude,
+          quantity: int.tryParse(widget.product.quantity.toString()) ?? 1,
+          product: orderProduct,
+          createdAt: Timestamp.now(),
+          ref: ref,
+          selectedSizeFromUser: widget.selectedSize.toString(),
+        );
+
+        // Combine with Shiprocket API response
         final userOrderRef = FirebaseFirestore.instance
             .collection('users') // or your userCollection
             .doc(currentUser)
             .collection('orders')
-            .doc(); // generates a new order doc
+            .doc(); // generates a new doc
 
         final orderMap = {
           "order_id": apiResult['order_id'],
           "status": apiResult['status'],
-          "created_at": Timestamp.now(),
+          "totalAmount": (widget.product.offerprice ?? 0.0).toDouble(),
+          "phoneNumber": address.phoneNumber ?? 0,
+          "address":
+              "${address.title ?? ''}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
+          "latitude": address.lattitude,
+          "longitude": address.longitude,
+          "quantity": int.tryParse(widget.product.quantity.toString()) ?? 1,
+          "product": orderProduct.toMap(), // make sure your model has toMap()
+          "selectedSizeFromUser": widget.selectedSize.toString(),
+          "createdAt": Timestamp.now(),
         };
 
         await FirebaseFirestore.instance.runTransaction((transaction) async {

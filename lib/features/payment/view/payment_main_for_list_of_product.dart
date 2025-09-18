@@ -91,7 +91,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
           stock: product.stock ?? 0,
           quantity: cartItem.quantity,
           sizevariants: [
-            SizeVariant(size: cartItem.size ?? "", stock: cartItem.quantity),
+            // SizeVariant(size: cartItem.size ?? "", stock: cartItem.quantity),
           ],
         ),
       );
