@@ -58,6 +58,7 @@ class AllProductsTile extends ConsumerWidget {
                             ? product.images![0]
                             : "",
                         errorWidget: (context, _, _) => const ImageLoader(),
+                        placeholder: (context, _) => const ImageLoader(),
                         height: size.height * 0.20,
                         width: double.infinity,
                         fit: BoxFit.contain,

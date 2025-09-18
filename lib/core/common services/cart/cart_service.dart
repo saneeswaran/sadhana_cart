@@ -148,9 +148,7 @@ class CartService {
 
       if (documentSnapshot.exists) {
         await documentSnapshot.reference.delete();
-        log("Product deleted successfully: $productId");
       } else {
-        log("Product not found: $productId");
         allDeleted = false;
       }
     }
