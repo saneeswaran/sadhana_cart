@@ -1,11 +1,11 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/app%20routes/app_routes.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/helper/main_helper.dart';
+import 'package:sadhana_cart/core/helper/permission_helper.dart';
 import 'package:sadhana_cart/core/service/notification_service.dart';
 import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_option.dart';
 import 'package:sadhana_cart/features/onboard/view/onboard_page_mobile.dart';
@@ -36,7 +36,13 @@ class _MyAppState extends State<MyApp> {
           .catchError((error) {
             log('Failed to initialize notifications: $error');
           });
+
+      _notification();
     });
+  }
+
+  void _notification() async {
+    await PermissionHelper.askNotificationPermission();
   }
 
   @override

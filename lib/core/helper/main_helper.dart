@@ -25,16 +25,14 @@ class MainHelper {
   //inits
   static Future<void> inits() async {
     WidgetsFlutterBinding.ensureInitialized();
-    // Initialize Firebase first
+    // Initialize Firebase
     try {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       );
-      log("✅ Firebase initialized");
     } catch (e, stackTrace) {
       log("❌ Firebase init failed: $e");
       log("🔍 Stack trace: $stackTrace");
-      // Don't rethrow if Firebase fails - you might want to continue without it
     }
     //initialize hive
     await Hive.initFlutter();
