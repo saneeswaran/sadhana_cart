@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -51,25 +52,29 @@ class OrderModel {
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
+    log("products ${map['products']}");
     return OrderModel(
-      quantity: map['quantity'] as int,
-      userId: map['userId'] != null ? map['userId'] as String : null,
-      totalAmount: map['totalAmount'] as double,
-      address: map['address'] != null ? map['address'] as String : null,
-      phoneNumber: map['phoneNumber'] as int,
-      latitude: map['latitude'] as double,
-      longitude: map['longitude'] as double,
-      orderStatus: map['orderStatus'] != null
-          ? map['orderStatus'] as String
-          : null,
-      orderDate: map['orderDate'] as Timestamp,
-      orderId: map['orderId'] != null ? map['orderId'] as String : null,
-      createdAt: map['createdAt'] as Timestamp,
-      products: List<OrderProductModel>.from(
-        (map['products'] as List<int>).map<OrderProductModel>(
-          (x) => OrderProductModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      quantity: map['quantity'],
+      userId: map['userId'],
+      totalAmount: map['totalAmount'],
+      address: map['address'],
+      phoneNumber: map['phoneNumber'],
+      latitude: map['latitude'],
+      longitude: map['longitude'],
+      orderStatus: map['orderStatus'],
+      orderDate: map['orderDate'],
+      orderId: map['orderId'],
+      createdAt: map['createdAt'],
+      products: map['products'] != null
+          ? (map['products'] is List<dynamic>)
+                ? List<OrderProductModel>.from(
+                    (map['products'] as List<dynamic>).map<OrderProductModel>(
+                      (x) =>
+                          OrderProductModel.fromMap(x as Map<String, dynamic>),
+                    ),
+                  )
+                : []
+          : [],
     );
   }
 
@@ -112,14 +117,12 @@ class OrderProductModel {
 
   factory OrderProductModel.fromMap(Map<String, dynamic> map) {
     return OrderProductModel(
-      id: map['id'] != null ? map['id'] as String : null,
-      productid: map['productid'] != null ? map['productid'] as String : null,
-      name: map['name'] != null ? map['name'] as String : null,
-      price: map['price'] != null ? (map['price'] as num).toDouble() : null,
-      stock: map['stock'] != null ? (map['stock'] as num).toInt() : null,
-      quantity: map['quantity'] != null
-          ? (map['quantity'] as num).toInt()
-          : null,
+      id: map['id'],
+      productid: map['productid'],
+      name: map['name'],
+      price: map['price'],
+      stock: map['stock'],
+      quantity: map['quantity'],
       sizevariants: map['sizevariants'] != null
           ? (map['sizevariants'] as List<dynamic>)
                 .map((x) => SizeVariant.fromMap(x as Map<String, dynamic>))
