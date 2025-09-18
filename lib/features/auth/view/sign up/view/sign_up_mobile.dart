@@ -36,6 +36,7 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
+    phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -129,8 +130,12 @@ class _SignUpMobileState extends ConsumerState<SignUpMobile> {
                         if (formKey.currentState!.validate()) {
                           final bool isSuccess =
                               await AuthService.createAccount(
-                                email: emailController.text,
-                                password: passwordController.text,
+                                name: nameController.text.trim(),
+                                contact: int.parse(
+                                  phoneNumberController.text.trim(),
+                                ),
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
                                 ref: ref,
                               );
                           final bool profile =

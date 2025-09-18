@@ -98,7 +98,7 @@ class OrderDetailsPage extends StatelessWidget {
                       _customText(
                         title: "Delivery Address: ",
                         titleColor: AppColor.orderStatusColor,
-                        value: order.address,
+                        value: order.address!,
                         valueColor: Colors.black,
                         maxLines: 3,
                       ),
