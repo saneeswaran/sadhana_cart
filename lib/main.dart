@@ -41,6 +41,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
     return MaterialApp(
       title: "Sadhana Cart",
       debugShowCheckedModeBanner: false,
@@ -50,6 +51,7 @@ class _MyAppState extends State<MyApp> {
       ),
       themeMode: ThemeMode.light,
       routes: AppRoutes.routes,
+      navigatorKey: navigatorKey,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {

@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/admin/admin_model.dart';
 import 'package:sadhana_cart/core/common%20model/notification/notification_model.dart';
+import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/notification/view%20model/notification_notifier.dart';
 
 class NotificationService {
@@ -33,6 +35,8 @@ class NotificationService {
   static final CollectionReference adminRef = FirebaseFirestore.instance
       .collection(admin);
 
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   // Background message handler
   @pragma('vm:entry-point')
   static Future<void> firebaseMessagingBackgroundHandler(
@@ -52,6 +56,13 @@ class NotificationService {
       await _localNotificationsPlugin.initialize(
         initSettings,
         onDidReceiveNotificationResponse: (NotificationResponse details) {
+          final data = details.payload;
+          if (data != null && navigatorKey.currentContext != null) {
+            navigateWithRoute(
+              context: navigatorKey.currentState!.context,
+              screenPath: data,
+            );
+          }
           log('Notification clicked: ${details.payload}');
         },
       );
