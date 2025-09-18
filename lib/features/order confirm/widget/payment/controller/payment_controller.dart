@@ -24,7 +24,7 @@ class PaymentController extends StateNotifier<PaymentState> {
   }
 
   void startPayment({required double amount}) {
-    // state = state.copyWith(isLoading: true);
+    //  state = state.copyWith(isLoading: true);
     state = PaymentState.initial().copyWith(isLoading: true);
     amount = amount * 100;
     var options = {
