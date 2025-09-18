@@ -279,24 +279,30 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                   setState(() {
                     isPaymentProcessing = true;
                   });
-                  showCustomSnackbar(
-                    context: context,
-                    message: "Order placed successfully!",
-                    type: ToastType.success,
-                  );
-                  navigateToReplacement(
-                    context: context,
-                    screen: const PaymentSuccessPage(),
-                  );
+                  if (context.mounted) {
+                    showCustomSnackbar(
+                      context: context,
+                      message: "Order placed successfully!",
+                      type: ToastType.success,
+                    );
+                  }
+                  if (context.mounted) {
+                    navigateToReplacement(
+                      context: context,
+                      screen: const PaymentSuccessPage(),
+                    );
+                  }
                 } else {
                   setState(() {
                     isPaymentProcessing = false;
                   });
-                  showCustomSnackbar(
-                    context: context,
-                    message: "Failed to place order. Try again.",
-                    type: ToastType.error,
-                  );
+                  if (context.mounted) {
+                    showCustomSnackbar(
+                      context: context,
+                      message: "Failed to place order. Try again.",
+                      type: ToastType.error,
+                    );
+                  }
                 }
               }
             } else if (next.error != null) {
