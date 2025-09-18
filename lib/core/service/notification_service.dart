@@ -1,13 +1,13 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:sadhana_cart/core/common%20model/admin/admin_model.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class NotificationService {
+  static final Dio dio = Dio();
   // 1. Initialize local notifications
   static const AndroidInitializationSettings androidInitSettings =
       AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -34,15 +34,15 @@ class NotificationService {
       );
       final adminToken = data.fcmtoken;
 
-      http.post(
-        Uri.parse(notificationUrl),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
+      dio.post(
+        notificationUrl,
+        options: Options(contentType: Headers.jsonContentType),
+        data: {
           'title': title,
           'body': message,
           'fcmtoken': adminToken,
           'screen': screen,
-        }),
+        },
       );
     }
   }

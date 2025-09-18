@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBtraD4VRw_kJsltygAqzKtcYdyfnLeHZk',
-    appId: '1:126398142924:android:0ecae351725fe73685a569',
+    appId: '1:126398142924:android:d096dc558320bb4885a569',
     messagingSenderId: '126398142924',
     projectId: 'sadhana-cart',
     storageBucket: 'sadhana-cart.firebasestorage.app',
@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAo-eSr8qvFVoyS6h0UZ6x-Hn46fs2Q2A0',
-    appId: '1:126398142924:ios:5adcafb846e9722685a569',
+    appId: '1:126398142924:ios:8bda670584f8f7fa85a569',
     messagingSenderId: '126398142924',
     projectId: 'sadhana-cart',
     storageBucket: 'sadhana-cart.firebasestorage.app',
@@ -67,5 +67,4 @@ class DefaultFirebaseOptions {
     iosClientId: '126398142924-iko2cbqi6d86ru9pbiv35j4qfru2r1gp.apps.googleusercontent.com',
     iosBundleId: 'com.sadhanacart.app',
   );
-
 }

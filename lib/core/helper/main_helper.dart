@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
@@ -22,9 +24,16 @@ class MainHelper {
   //inits
   static Future<void> inits() async {
     //initialize firebase
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      log("✅ Firebase initialized");
+    } catch (e, stackTrace) {
+      log("❌ Firebase init failed: $e");
+      log("🔍 Stack trace: $stackTrace");
+      rethrow;
+    }
     //initialize hive
     await Hive.initFlutter();
 
