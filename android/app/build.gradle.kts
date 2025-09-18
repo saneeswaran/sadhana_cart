@@ -8,7 +8,6 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
@@ -16,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.sadhana_cart"
+    namespace = "com.innomatrics.sadhana_cart"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -36,6 +35,7 @@ android {
         targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
     }
 
     signingConfigs {
@@ -51,7 +51,7 @@ android {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
-            isShrinkResources = true
+            isShrinkResources = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -59,9 +59,15 @@ android {
         }
     }
 }
+
 dependencies {
-    implementation("com.google.firebase:firebase-messaging:23.4.1")
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-messaging") // REQUIRED
+    implementation("androidx.multidex:multidex:2.0.1")
+    implementation("com.google.android.gms:play-services-base:18.3.0")
+    implementation("androidx.work:work-runtime:2.9.0")
 }
 
 flutter {

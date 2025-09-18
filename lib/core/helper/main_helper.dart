@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/brand/brand_model.dart';
@@ -23,7 +24,8 @@ class MainHelper {
   static const String notificationBox = 'notificationBox';
   //inits
   static Future<void> inits() async {
-    //initialize firebase
+    WidgetsFlutterBinding.ensureInitialized();
+    // Initialize Firebase first
     try {
       await Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
@@ -32,7 +34,7 @@ class MainHelper {
     } catch (e, stackTrace) {
       log("❌ Firebase init failed: $e");
       log("🔍 Stack trace: $stackTrace");
-      rethrow;
+      // Don't rethrow if Firebase fails - you might want to continue without it
     }
     //initialize hive
     await Hive.initFlutter();
