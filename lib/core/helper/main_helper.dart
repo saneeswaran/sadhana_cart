@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:sadhana_cart/core/common%20model/banner/banner_model.dart';
 import 'package:sadhana_cart/core/common%20model/brand/brand_model.dart';
@@ -22,9 +21,6 @@ class MainHelper {
   static const String notificationBox = 'notificationBox';
   //inits
   static Future<void> inits() async {
-    //bindings
-    WidgetsFlutterBinding.ensureInitialized();
-
     //initialize firebase
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
