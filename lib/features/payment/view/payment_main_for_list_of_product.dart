@@ -15,6 +15,7 @@ import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/service/notification_service.dart';
 import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
@@ -25,6 +26,7 @@ import 'package:sadhana_cart/features/order confirm/widget/payment/view/payment_
 import 'package:sadhana_cart/features/order confirm/widget/payment/widget/payment_option_tile.dart';
 import 'package:sadhana_cart/features/payment/service/payment_service.dart';
 import 'package:sadhana_cart/features/payment/view/order_address.dart';
+import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view model/address_notifier.dart';
 
@@ -163,6 +165,16 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
         if (stockUpdated) {
           log("Stock updated successfully");
           ref.read(cartProvider.notifier).resetCart(cart: widget.cart);
+          //notification service
+          final userName = ref.watch(
+            userProvider.select((value) => value?.name),
+          );
+          final name = userName ?? "";
+          NotificationService.sendNotification(
+            title: "Order Placed",
+            message: "$name placed an order",
+            screen: "/order",
+          );
         } else {
           log("Stock update failed");
           if (context.mounted) {

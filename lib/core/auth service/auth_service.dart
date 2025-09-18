@@ -1,14 +1,19 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
+import 'package:sadhana_cart/core/helper/firebase_message_helper.dart';
 
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //current user id
   static String? get currentUser => _auth.currentUser?.uid;
+
+  static final CollectionReference userRef = FirebaseFirestore.instance
+      .collection("users");
 
   // Method to create an account
   static Future<bool> createAccount({
@@ -44,13 +49,21 @@ class AuthService {
     required WidgetRef ref,
   }) async {
     try {
-      ref.read(loadingProvider.notifier).state = true;
-      final credential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      ref.read(loadingProvider.notifier).state = false;
-      return credential.user;
+      //update fcm token
+      final token = await FirebaseMessageHelper.createFcmToken();
+      final userDoc = await userRef.doc(currentUser).get();
+      if (userDoc.exists) {
+        await userRef.doc(currentUser).update({"fcmToken": token});
+        final credential = await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        ref.read(loadingProvider.notifier).state = false;
+        return credential.user;
+      } else {
+        log("User document not found");
+      }
+      return null;
     } catch (e) {
       throw FirebaseAuthException(
         code: 'sign-in-failed',
