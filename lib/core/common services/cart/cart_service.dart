@@ -137,6 +137,8 @@ class CartService {
   static Future<bool> removeAllPaidCartItems({
     required List<CartModel> cart,
   }) async {
+    bool allDeleted = true;
+
     for (final prod in cart) {
       final productId = prod.cartId;
 
@@ -146,13 +148,13 @@ class CartService {
 
       if (documentSnapshot.exists) {
         await documentSnapshot.reference.delete();
-        log("product deleted successfully: $productId");
-        return true;
+        log("Product deleted successfully: $productId");
       } else {
-        log("product not found: $productId");
-        return false;
+        log("Product not found: $productId");
+        allDeleted = false;
       }
     }
-    return false;
+
+    return allDeleted;
   }
 }

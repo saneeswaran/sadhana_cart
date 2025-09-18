@@ -115,19 +115,14 @@ class OtherProductDetails extends StatelessWidget {
               title: "Description",
               value: Text(product.description!),
             ),
-            productData.isEmpty
-                ? const SizedBox.shrink()
-                : CustomTileDropdown(
-                    title: "Details",
-                    value: Column(
-                      children: productData.entries.map((entry) {
-                        return ProductDetailRow(
-                          title: entry.key,
-                          value: entry.value,
-                        );
-                      }).toList(),
-                    ),
-                  ),
+            CustomTileDropdown(
+              title: "Details",
+              value: Column(
+                children: productData.entries.map((entry) {
+                  return ProductDetailRow(title: entry.key, value: entry.value);
+                }).toList(),
+              ),
+            ),
             Consumer(
               builder: (context, ref, child) {
                 final ratingAsync = ref.watch(

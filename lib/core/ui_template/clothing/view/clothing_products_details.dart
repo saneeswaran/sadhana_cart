@@ -54,7 +54,6 @@ class ClothingProductsDetails extends StatelessWidget {
       "Stock available (${selectedSize.stock}) for size: ${selectedSize.size}, proceeding",
     );
 
-    // Pass size string to callback
     onStockAvailable(product, selectedSizeIndex, selectedSize.size);
   }
 
@@ -297,21 +296,19 @@ class ClothingProductsDetails extends StatelessWidget {
               value: Text(product.description!),
             ),
             const SizedBox(height: 20),
-            productData.containsValue("null")
-                ? const SizedBox.shrink()
-                : CustomTileDropdown(
-                    title: "Details",
-                    value: Column(
-                      children: productData.entries
-                          .map(
-                            (entry) => ProductDetailRow(
-                              title: entry.key,
-                              value: entry.value,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+            CustomTileDropdown(
+              title: "Details",
+              value: Column(
+                children: productData.entries
+                    .map(
+                      (entry) => ProductDetailRow(
+                        title: entry.key,
+                        value: entry.value,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
             const SizedBox(height: 20),
             Consumer(
               builder: (context, ref, child) {
