@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sadhana_cart/core/auth%20service/auth_service.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/features/favorites/view/favorite_page_mobile.dart';
-import 'package:sadhana_cart/features/order%20confirm/widget/shipping/model/order_page_view.dart';
 import 'package:sadhana_cart/features/order/widgets/my%20orders/view/my_orders_page.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view/user_address_page.dart';
 import 'package:sadhana_cart/features/profile/widget/payment/view/payment_method.dart';
@@ -56,13 +55,7 @@ class AdditionalInfoCard extends StatelessWidget {
               navigateTo(context: context, screen: const FavoritePageMobile());
             },
           ),
-          Divider(color: Colors.grey.shade300),
-          _customTile(
-            icon: const Icon(Icons.star),
-            text: "Rate this app",
-            onTap: () =>
-                navigateTo(context: context, screen: const OrderPageView()),
-          ),
+
           Divider(color: Colors.grey.shade300),
           _customTile(
             icon: const Icon(Icons.logout),
