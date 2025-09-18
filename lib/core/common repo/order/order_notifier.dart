@@ -46,4 +46,15 @@ class OrderNotifier extends StateNotifier<OrderState> {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
+
+  void filterOrderByStatus({required String query}) {
+    state = state.copyWith(
+      orders: state.orders
+          .where(
+            (order) =>
+                order.orderStatus!.toLowerCase().contains(query.toLowerCase()),
+          )
+          .toList(),
+    );
+  }
 }

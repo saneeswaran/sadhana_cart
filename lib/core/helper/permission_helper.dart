@@ -13,4 +13,16 @@ class PermissionHelper {
     }
     return true;
   }
+
+  static Future<bool> askNotificationPermission() async {
+    final Permission permission = Permission.notification;
+    var status = await permission.status;
+    if (status.isDenied || status.isRestricted) {
+      status = await permission.request();
+      if (!status.isGranted) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

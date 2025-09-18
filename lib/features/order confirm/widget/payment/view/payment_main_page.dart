@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
 import 'package:sadhana_cart/core/common%20services/order/order_service.dart';
+import 'package:sadhana_cart/core/common%20services/shiprocket_api/api_provider.dart';
+import 'package:sadhana_cart/core/common%20services/shiprocket_api/shiprocket_api_services.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
@@ -18,6 +20,7 @@ import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_success_page.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/update_location_page.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/payment_option_tile.dart';
+import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
 
@@ -79,10 +82,8 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         : null;
 
     if (address == null) {
-      showCustomSnackbar(
-        context: context,
-        message: "Please select address first!",
-        type: ToastType.info,
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please add an address first.")),
       );
       setState(() {
         isLoading = false;
@@ -159,21 +160,134 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
       final acceptedTerms = ref.read(orderAcceptTerms);
       if (!acceptedTerms) {
-        showCustomSnackbar(
-          context: context,
-          message: "Please accept terms",
-          type: ToastType.info,
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Please accept Terms & Conditions")),
         );
         return;
       }
 
       final paymentController = ref.read(paymentProvider.notifier);
+      final user = ref.read(userProvider);
+      log("Current user object: $user");
+
+      if (user == null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("User data not found.")));
+        return;
+      }
 
       // Reset
       paymentController.resetPaymentState();
       paymentController.startPayment(
-        amount: (widget.product.offerprice ?? 0).toDouble(),
+        amount: (widget.product.price ?? 0).toDouble(),
+        contact: address.phoneNumber.toString(),
+        email: user.email ?? "demo@example.com",
       );
+
+      log(
+        "AMount:${(widget.product.price ?? 0).toDouble()}, Contact: ${address.phoneNumber.toString()}, Email : ${user.email}",
+      );
+    }
+  }
+
+  // CAll API
+  Future<void> _callShiprocketApiAfterPayment(String paymentId) async {
+    try {
+      final addressState = ref.read(addressprovider);
+      final AddressModel? address = addressState.addresses.isNotEmpty
+          ? addressState.addresses.last
+          : null;
+
+      if (address == null) {
+        log("No address found, skipping Shiprocket API call.");
+        return;
+      }
+
+      final userEmail = ref.read(userProvider)?.email ?? "demo@example.com";
+      final currentUser = ref.read(userProvider)?.customerId ?? "demoUser";
+
+      final shiprocketService = ShiprocketApiServices(
+        ref.read(dioProvider),
+        ref,
+      );
+
+      // Safe selected size
+      final selectedSizeSafe =
+          widget.selectedSize ??
+          (widget.product.sizevariants != null &&
+                  widget.product.sizevariants!.isNotEmpty
+              ? widget.product.sizevariants!.first.size
+              : "DemoSize");
+
+      final Map<String, dynamic> orderData = {
+        "order_id": "DEMO${DateTime.now().millisecondsSinceEpoch}",
+        "order_date": DateTime.now().toString(),
+        "pickup_location": "Home",
+        "billing_customer_name": address.name ?? "",
+        "billing_last_name": address.name ?? "N/A",
+        "billing_address": address.streetName,
+        "billing_city": address.city,
+        "billing_pincode": address.pinCode,
+        "billing_state": address.state,
+        "billing_country": address.state,
+        "billing_email": userEmail,
+        "billing_phone": address.phoneNumber ?? "",
+        "shipping_is_billing": true,
+        "shipping_country": "India",
+        "shipping_email": userEmail,
+        "order_items": [
+          {
+            "name": widget.product.name ?? "",
+            "sku": widget.product.productid ?? "",
+            "units": (widget.product.quantity ?? 1).toString(),
+            "selling_price": (widget.product.offerprice ?? 0.0).toString(),
+            "size": selectedSizeSafe,
+          },
+        ],
+        "payment_method": _selectedMethod == PaymentEnum.cash
+            ? "COD"
+            : "Prepaid",
+        "sub_total": (widget.product.offerprice ?? 0.0).toString(),
+        "length": 10,
+        "breadth": 5,
+        "height": 8,
+        "weight": (widget.product.weight ?? 500).toString(),
+      };
+
+      log("=== Shiprocket API Call ===");
+      log("Payment ID: $paymentId");
+      log("Order Data: $orderData");
+
+      final apiResult = await shiprocketService.createOrder(orderData);
+
+      log("Shiprocket API Response: $apiResult");
+
+      // --- STORE ONLY order_id AND status ---
+      if (apiResult != null &&
+          apiResult['order_id'] != null &&
+          apiResult['status'] != null) {
+        final userOrderRef = FirebaseFirestore.instance
+            .collection('users') // or your userCollection
+            .doc(currentUser)
+            .collection('orders')
+            .doc(); // generates a new order doc
+
+        final orderMap = {
+          "order_id": apiResult['order_id'],
+          "status": apiResult['status'],
+          "created_at": Timestamp.now(),
+        };
+
+        await FirebaseFirestore.instance.runTransaction((transaction) async {
+          transaction.set(userOrderRef, orderMap);
+        });
+
+        log("Order stored in Firestore successfully: $orderMap");
+      }
+    } catch (e, stackTrace) {
+      log("Error calling Shiprocket API: $e");
+      log("StackTrace: $stackTrace");
     }
   }
 
@@ -242,6 +356,8 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                 "Payment confirmed on PaymentMainPage! Payment ID: ${next.paymentId}",
               );
 
+              await _callShiprocketApiAfterPayment(next.paymentId!);
+
               // Here you can call addSingleOrder
               final addressState = ref.read(addressprovider);
               final AddressModel? address = addressState.addresses.isNotEmpty
@@ -279,6 +395,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                   setState(() {
                     isPaymentProcessing = true;
                   });
+
                   showCustomSnackbar(
                     context: context,
                     message: "Order placed successfully!",
@@ -409,7 +526,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
-                                        "₹ ${product.offerprice ?? 0}",
+                                        "₹ ${product.price ?? 0}",
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -560,7 +677,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                           PaymentOptionTile(
                             title: "Cash On Delivery",
                             description: "Pay when you receive your product",
-                            price: "₹${product.offerprice ?? 0}",
+                            price: "₹${product.price ?? 0}",
                             selected: _selectedMethod == PaymentEnum.cash,
                             onTap: () {
                               setState(() {
@@ -572,7 +689,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                           PaymentOptionTile(
                             title: "Online Payment",
                             description: "Pay now using card or UPI",
-                            price: "₹${product.offerprice ?? 0}",
+                            price: "₹${product.price ?? 0}",
                             selected: _selectedMethod == PaymentEnum.online,
                             onTap: () {
                               setState(() {

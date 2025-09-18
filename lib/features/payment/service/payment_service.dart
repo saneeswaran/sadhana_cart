@@ -12,6 +12,7 @@ import 'package:sadhana_cart/core/helper/navigation_helper.dart';
 import 'package:sadhana_cart/core/widgets/snack_bar.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/view/payment_success_page.dart';
+import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
 
@@ -94,8 +95,26 @@ class PaymentService {
         return;
       }
 
+      // Get payment controller
       final paymentController = ref.read(paymentProvider.notifier);
-      paymentController.startPayment(amount: totalAmount.toDouble());
+
+      // Get current user email
+      final user = ref.read(userProvider);
+      if (user == null) {
+        showCustomSnackbar(
+          context: context,
+          message: "User data not found",
+          type: ToastType.error,
+        );
+        return;
+      }
+
+      // Start payment with required parameters
+      paymentController.startPayment(
+        amount: totalAmount.toDouble(),
+        contact: address.phoneNumber.toString(),
+        email: user.email ?? "demo@example.com",
+      );
     }
   }
 }

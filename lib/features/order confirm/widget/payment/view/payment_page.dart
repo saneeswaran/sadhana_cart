@@ -6,6 +6,9 @@ import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/controller/payment_controller.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/checkout_total_amount_container.dart';
 import 'package:sadhana_cart/features/order%20confirm/widget/payment/widget/custom_payment_method.dart';
+import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
+import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
+import 'package:sadhana_cart/features/profile/widget/address/view%20model/address_notifier.dart';
 import 'package:sadhana_cart/features/profile/widget/payment/view%20model/list_wallet_page.dart';
 
 class PaymentPage extends ConsumerWidget {
@@ -120,8 +123,29 @@ class PaymentPage extends ConsumerWidget {
                     : ElevatedButton(
                         onPressed: () {
                           if (ref.read(orderAcceptTerms)) {
-                            // Amount in paise, example: ₹500 = 50000
-                            paymentController.startPayment(amount: 1);
+                            // Get current user
+                            final user = ref.read(userProvider);
+                            final addressState = ref.read(addressprovider);
+                            final AddressModel? address =
+                                addressState.addresses.isNotEmpty
+                                ? addressState.addresses.last
+                                : null;
+
+                            if (user == null || address == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("User or address not found"),
+                                ),
+                              );
+                              return;
+                            }
+
+                            // Start payment with required params
+                            paymentController.startPayment(
+                              amount: 1, // Replace with actual amount in paise
+                              contact: address.phoneNumber.toString(),
+                              email: user.email ?? "demo@example.com",
+                            );
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

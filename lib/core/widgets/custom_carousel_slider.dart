@@ -39,6 +39,7 @@ class CustomCarouselSlider extends ConsumerWidget {
 
               return GestureDetector(
                 onTap: () {
+                  log('Image tapped: $imageUrl');
                   navigateTo(
                     context: context,
                     screen: ViewPhoto(imageUrl: imageUrl),

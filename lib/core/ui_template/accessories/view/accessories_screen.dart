@@ -124,21 +124,24 @@ class AccessoriesScreen extends StatelessWidget {
               title: "Description",
               value: Text(product.description ?? ""),
             ),
-            productAdditionalData.isEmpty
-                ? const SizedBox.shrink()
-                : CustomTileDropdown(
-                    title: "Details",
-                    value: Column(
-                      children: productAdditionalData.entries
-                          .map(
-                            (entry) => ProductDetailRow(
-                              title: entry.key,
-                              value: entry.value,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+            GestureDetector(
+              onTap: () {
+                log(productAdditionalData.toString());
+              },
+              child: CustomTileDropdown(
+                title: "Details",
+                value: Column(
+                  children: productAdditionalData.entries
+                      .map(
+                        (entry) => ProductDetailRow(
+                          title: entry.key,
+                          value: entry.value,
+                        ),
+                      )
+                      .toList(),
+                ),
+              ),
+            ),
             Consumer(
               builder: (context, ref, child) {
                 final ratingAsync = ref.watch(

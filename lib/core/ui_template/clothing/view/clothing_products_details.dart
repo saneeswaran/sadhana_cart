@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/colors/app_color.dart';
 import 'package:sadhana_cart/core/common model/product/product_model.dart';
-import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/constants/app_images.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
@@ -54,7 +53,6 @@ class ClothingProductsDetails extends StatelessWidget {
       "Stock available (${selectedSize.stock}) for size: ${selectedSize.size}, proceeding",
     );
 
-    // Pass size string to callback
     onStockAvailable(product, selectedSizeIndex, selectedSize.size);
   }
 
@@ -77,11 +75,11 @@ class ClothingProductsDetails extends StatelessWidget {
                     (c) => c.cart.productid == product.productid,
                   );
 
-                  final selectedSize = ref.watch(clothingSizeProvider);
+                  final selectedSizeIndex = ref.watch(clothingSizeProvider);
+                  final selected =
+                      product.sizevariants?[selectedSizeIndex].size ?? "L";
                   final loader = ref.watch(cartLoadingProvider);
-                  final SizeVariant sizeVariant =
-                      product.sizevariants?[selectedSize] ??
-                      SizeVariant(size: "", stock: 0);
+
                   return AbsorbPointer(
                     absorbing: loader,
                     child: CustomElevatedButton(
@@ -95,7 +93,8 @@ class ClothingProductsDetails extends StatelessWidget {
                         if (!isAlreadyInCart) {
                           // Check stock before adding to cart
                           final stock =
-                              product.sizevariants?[selectedSize].stock ?? 0;
+                              product.sizevariants?[selectedSizeIndex].stock ??
+                              0;
                           if (stock <= 0) {
                             log("Cannot add to cart. Stock not available.");
                             showCustomSnackbar(
@@ -108,7 +107,7 @@ class ClothingProductsDetails extends StatelessWidget {
 
                           await cartNotifier.addToCart(
                             product: product,
-                            sizevariant: sizeVariant,
+                            size: selected,
                           );
 
                           if (context.mounted) {
@@ -233,7 +232,7 @@ class ClothingProductsDetails extends StatelessWidget {
                                   }
 
                                   final bool sizeHaveMoreContent =
-                                      sizeItem.size.length > 2 ? false : true;
+                                      sizeItem.size.length > 3 ? false : true;
 
                                   return GestureDetector(
                                     onTap: () {
@@ -297,21 +296,19 @@ class ClothingProductsDetails extends StatelessWidget {
               value: Text(product.description!),
             ),
             const SizedBox(height: 20),
-            productData.containsValue("null")
-                ? const SizedBox.shrink()
-                : CustomTileDropdown(
-                    title: "Details",
-                    value: Column(
-                      children: productData.entries
-                          .map(
-                            (entry) => ProductDetailRow(
-                              title: entry.key,
-                              value: entry.value,
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
+            CustomTileDropdown(
+              title: "Details",
+              value: Column(
+                children: productData.entries
+                    .map(
+                      (entry) => ProductDetailRow(
+                        title: entry.key,
+                        value: entry.value,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
             const SizedBox(height: 20),
             Consumer(
               builder: (context, ref, child) {

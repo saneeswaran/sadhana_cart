@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -22,13 +24,16 @@ class MainHelper {
   static const String notificationBox = 'notificationBox';
   //inits
   static Future<void> inits() async {
-    //bindings
     WidgetsFlutterBinding.ensureInitialized();
-
-    //initialize firebase
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // Initialize Firebase
+    try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    } catch (e, stackTrace) {
+      log("❌ Firebase init failed: $e");
+      log("🔍 Stack trace: $stackTrace");
+    }
     //initialize hive
     await Hive.initFlutter();
 

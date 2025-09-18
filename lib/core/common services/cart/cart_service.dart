@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_model.dart';
 import 'package:sadhana_cart/core/common%20model/cart/cart_with_product.dart';
 import 'package:sadhana_cart/core/common%20model/product/product_model.dart';
-import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class CartService {
   static const String user = 'users';
@@ -19,14 +18,14 @@ class CartService {
       .collection("products");
 
   static Future<bool> addToCart(
-    SizeVariant? sizeVariant, {
+    String? size, {
     required ProductModel product,
   }) async {
     try {
       Query query = cartRef.where("productid", isEqualTo: product.productid);
 
-      if (sizeVariant!.size.trim().isNotEmpty) {
-        query = query.where("size", isEqualTo: sizeVariant.size);
+      if (size != null && size.trim().isNotEmpty) {
+        query = query.where("size", isEqualTo: size);
       }
 
       final querySnapshot = await query.limit(1).get();
@@ -42,15 +41,15 @@ class CartService {
       } else {
         final docRef = cartRef.doc();
 
-        final CartModel cartModel = CartModel(
-          cartId: docRef.id,
-          customerId: currentUserId,
-          productid: product.productid!,
-          quantity: 1,
-          sizeVariant: sizeVariant,
-        );
+        // final CartModel cartModel = CartModel(
+        //   cartId: docRef.id,
+        //   customerId: currentUserId,
+        //   productid: product.productid!,
+        //   quantity: 1,
+        //   size: size,
+        // );
 
-        await cartRef.doc(docRef.id).set(cartModel.toMap());
+        // await cartRef.doc(docRef.id).set(cartModel.toMap());
       }
 
       return true;
@@ -132,5 +131,29 @@ class CartService {
     }
 
     return false;
+  }
+
+  static Future<bool> removeAllPaidCartItems({
+    required List<CartModel> cart,
+  }) async {
+    bool allDeleted = true;
+
+    for (final prod in cart) {
+      final productId = prod.cartId;
+
+      final DocumentSnapshot documentSnapshot = await cartRef
+          .doc(productId)
+          .get();
+
+      if (documentSnapshot.exists) {
+        await documentSnapshot.reference.delete();
+        log("Product deleted successfully: $productId");
+      } else {
+        log("Product not found: $productId");
+        allDeleted = false;
+      }
+    }
+
+    return allDeleted;
   }
 }

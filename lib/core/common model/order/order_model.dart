@@ -1,36 +1,41 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
 class OrderModel {
   final int quantity;
-  final String userId;
+  final String? userId;
   final double totalAmount;
-  final String address;
+  final String? address;
   final int phoneNumber;
   final double latitude;
   final double longitude;
-  String orderStatus;
+  String? orderStatus;
   final Timestamp orderDate;
-  final String orderId;
+  final String? orderId;
   final Timestamp createdAt;
   final List<OrderProductModel> products;
+
+  // Shiprocket fields
+  final int? shiprocketOrderId; // API order_id
+  final String? shiprocketStatus; // API status
+
   OrderModel({
     required this.quantity,
-    required this.userId,
+    this.userId,
     required this.totalAmount,
-    required this.address,
+    this.address,
     required this.phoneNumber,
     required this.latitude,
     required this.longitude,
-    required this.orderStatus,
+    this.orderStatus,
     required this.orderDate,
-    required this.orderId,
+    this.orderId,
     required this.createdAt,
     required this.products,
+    this.shiprocketOrderId,
+    this.shiprocketStatus,
   });
 
   Map<String, dynamic> toMap() {
@@ -47,27 +52,37 @@ class OrderModel {
       'orderId': orderId,
       'createdAt': createdAt,
       'products': products.map((x) => x.toMap()).toList(),
+      'shiprocketOrderId': shiprocketOrderId,
+      'shiprocketStatus': shiprocketStatus,
     };
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     return OrderModel(
       quantity: map['quantity'] as int,
-      userId: map['userId'] as String,
+      userId: map['userId'] != null ? map['userId'] as String : null,
       totalAmount: map['totalAmount'] as double,
-      address: map['address'] as String,
+      address: map['address'] != null ? map['address'] as String : null,
       phoneNumber: map['phoneNumber'] as int,
       latitude: map['latitude'] as double,
       longitude: map['longitude'] as double,
-      orderStatus: map['orderStatus'] as String,
+      orderStatus: map['orderStatus'] != null
+          ? map['orderStatus'] as String
+          : null,
       orderDate: map['orderDate'] as Timestamp,
-      orderId: map['orderId'] as String,
+      orderId: map['orderId'] != null ? map['orderId'] as String : null,
       createdAt: map['createdAt'] as Timestamp,
       products: List<OrderProductModel>.from(
-        (map['products'] as List<int>).map<OrderProductModel>(
+        (map['products'] as List<dynamic>).map<OrderProductModel>(
           (x) => OrderProductModel.fromMap(x as Map<String, dynamic>),
         ),
       ),
+      shiprocketOrderId: map['shiprocketOrderId'] != null
+          ? (map['shiprocketOrderId'] as num).toInt()
+          : null,
+      shiprocketStatus: map['shiprocketStatus'] != null
+          ? map['shiprocketStatus'] as String
+          : null,
     );
   }
 
@@ -79,24 +94,25 @@ class OrderModel {
 
 class OrderProductModel {
   final String? id;
-  final String productid;
-  final String name;
-  final double price;
-  int stock;
-  final int quantity;
+  final String? productid;
+  final String? name;
+  final double? price;
+  int? stock;
+  final int? quantity;
   final List<SizeVariant>? sizevariants;
+
   OrderProductModel({
     this.id,
-    required this.productid,
-    required this.name,
-    required this.price,
-    required this.stock,
-    required this.quantity,
+    this.productid,
+    this.name,
+    this.price,
+    this.stock,
+    this.quantity,
     this.sizevariants,
   });
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
+    return {
       'id': id,
       'productid': productid,
       'name': name,
@@ -109,18 +125,18 @@ class OrderProductModel {
 
   factory OrderProductModel.fromMap(Map<String, dynamic> map) {
     return OrderProductModel(
-      id: map['id'] as String,
-      productid: map['productid'] as String,
-      name: map['name'] as String,
-      price: map['price'] as double,
-      stock: map['stock'] as int,
-      quantity: map['quantity'] as int,
+      id: map['id'] != null ? map['id'] as String : null,
+      productid: map['productid'] != null ? map['productid'] as String : null,
+      name: map['name'] != null ? map['name'] as String : null,
+      price: map['price'] != null ? (map['price'] as num).toDouble() : null,
+      stock: map['stock'] != null ? (map['stock'] as num).toInt() : null,
+      quantity: map['quantity'] != null
+          ? (map['quantity'] as num).toInt()
+          : null,
       sizevariants: map['sizevariants'] != null
-          ? List<SizeVariant>.from(
-              (map['sizevariants'] as List<int>).map<SizeVariant?>(
-                (x) => SizeVariant.fromMap(x as Map<String, dynamic>),
-              ),
-            )
+          ? (map['sizevariants'] as List<dynamic>)
+                .map((x) => SizeVariant.fromMap(x as Map<String, dynamic>))
+                .toList()
           : null,
     );
   }
@@ -129,4 +145,9 @@ class OrderProductModel {
 
   factory OrderProductModel.fromJson(String source) =>
       OrderProductModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'OrderProductModel(id: $id, productid: $productid, name: $name, price: $price, stock: $stock, quantity: $quantity, sizevariants: $sizevariants)';
+  }
 }

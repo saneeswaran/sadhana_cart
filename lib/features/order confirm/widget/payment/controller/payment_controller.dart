@@ -23,16 +23,20 @@ class PaymentController extends StateNotifier<PaymentState> {
     _isPaymentProcessing = false;
   }
 
-  void startPayment({required double amount}) {
-    //  state = state.copyWith(isLoading: true);
+  void startPayment({
+    required double amount,
+    required String contact,
+    required String email,
+  }) {
     state = PaymentState.initial().copyWith(isLoading: true);
     amount = amount * 100;
+
     var options = {
-      'key': 'rzp_live_RF5gE7NCdAsEIs',
+      'key': 'rzp_test_RCgP4dyI1pibjj',
       'amount': amount,
       'name': 'Sadhana Cart',
       'description': 'Order Payment',
-      'prefill': {'contact': '1234567890', 'email': 'abcd@gmail.com'},
+      'prefill': {'contact': contact, 'email': email},
     };
 
     try {

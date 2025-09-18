@@ -11,9 +11,11 @@ import 'package:sadhana_cart/core/common model/product/size_variant.dart';
 import 'package:sadhana_cart/core/common services/order/order_service.dart';
 import 'package:sadhana_cart/core/common services/product/product_service.dart';
 import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
+import 'package:sadhana_cart/core/common%20repo/cart/cart_notifier.dart';
 import 'package:sadhana_cart/core/disposable/disposable.dart';
 import 'package:sadhana_cart/core/enums/payment_enum.dart';
 import 'package:sadhana_cart/core/helper/navigation_helper.dart';
+import 'package:sadhana_cart/core/service/notification_service.dart';
 import 'package:sadhana_cart/core/widgets/custom_check_box.dart';
 import 'package:sadhana_cart/core/widgets/custom_elevated_button.dart';
 import 'package:sadhana_cart/core/widgets/custom_text_button.dart';
@@ -24,6 +26,7 @@ import 'package:sadhana_cart/features/order confirm/widget/payment/view/payment_
 import 'package:sadhana_cart/features/order confirm/widget/payment/widget/payment_option_tile.dart';
 import 'package:sadhana_cart/features/payment/service/payment_service.dart';
 import 'package:sadhana_cart/features/payment/view/order_address.dart';
+import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view model/address_notifier.dart';
 
@@ -33,11 +36,11 @@ class PaymentMainForListOfProduct extends ConsumerStatefulWidget {
   final double totalAmount;
 
   const PaymentMainForListOfProduct({
-    super.key,
+    Key? key,
     required this.cart,
     required this.products,
     required this.totalAmount,
-  });
+  }) : super(key: key);
 
   @override
   ConsumerState<PaymentMainForListOfProduct> createState() =>
@@ -71,6 +74,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
 
   @override
   Widget build(BuildContext context) {
+    // Build orderProduct list here once
     final List<OrderProductModel> orderProduct = [];
     for (int i = 0; i < widget.cart.length; i++) {
       final cartItem = widget.cart[i];
@@ -86,12 +90,9 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
           price: totalPrice.toDouble(),
           stock: product.stock ?? 0,
           quantity: cartItem.quantity,
-          sizevariants: [
-            SizeVariant(
-              size: cartItem.sizeVariant?.size ?? "",
-              stock: cartItem.quantity,
-            ),
-          ],
+          // sizevariants: [
+          //   SizeVariant(size: cartItem.size ?? "", stock: cartItem.quantity),
+          // ],
         ),
       );
     }
@@ -161,6 +162,17 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
 
         if (stockUpdated) {
           log("Stock updated successfully");
+          ref.read(cartProvider.notifier).resetCart(cart: widget.cart);
+          //notification service
+          final userName = ref.watch(
+            userProvider.select((value) => value?.name),
+          );
+          final name = userName ?? "";
+          NotificationService.sendNotification(
+            title: "Order Placed",
+            message: "$name placed an order",
+            screen: "/order",
+          );
         } else {
           log("Stock update failed");
           if (context.mounted) {
@@ -176,7 +188,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
         if (context.mounted) {
           showCustomSnackbar(
             context: context,
-            message: "Order placed and stock updated",
+            message: "Order placed Successfully",
             type: ToastType.success,
           );
           navigateToReplacement(

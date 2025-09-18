@@ -103,7 +103,7 @@ class FeaturedProductTile extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
-                          "${Constants.indianCurrency} ${product.offerprice}",
+                          "${Constants.indianCurrency} ${product.price}",
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(

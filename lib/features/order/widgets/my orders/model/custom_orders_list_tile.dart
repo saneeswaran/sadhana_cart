@@ -140,10 +140,10 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                       style: customOutlinedButtonStyle,
                     ),
                     onPressed: () {
-                      navigateTo(
-                        context: context,
-                        screen: const OrderDetailsPage(),
-                      );
+                      // navigateTo(
+                      //   context: context,
+                      //   screen: const OrderDetailsPage(),
+                      // );
                     },
                   ),
                 ],
