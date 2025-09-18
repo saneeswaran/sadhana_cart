@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,10 +10,13 @@ import 'package:sadhana_cart/features/bottom%20nav/view/bottom_nav_option.dart';
 import 'package:sadhana_cart/features/onboard/view/onboard_page_mobile.dart';
 import 'package:sadhana_cart/features/splash/view/splash_page_mobile.dart';
 
-// main.dart
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await MainHelper.inits();
-  runApp(const ProviderScope(child: MyApp()));
+  final container = ProviderContainer();
+  await NotificationService(container: container).initialize();
+
+  runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -29,19 +31,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      NotificationService.initialize()
-          .then((_) {
-            log('Notifications initialized successfully');
-          })
-          .catchError((error) {
-            log('Failed to initialize notifications: $error');
-          });
-
-      _notification();
+      _requestNotificationPermission();
     });
   }
 
-  void _notification() async {
+  Future<void> _requestNotificationPermission() async {
     await PermissionHelper.askNotificationPermission();
   }
 
