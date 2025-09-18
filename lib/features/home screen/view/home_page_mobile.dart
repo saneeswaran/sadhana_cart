@@ -9,6 +9,7 @@ import 'package:sadhana_cart/features/home%20screen/widgets/banner_list_mobile.d
 import 'package:sadhana_cart/features/home%20screen/widgets/categories_list_mobile.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/featured_product_tile.dart';
 import 'package:sadhana_cart/features/home%20screen/widgets/recommanded_product_tile.dart';
+import 'package:sadhana_cart/features/notification/view%20model/notification_notifier.dart';
 import 'package:sadhana_cart/features/notification/view/notification_page_mobile.dart';
 import 'package:sadhana_cart/core/common%20repo/product/all_products_notifier.dart';
 
@@ -47,7 +48,7 @@ class _HomePageMobileState extends ConsumerState<HomePageMobile> {
   Widget build(BuildContext context) {
     final products = ref.watch(allProductsProvider);
     final notifier = ref.read(allProductsProvider.notifier);
-
+    final notification = ref.watch(notificationProvider);
     return Scaffold(
       backgroundColor: const Color(0xffFFFFFF),
       drawer: const CustomHomePageDrawer(),
@@ -64,7 +65,7 @@ class _HomePageMobileState extends ConsumerState<HomePageMobile> {
         ),
         actions: [
           Badge.count(
-            count: 5,
+            count: notification.length,
             child: Padding(
               padding: const EdgeInsets.all(6.0),
               child: GestureDetector(

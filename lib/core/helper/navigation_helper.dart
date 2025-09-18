@@ -23,13 +23,18 @@ void navigateToReplacement({
   );
 }
 
+void navigateWithRoute({
+  required BuildContext context,
+  required String screenPath,
+}) {
+  Navigator.pushNamed(context, screenPath);
+}
+
 void navigateToProductDesignBasedOnCategory({
   required BuildContext context,
   required String categoryName,
   required ProductModel product,
 }) {
-  // final categoryLowerCase = categoryName.toLowerCase().replaceAll(' ', '_');
-
   final clothingList = CategoryConstants.clothingCategory;
 
   final isClothing = clothingList.any(
@@ -58,91 +63,4 @@ void navigateToProductDesignBasedOnCategory({
       screen: OtherProductDetails(product: product),
     );
   }
-  //  else if (categoryLowerCase == CategoryConstants.footwear.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.fashion.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryLowerCase ==
-  //     CategoryConstants.personalCare.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.stationary.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.home.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.books.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.electronics.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.groceries.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryLowerCase == CategoryConstants.cosmetics.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // } else if (categoryName == CategoryConstants.photoFrame.toLowerCase()) {
-  //   navigateTo(
-  //     context: context,
-  //     screen: AccessoriesScreen(product: product),
-  //   );
-  // }
-  /*
-
-else if (categoryLowerCase.toLowerCase() ==
-      CategoryConstants.mobile.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: MobileTemplate(product: product),
-    );
-  } else if (categoryLowerCase.toLowerCase() ==
-      CategoryConstants.laptop.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: LaptopTemplate(product: product),
-    );
-  } else if (categoryLowerCase == CategoryConstants.headphone.toLowerCase()) {
-    log('Category tapped: $categoryLowerCase');
-    navigateTo(
-      context: context,
-      screen: HeadPhoneTemplate(product: product),
-    );
-  } else if (categoryName.toLowerCase() ==
-      CategoryConstants.accessories.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: AccessoriesScreen(product: product),
-    );
-  } else if (categoryName.toLowerCase() ==
-      CategoryConstants.personalCare.toLowerCase()) {
-    navigateTo(
-      context: context,
-      screen: PersonalCarePage(product: product),
-    );
-  }
-
-  */
 }

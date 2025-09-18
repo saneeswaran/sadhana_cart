@@ -90,9 +90,9 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
           price: totalPrice.toDouble(),
           stock: product.stock ?? 0,
           quantity: cartItem.quantity,
-          // sizevariants: [
-          //   SizeVariant(size: cartItem.size ?? "", stock: cartItem.quantity),
-          // ],
+          sizevariants: [
+            SizeVariant(size: cartItem.size ?? "", stock: cartItem.quantity),
+          ],
         ),
       );
     }

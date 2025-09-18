@@ -51,7 +51,7 @@ class _CartPageMobileState extends ConsumerState<CartPageMobile> {
                 final product = cw.product;
 
                 final selectedSize =
-                    // cartItem.sizeVariant ??
+                    cartItem.sizeVariant ??
                     SizeVariant(size: "", color: "", stock: 0);
                 final offerPrice = product.offerprice ?? 0.0;
                 final quantity = cartItem.quantity;

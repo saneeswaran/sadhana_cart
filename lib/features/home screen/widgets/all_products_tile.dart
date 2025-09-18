@@ -14,6 +14,7 @@ class AllProductsTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final boundaryKey = GlobalKey();
     final Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6),
@@ -51,16 +52,20 @@ class AllProductsTile extends ConsumerWidget {
                 child: Stack(
                   children: [
                     // Product Image
-                    Container(
-                      color: Colors.white,
-                      child: CachedNetworkImage(
-                        imageUrl: product.images?.isNotEmpty == true
-                            ? product.images![0]
-                            : "",
-                        errorWidget: (context, _, _) => const ImageLoader(),
-                        height: size.height * 0.20,
-                        width: double.infinity,
-                        fit: BoxFit.contain,
+                    RepaintBoundary(
+                      key: boundaryKey,
+                      child: Container(
+                        color: Colors.white,
+                        child: CachedNetworkImage(
+                          imageUrl: product.images?.isNotEmpty == true
+                              ? product.images![0]
+                              : "",
+                          errorWidget: (context, _, _) => const ImageLoader(),
+                          placeholder: (context, _) => const ImageLoader(),
+                          height: size.height * 0.20,
+                          width: double.infinity,
+                          fit: BoxFit.contain,
+                        ),
                       ),
                     ),
                   ],

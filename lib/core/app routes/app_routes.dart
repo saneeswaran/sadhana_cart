@@ -7,6 +7,7 @@ import 'package:sadhana_cart/features/cart/view/cart_page_mobile.dart';
 import 'package:sadhana_cart/features/favorites/view/favorite_page_mobile.dart';
 import 'package:sadhana_cart/features/home%20screen/view/home_page_mobile.dart';
 import 'package:sadhana_cart/features/notification/view/notification_page_mobile.dart';
+import 'package:sadhana_cart/features/order/widgets/my%20orders/view/my_orders_page.dart';
 import 'package:sadhana_cart/features/search%20product/view/search_product_mobile.dart';
 
 class AppRoutes {
@@ -20,5 +21,6 @@ class AppRoutes {
     'notifications': (_) => const NotificationPageMobile(),
     '/search': (_) => const SearchProductMobile(),
     '/homepage': (_) => const HomePageMobile(),
+    '/order': (_) => const MyOrdersPage(),
   };
 }
