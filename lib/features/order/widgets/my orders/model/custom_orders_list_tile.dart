@@ -149,16 +149,16 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    order.orderStatus ?? "Pending",
-                    style: TextStyle(
-                      color: (order.orderStatus == "Delivered")
-                          ? Colors.green
-                          : Colors.red,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  // Text(
+                  //   order.orderStatus ?? "Pending",
+                  //   style: TextStyle(
+                  //     color: (order.orderStatus == "Delivered")
+                  //         ? Colors.green
+                  //         : Colors.red,
+                  //     fontSize: 20,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
                   CustomOutlineButton(
                     child: const Text(
                       "Details",

@@ -127,7 +127,7 @@ class _OrderDetailsPageState extends ConsumerState<OrderDetailsPage> {
                         children: [
                           const SizedBox(width: 0),
                           Text(
-                            "Your order is $orderStatus",
+                            "Your order is: $orderStatus",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
