@@ -55,7 +55,13 @@ class AppImages {
       bannerName: "banner1",
       image: carousel,
       productId: "1",
-      description: "",
+      status: "",
+    ),
+    BannerModel(
+      bannerId: "2",
+      bannerName: "banner2",
+      image: onboard,
+      productId: "3",
       status: "",
     ),
   ];

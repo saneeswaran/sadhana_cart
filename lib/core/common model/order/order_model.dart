@@ -19,8 +19,8 @@ class OrderModel {
   final List<OrderProductModel> products;
 
   // Shiprocket fields
-  final int? shiprocketOrderId; // API order_id
-  final String? shiprocketStatus; // API status
+  final int? shiprocketOrderId;
+  final String? shiprocketStatus;
 
   OrderModel({
     required this.quantity,
@@ -98,7 +98,7 @@ class OrderModel {
 
     final Timestamp fallbackDate = Timestamp.fromDate(
       DateTime(2025, 1, 1, 10, 0),
-    ); // demo value
+    );
 
     return OrderModel(
       quantity: map['quantity'] as int,

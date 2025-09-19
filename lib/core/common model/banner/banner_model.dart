@@ -14,16 +14,13 @@ class BannerModel extends HiveObject {
   @HiveField(2)
   final String image;
   @HiveField(3)
-  final String description;
-  @HiveField(4)
   final String productId;
-  @HiveField(5)
+  @HiveField(4)
   final String status;
   BannerModel({
     required this.bannerId,
     required this.bannerName,
     required this.image,
-    required this.description,
     required this.productId,
     required this.status,
   });
@@ -33,7 +30,6 @@ class BannerModel extends HiveObject {
       'bannerId': bannerId,
       'bannerName': bannerName,
       'image': image,
-      'description': description,
       'productId': productId,
       'status': status,
     };
@@ -44,7 +40,6 @@ class BannerModel extends HiveObject {
       bannerId: map['bannerId'] as String,
       bannerName: map['bannerName'] as String,
       image: map['image'] as String,
-      description: map['description'] as String,
       productId: map['productId'] as String,
       status: map['status'] as String,
     );
@@ -54,4 +49,9 @@ class BannerModel extends HiveObject {
 
   factory BannerModel.fromJson(String source) =>
       BannerModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() {
+    return 'BannerModel(bannerId: $bannerId, bannerName: $bannerName, image: $image, productId: $productId, status: $status)';
+  }
 }

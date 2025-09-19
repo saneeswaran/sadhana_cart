@@ -41,15 +41,15 @@ class CartService {
       } else {
         final docRef = cartRef.doc();
 
-        // final CartModel cartModel = CartModel(
-        //   cartId: docRef.id,
-        //   customerId: currentUserId,
-        //   productid: product.productid!,
-        //   quantity: 1,
-        //   size: size,
-        // );
+        final CartModel cartModel = CartModel(
+          cartId: docRef.id,
+          customerId: currentUserId,
+          productid: product.productid!,
+          quantity: 1,
+          sizeVariant: product.sizevariants!.firstWhere((v) => v.size == size),
+        );
 
-        // await cartRef.doc(docRef.id).set(cartModel.toMap());
+        await cartRef.doc(docRef.id).set(cartModel.toMap());
       }
 
       return true;

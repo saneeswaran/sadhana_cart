@@ -14,7 +14,6 @@ class BannerService {
       final data = querySnapshot.docs
           .map((e) => BannerModel.fromMap(e.data() as Map<String, dynamic>))
           .toList();
-      log(data.toString());
       for (final banners in data) {
         await HiveHelper.addBanners(banner: banners);
       }

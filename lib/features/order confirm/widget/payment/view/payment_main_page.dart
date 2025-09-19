@@ -212,7 +212,6 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         ref,
       );
 
-      // Safe selected size
       final selectedSizeSafe =
           widget.selectedSize ??
           (widget.product.sizevariants != null &&
