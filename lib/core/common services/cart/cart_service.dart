@@ -40,13 +40,14 @@ class CartService {
         await cartRef.doc(existing.cartId).update(updated.toMap());
       } else {
         final docRef = cartRef.doc();
+        final variant = product.sizevariants!.firstWhere((v) => v.size == size);
 
         final CartModel cartModel = CartModel(
           cartId: docRef.id,
           customerId: currentUserId,
           productid: product.productid!,
           quantity: 1,
-          sizeVariant: product.sizevariants!.firstWhere((v) => v.size == size),
+          sizeVariant: variant,
         );
 
         await cartRef.doc(docRef.id).set(cartModel.toMap());

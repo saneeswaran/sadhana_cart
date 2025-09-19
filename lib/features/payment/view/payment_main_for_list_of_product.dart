@@ -135,10 +135,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
           latitude: address.lattitude,
           longitude: address.longitude,
           orderDate: DateTime.now().toString(),
-          quantity: widget.cart.fold<int>(
-            0,
-            (int sum, c) => sum + c.quantity,
-          ), // sum quantities
+          quantity: widget.cart.fold<int>(0, (int sum, c) => sum + c.quantity),
           products: orderProduct,
           createdAt: Timestamp.now(),
           ref: ref,

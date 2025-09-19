@@ -220,7 +220,6 @@ class OrderService {
         final snapshot = await productDoc.get();
 
         if (snapshot.exists) {
-          // If product already exists, update quantity (increment)
           final currentData = snapshot.data() as Map<String, dynamic>;
           final currentQuantity = currentData['quantity'] ?? 0;
 
@@ -229,12 +228,11 @@ class OrderService {
             'quantity': currentQuantity + (product.quantity ?? 1),
             'lastPurchasedAt': FieldValue.serverTimestamp(),
             'paymentMethod': paymentMethod,
-            'address': address.toMap(), // <-- save latest address used
+            'address': address.toMap(),
           });
 
           log("Updated purchased product: $productId with new quantity");
         } else {
-          // If product doesn't exist, create new entry
           await productDoc.set({
             ...product.toMap(),
             'quantity': product.quantity ?? 1,

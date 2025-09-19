@@ -33,7 +33,6 @@ class OrderNotifier extends StateNotifier<OrderState> {
     }
   }
 
-  /// Save purchased products for current user
   Future<void> savePurchasedProducts({
     required List<ProductModel> products,
     required AddressModel address,
@@ -69,7 +68,7 @@ class OrderNotifier extends StateNotifier<OrderState> {
 
   Future<void> updateOrderStatus({
     required String userId,
-    required String orderId, // as string from API
+    required String orderId,
     required String apiStatus,
   }) async {
     try {
@@ -83,7 +82,6 @@ class OrderNotifier extends StateNotifier<OrderState> {
           .doc(userId)
           .collection('orders');
 
-      // Convert to number to match Firestore field type
       final orderIdNumber = int.tryParse(orderId);
 
       final querySnapshot = await ordersRef
@@ -104,7 +102,6 @@ class OrderNotifier extends StateNotifier<OrderState> {
       await docRef.update({'status': apiStatus});
       log("Firestore update success -> orderId: $orderId, status: $apiStatus");
 
-      // Update local state list too
       log("Updating local allOrders list...");
       allOrders = allOrders.map((o) {
         if (o.orderId.toString() == orderId) {

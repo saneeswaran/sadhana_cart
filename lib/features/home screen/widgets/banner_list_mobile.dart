@@ -25,12 +25,12 @@ class _BannerListMobileState extends ConsumerState<BannerListMobile> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     final bannerState = ref.watch(bannerProvider);
 
     if (bannerState.isLoading) {
       return const BannerLoader();
     }
+
     if (bannerState.banner?.length == 1) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -50,7 +50,7 @@ class _BannerListMobileState extends ConsumerState<BannerListMobile> {
     }
 
     if (bannerState.banner?.isEmpty ?? true) {
-      ClipRRect(
+      return ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Image.asset(
           AppImages.bannerImages.first.image,
@@ -59,6 +59,7 @@ class _BannerListMobileState extends ConsumerState<BannerListMobile> {
         ),
       );
     }
+
     return CarouselSlider(
       items: bannerState.banner!
           .map(
