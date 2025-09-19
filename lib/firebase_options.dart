@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBtraD4VRw_kJsltygAqzKtcYdyfnLeHZk',
-    appId: '1:126398142924:android:d096dc558320bb4885a569',
+    appId: '1:126398142924:android:cb36224513b0c26785a569',
     messagingSenderId: '126398142924',
     projectId: 'sadhana-cart',
     storageBucket: 'sadhana-cart.firebasestorage.app',
@@ -59,12 +59,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAo-eSr8qvFVoyS6h0UZ6x-Hn46fs2Q2A0',
-    appId: '1:126398142924:ios:8bda670584f8f7fa85a569',
+    appId: '1:126398142924:ios:11d800e7c222bad585a569',
     messagingSenderId: '126398142924',
     projectId: 'sadhana-cart',
     storageBucket: 'sadhana-cart.firebasestorage.app',
     androidClientId: '126398142924-3099cnmiphek25cba21mahr3j9olff2l.apps.googleusercontent.com',
-    iosClientId: '126398142924-iko2cbqi6d86ru9pbiv35j4qfru2r1gp.apps.googleusercontent.com',
-    iosBundleId: 'com.sadhanacart.app',
+    iosClientId: '126398142924-suei59rn5bobd4qmppiv5kfs9p62e3q6.apps.googleusercontent.com',
+    iosBundleId: 'com.innomatricstech.sadhanacart',
   );
 }
