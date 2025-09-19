@@ -1,3 +1,4 @@
+import 'dart:convert' show jsonEncode;
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,6 +30,8 @@ import 'package:sadhana_cart/features/payment/view/order_address.dart';
 import 'package:sadhana_cart/features/profile/view%20model/user_notifier.dart';
 import 'package:sadhana_cart/features/profile/widget/address/model/address_model.dart';
 import 'package:sadhana_cart/features/profile/widget/address/view model/address_notifier.dart';
+import 'package:sadhana_cart/core/common%20services/shiprocket_api/shiprocket_api_services.dart';
+import 'package:dio/dio.dart';
 
 class PaymentMainForListOfProduct extends ConsumerStatefulWidget {
   final List<ProductModel> products;
@@ -64,12 +67,62 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
     );
   }
 
+  late final ShiprocketApiServices shiprocketService;
+
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
       ref.read(addressprovider.notifier).updateAddress();
     });
+    // Initialize Dio and Shiprocket service
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: 'https://apiv2.shiprocket.in/v1/external/', // your base URL
+      ),
+    );
+    shiprocketService = ShiprocketApiServices(dio, ref);
+  }
+
+  Map<String, dynamic> _buildShiprocketOrderData({
+    required List<OrderProductModel> products,
+    required AddressModel address,
+    required double totalAmount,
+  }) {
+    return {
+      "order_id": DateTime.now().millisecondsSinceEpoch.toString(),
+      "order_date": DateTime.now().toIso8601String(),
+      "billing_customer_name": address.title,
+      "billing_last_name": "",
+      "billing_address": address.streetName,
+      "billing_city": address.city,
+      "billing_state": address.state,
+      "billing_pincode": address.pinCode,
+      "billing_country": "India",
+      "billing_email": "test@example.com",
+      "billing_phone": address.phoneNumber.toString(),
+      "shipping_is_billing": true,
+      "order_items": products.map((p) {
+        return {
+          "name": p.name,
+          "sku": p.productid,
+          "units": p.quantity,
+          "selling_price": p.price,
+          "discount": 0,
+          "tax": 0,
+        };
+      }).toList(),
+      "payment_method": "Prepaid",
+      "shipping_charges": 0,
+      "giftwrap_charges": 0,
+      "transaction_charges": 0,
+      "total_discount": 0,
+      "sub_total": totalAmount,
+      "length": 10,
+      "breadth": 10,
+      "height": 10,
+      "weight": 1.0,
+    };
   }
 
   @override
@@ -100,13 +153,16 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
       );
     }
 
+    // --- Inside ref.listen<PaymentState> ---
     ref.listen<PaymentState>(paymentProvider, (previous, next) async {
+      log("PaymentState changed: success=${next.success}, error=${next.error}");
       if (next.success) {
         debugPrint("Payment succeeded!");
 
         // Ensure address is ready
         final addressState = ref.read(addressprovider);
         if (addressState.addresses.isEmpty) {
+          log("Address list empty, updating...");
           await ref.read(addressprovider.notifier).updateAddress();
         }
         final updatedAddressState = ref.read(addressprovider);
@@ -125,8 +181,12 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
           }
           return;
         }
+        log(
+          "Using address: ${address.title}, ${address.streetName}, ${address.city}",
+        );
 
-        // Place order
+        // Place Firebase order
+        log("Placing Firebase order...");
         final placed = await OrderService.addMultipleProductOrder(
           totalAmount: widget.totalAmount,
           address:
@@ -142,7 +202,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
         );
 
         if (!placed) {
-          log("Order placement failed");
+          log("Order placement failed in Firebase");
           if (context.mounted) {
             showCustomSnackbar(
               context: context,
@@ -152,10 +212,10 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
           }
           return;
         }
-
-        log("Order placed successfully");
+        log("Firebase order placed successfully");
 
         // Decrease stock after successful order
+        log("Updating stock for products...");
         bool stockUpdated = await ProductService.decreaseStockForProducts(
           orderProduct,
         );
@@ -163,16 +223,36 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
         if (stockUpdated) {
           log("Stock updated successfully");
           ref.read(cartProvider.notifier).resetCart(cart: widget.cart);
-          //notification service
+
           final userName = ref.watch(
             userProvider.select((value) => value?.name),
           );
           final name = userName ?? "";
+          log("Sending notification for order placement");
           NotificationService.sendNotification(
             title: "Order Placed",
             message: "$name placed an order",
             screen: "/order",
           );
+
+          // --- Shiprocket API call ---
+          try {
+            log("Creating Shiprocket order...");
+            final orderData = _buildShiprocketOrderData(
+              products: orderProduct,
+              address: address,
+              totalAmount: widget.totalAmount,
+            );
+
+            log("Shiprocket order payload: ${jsonEncode(orderData)}");
+
+            final shiprocketResponse = await shiprocketService.createOrder(
+              orderData,
+            );
+            log("Shiprocket order created successfully: $shiprocketResponse");
+          } catch (e, st) {
+            log("Failed to create Shiprocket order: $e\n$st");
+          }
         } else {
           log("Stock update failed");
           if (context.mounted) {
@@ -182,10 +262,10 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
               type: ToastType.error,
             );
           }
-          // maybe rollback or notify admin
         }
 
         if (context.mounted) {
+          log("Navigating to Payment Success Page");
           showCustomSnackbar(
             context: context,
             message: "Order placed Successfully",
@@ -196,6 +276,8 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
             screen: const PaymentSuccessPage(),
           );
         }
+      } else {
+        log("Payment failed or pending, error=${next.error}");
       }
     });
 

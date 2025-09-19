@@ -32,7 +32,7 @@ class PaymentController extends StateNotifier<PaymentState> {
     amount = amount * 100;
 
     var options = {
-      'key': 'rzp_test_RCgP4dyI1pibjj',
+      'key': 'rzp_live_RF5gE7NCdAsEIs',
       'amount': amount,
       'name': 'Sadhana Cart',
       'description': 'Order Payment',
