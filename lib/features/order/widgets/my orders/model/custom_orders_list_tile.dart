@@ -17,45 +17,60 @@ class CustomOrdersListTile extends ConsumerStatefulWidget {
 class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
   @override
   void initState() {
+    super.initState();
     Future.microtask(() {
       ref.read(orderProvider.notifier).fetchCustomOrderDetails();
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final orders = ref.watch(orderProvider);
-    // if (orders.loading) {
-    //   return const OrderDetailsLoader();
-    // }
+    final orderState = ref.watch(orderProvider);
+    final size = MediaQuery.of(context).size;
 
-    // if (orders.orders.isEmpty) {
-    //   return const Scaffold(
-    //     body: Center(
-    //       child: Text(
-    //         "No orders found",
-    //         style: TextStyle(
-    //           color: Colors.black,
-    //           fontSize: 16,
-    //           fontWeight: FontWeight.bold,
-    //         ),
-    //       ),
-    //     ),
-    //   );
-    // }
-    final Size size = MediaQuery.of(context).size;
+    if (orderState.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (orderState.error != null) {
+      return Center(child: Text("Error: ${orderState.error}"));
+    }
+
+    if (orderState.orders.isEmpty) {
+      return const Center(
+        child: Text(
+          "No orders found",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    }
+
     return ListView.builder(
-      itemCount: 5,
+      itemCount: orderState.orders.length,
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
-        //outside container
+        final order = orderState.orders[index];
+
+        // Format createdAt safely
+        String createdAtText = "--";
+        if (order.createdAt != null) {
+          try {
+            order.createdAt!.toDate().toString();
+          } catch (e) {
+            createdAtText = "--";
+          }
+        }
+
         return Container(
           margin: const EdgeInsets.all(12),
           padding: const EdgeInsets.all(20),
           height: size.height * 0.3,
-          width: size.width * 1,
+          width: size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: Colors.white,
@@ -70,24 +85,25 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
           child: Column(
             spacing: 25,
             children: [
-              const Row(
+              // 🔹 Order ID + Date
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "OrderID",
+                    "OrderID: ${order.orderId ?? '--'}",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    "Date",
+                    createdAtText,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xff777E90),
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -95,13 +111,17 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                   ),
                 ],
               ),
+
+              // 🔹 Tracking number
               _customText(
-                title: "Tracking Number:   ",
+                title: "Tracking Number: ",
                 titleFontWeight: FontWeight.bold,
                 titleColor: const Color(0xff777e90),
-                value: "1234567890",
+                value: order.shiprocketOrderId?.toString() ?? "N/A",
                 valueColor: Colors.black,
               ),
+
+              // 🔹 Quantity + Subtotal
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -109,27 +129,32 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                     title: "Quantity: ",
                     titleFontWeight: FontWeight.bold,
                     titleColor: const Color(0xff777e90),
-                    value: "3",
+                    value: order.quantity?.toString() ?? "0",
                     valueColor: Colors.black,
                     valueFontWeight: FontWeight.bold,
                   ),
                   _customText(
-                    title: "Subtotal:   ",
+                    title: "Subtotal: ",
                     titleFontWeight: FontWeight.bold,
                     titleColor: const Color(0xff777e90),
-                    value: "${Constants.indianCurrency} 110",
+                    value:
+                        "${Constants.indianCurrency} ${(order.totalAmount ?? 0).toStringAsFixed(2)}",
                     valueColor: Colors.black,
                     valueFontWeight: FontWeight.bold,
                   ),
                 ],
               ),
+
+              // 🔹 Status + Details Button
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Pending",
+                  Text(
+                    order.orderStatus ?? "Pending",
                     style: TextStyle(
-                      color: Colors.red,
+                      color: (order.orderStatus == "Delivered")
+                          ? Colors.green
+                          : Colors.red,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -140,10 +165,10 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                       style: customOutlinedButtonStyle,
                     ),
                     onPressed: () {
-                      // navigateTo(
-                      //   context: context,
-                      //   screen: const OrderDetailsPage(),
-                      // );
+                      navigateTo(
+                        context: context,
+                        screen: OrderDetailsPage(order: order),
+                      );
                     },
                   ),
                 ],
