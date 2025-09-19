@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sadhana_cart/core/common%20model/order/order_model.dart';
 import 'package:sadhana_cart/core/common%20model/order/order_state.dart';
@@ -62,5 +65,61 @@ class OrderNotifier extends StateNotifier<OrderState> {
     }).toList();
 
     state = state.copyWith(orders: filteredOrders);
+  }
+
+  Future<void> updateOrderStatus({
+    required String userId,
+    required String orderId, // as string from API
+    required String apiStatus,
+  }) async {
+    try {
+      log("updateOrderStatus called");
+      log(
+        "Params -> userId: $userId, orderId: $orderId, apiStatus: $apiStatus",
+      );
+
+      final ordersRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .collection('orders');
+
+      // Convert to number to match Firestore field type
+      final orderIdNumber = int.tryParse(orderId);
+
+      final querySnapshot = await ordersRef
+          .where('order_id', isEqualTo: orderIdNumber)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        log(
+          "No order document found with order_id: $orderIdNumber under userId: $userId",
+        );
+        return;
+      }
+
+      final doc = querySnapshot.docs.first;
+      final docRef = ordersRef.doc(doc.id);
+
+      await docRef.update({'status': apiStatus});
+      log("Firestore update success -> orderId: $orderId, status: $apiStatus");
+
+      // Update local state list too
+      log("Updating local allOrders list...");
+      allOrders = allOrders.map((o) {
+        if (o.orderId.toString() == orderId) {
+          log("Updating order in local list -> $orderId to status: $apiStatus");
+          return o.copyWith(orderStatus: apiStatus);
+        }
+        return o;
+      }).toList();
+
+      state = state.copyWith(orders: allOrders);
+      log("State updated successfully");
+    } catch (e, st) {
+      log("Error in updateOrderStatus: $e");
+      log("Stacktrace: $st");
+      state = state.copyWith(error: e.toString());
+    }
   }
 }

@@ -83,14 +83,31 @@ class ShiprocketApiServices {
     return response.data as Map<String, dynamic>;
   }
 
-  Future<Map<String, dynamic>> getOrders({int page = 1}) async {
+  /// Fetch details of a specific order by Shiprocket order ID
+  Future<Map<String, dynamic>> getOrderDetails(String orderId) async {
     final token = await _getValidToken();
-    final response = await dio.get(
-      'orders',
-      queryParameters: {'page': page},
-      options: Options(headers: {'Authorization': 'Bearer $token'}),
-    );
-    return response.data as Map<String, dynamic>;
+
+    final url = 'orders/show/$orderId';
+    log("Calling Shiprocket API GET: ${dio.options.baseUrl}$url");
+    log("Using token: $token");
+
+    try {
+      final response = await dio.get(
+        url,
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+          validateStatus: (_) => true, // allow all status codes for logging
+        ),
+      );
+
+      log("Order Details status code: ${response.statusCode}");
+      log("Order Details body: ${response.data}");
+
+      return response.data as Map<String, dynamic>;
+    } catch (e) {
+      log("Error fetching order details: $e");
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> getAllOrders() async {

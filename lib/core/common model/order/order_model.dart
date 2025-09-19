@@ -12,7 +12,7 @@ class OrderModel {
   final int phoneNumber;
   final double latitude;
   final double longitude;
-  String? orderStatus;
+  final String? orderStatus;
   final Timestamp orderDate;
   final String? orderId;
   final Timestamp createdAt;
@@ -39,6 +39,41 @@ class OrderModel {
     this.shiprocketStatus,
   });
 
+  // copyWith for immutability
+  OrderModel copyWith({
+    int? quantity,
+    String? userId,
+    double? totalAmount,
+    String? address,
+    int? phoneNumber,
+    double? latitude,
+    double? longitude,
+    String? orderStatus,
+    Timestamp? orderDate,
+    String? orderId,
+    Timestamp? createdAt,
+    List<OrderProductModel>? products,
+    int? shiprocketOrderId,
+    String? shiprocketStatus,
+  }) {
+    return OrderModel(
+      quantity: quantity ?? this.quantity,
+      userId: userId ?? this.userId,
+      totalAmount: totalAmount ?? this.totalAmount,
+      address: address ?? this.address,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      orderStatus: orderStatus ?? this.orderStatus,
+      orderDate: orderDate ?? this.orderDate,
+      orderId: orderId ?? this.orderId,
+      createdAt: createdAt ?? this.createdAt,
+      products: products ?? this.products,
+      shiprocketOrderId: shiprocketOrderId ?? this.shiprocketOrderId,
+      shiprocketStatus: shiprocketStatus ?? this.shiprocketStatus,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'quantity': quantity,
@@ -59,7 +94,12 @@ class OrderModel {
   }
 
   factory OrderModel.fromMap(Map<String, dynamic> map) {
-    log("products ${map['products']}");
+    log("product data: ${map['product']}");
+
+    final Timestamp fallbackDate = Timestamp.fromDate(
+      DateTime(2025, 1, 1, 10, 0),
+    ); // demo value
+
     return OrderModel(
       quantity: map['quantity'] as int,
       userId: map['userId'] != null ? map['userId'] as String : null,
@@ -99,7 +139,7 @@ class OrderProductModel {
   final String? productid;
   final String? name;
   final double? price;
-  int? stock;
+  final int? stock;
   final int? quantity;
   final List<SizeVariant>? sizevariants;
 
@@ -112,6 +152,27 @@ class OrderProductModel {
     this.quantity,
     this.sizevariants,
   });
+
+  // copyWith for immutability
+  OrderProductModel copyWith({
+    String? id,
+    String? productid,
+    String? name,
+    double? price,
+    int? stock,
+    int? quantity,
+    List<SizeVariant>? sizevariants,
+  }) {
+    return OrderProductModel(
+      id: id ?? this.id,
+      productid: productid ?? this.productid,
+      name: name ?? this.name,
+      price: price ?? this.price,
+      stock: stock ?? this.stock,
+      quantity: quantity ?? this.quantity,
+      sizevariants: sizevariants ?? this.sizevariants,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -127,17 +188,17 @@ class OrderProductModel {
 
   factory OrderProductModel.fromMap(Map<String, dynamic> map) {
     return OrderProductModel(
-      id: map['id'],
-      productid: map['productid'],
-      name: map['name'],
-      price: map['price'],
-      stock: map['stock'],
-      quantity: map['quantity'],
+      id: map['id']?.toString(),
+      productid: map['productid']?.toString(),
+      name: map['name']?.toString(),
+      price: (map['price'] ?? 0).toDouble(),
+      stock: (map['stock'] ?? 0) as int,
+      quantity: (map['quantity'] ?? 0) as int,
       sizevariants: map['sizevariants'] != null
           ? (map['sizevariants'] as List<dynamic>)
                 .map((x) => SizeVariant.fromMap(x as Map<String, dynamic>))
                 .toList()
-          : null,
+          : [],
     );
   }
 

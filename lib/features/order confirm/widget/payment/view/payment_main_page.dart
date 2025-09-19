@@ -263,17 +263,27 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
       log("Shiprocket API Response: $apiResult");
 
+      // --- STORE ONLY order_id AND status ---
       if (apiResult['order_id'] != null && apiResult['status'] != null) {
         final userOrderRef = FirebaseFirestore.instance
             .collection('users')
             .doc(currentUser)
             .collection('orders')
-            .doc();
+            .doc(); // generates a new order doc
 
         final orderMap = {
           "order_id": apiResult['order_id'],
           "status": apiResult['status'],
-          "created_at": Timestamp.now(),
+          "totalAmount": (widget.product.offerprice ?? 0.0).toDouble(),
+          "phoneNumber": address.phoneNumber ?? 0,
+          "address":
+              "${address.title ?? ''}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
+          "latitude": address.lattitude,
+          "longitude": address.longitude,
+          "quantity": int.tryParse(widget.product.quantity.toString()) ?? 1,
+          "product": widget.product.toMap(),
+          "selectedSizeFromUser": widget.selectedSize.toString(),
+          "createdAt": Timestamp.now(),
         };
 
         await FirebaseFirestore.instance.runTransaction((transaction) async {
