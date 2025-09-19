@@ -263,15 +263,12 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
 
       log("Shiprocket API Response: $apiResult");
 
-      // --- STORE ONLY order_id AND status ---
-      if (apiResult != null &&
-          apiResult['order_id'] != null &&
-          apiResult['status'] != null) {
+      if (apiResult['order_id'] != null && apiResult['status'] != null) {
         final userOrderRef = FirebaseFirestore.instance
-            .collection('users') // or your userCollection
+            .collection('users')
             .doc(currentUser)
             .collection('orders')
-            .doc(); // generates a new order doc
+            .doc();
 
         final orderMap = {
           "order_id": apiResult['order_id'],
@@ -396,24 +393,30 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                     isPaymentProcessing = true;
                   });
 
-                  showCustomSnackbar(
-                    context: context,
-                    message: "Order placed successfully!",
-                    type: ToastType.success,
-                  );
-                  navigateToReplacement(
-                    context: context,
-                    screen: const PaymentSuccessPage(),
-                  );
+                  if (context.mounted) {
+                    showCustomSnackbar(
+                      context: context,
+                      message: "Order placed successfully!",
+                      type: ToastType.success,
+                    );
+                  }
+                  if (context.mounted) {
+                    navigateToReplacement(
+                      context: context,
+                      screen: const PaymentSuccessPage(),
+                    );
+                  }
                 } else {
                   setState(() {
                     isPaymentProcessing = false;
                   });
-                  showCustomSnackbar(
-                    context: context,
-                    message: "Failed to place order. Try again.",
-                    type: ToastType.error,
-                  );
+                  if (context.mounted) {
+                    showCustomSnackbar(
+                      context: context,
+                      message: "Failed to place order. Try again.",
+                      type: ToastType.error,
+                    );
+                  }
                 }
               }
             } else if (next.error != null) {

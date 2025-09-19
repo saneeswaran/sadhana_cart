@@ -36,11 +36,11 @@ class PaymentMainForListOfProduct extends ConsumerStatefulWidget {
   final double totalAmount;
 
   const PaymentMainForListOfProduct({
-    Key? key,
+    super.key,
     required this.cart,
     required this.products,
     required this.totalAmount,
-  }) : super(key: key);
+  });
 
   @override
   ConsumerState<PaymentMainForListOfProduct> createState() =>
@@ -91,7 +91,10 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainForListOfProduct> {
           stock: product.stock ?? 0,
           quantity: cartItem.quantity,
           sizevariants: [
-            SizeVariant(size: cartItem.size ?? "", stock: cartItem.quantity),
+            SizeVariant(
+              size: cartItem.sizeVariant?.size ?? "",
+              stock: cartItem.quantity,
+            ),
           ],
         ),
       );

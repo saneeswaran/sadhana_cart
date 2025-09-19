@@ -1,10 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-<<<<<<< HEAD
-=======
 import 'dart:developer';
-
->>>>>>> 571b95b7ba6f515bbb20b9deda60f2f47be4ce75
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sadhana_cart/core/common%20model/product/size_variant.dart';
 
@@ -65,7 +61,6 @@ class OrderModel {
   factory OrderModel.fromMap(Map<String, dynamic> map) {
     log("products ${map['products']}");
     return OrderModel(
-<<<<<<< HEAD
       quantity: map['quantity'] as int,
       userId: map['userId'] != null ? map['userId'] as String : null,
       totalAmount: map['totalAmount'] as double,
@@ -90,29 +85,6 @@ class OrderModel {
       shiprocketStatus: map['shiprocketStatus'] != null
           ? map['shiprocketStatus'] as String
           : null,
-=======
-      quantity: map['quantity'],
-      userId: map['userId'],
-      totalAmount: map['totalAmount'],
-      address: map['address'],
-      phoneNumber: map['phoneNumber'],
-      latitude: map['latitude'],
-      longitude: map['longitude'],
-      orderStatus: map['orderStatus'],
-      orderDate: map['orderDate'],
-      orderId: map['orderId'],
-      createdAt: map['createdAt'],
-      products: map['products'] != null
-          ? (map['products'] is List<dynamic>)
-                ? List<OrderProductModel>.from(
-                    (map['products'] as List<dynamic>).map<OrderProductModel>(
-                      (x) =>
-                          OrderProductModel.fromMap(x as Map<String, dynamic>),
-                    ),
-                  )
-                : []
-          : [],
->>>>>>> 571b95b7ba6f515bbb20b9deda60f2f47be4ce75
     );
   }
 

@@ -22,7 +22,7 @@ class WalletLoadingPage extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Image.asset(e.bannerImage, fit: BoxFit.cover),
+                  child: Image.asset(e.image, fit: BoxFit.cover),
                 ),
               ),
             )

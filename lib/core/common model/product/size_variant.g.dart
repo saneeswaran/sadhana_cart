@@ -48,22 +48,3 @@ class SizeVariantAdapter extends TypeAdapter<SizeVariant> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-SizeVariant _$SizeVariantFromJson(Map<String, dynamic> json) => SizeVariant(
-      size: json['size'] as String,
-      color: json['color'] as String?,
-      stock: (json['stock'] as num).toInt(),
-      skuSuffix: json['skuSuffix'] as String?,
-    );
-
-Map<String, dynamic> _$SizeVariantToJson(SizeVariant instance) =>
-    <String, dynamic>{
-      'size': instance.size,
-      'color': instance.color,
-      'stock': instance.stock,
-      'skuSuffix': instance.skuSuffix,
-    };

@@ -53,20 +53,10 @@ class AppImages {
     BannerModel(
       bannerId: "1",
       bannerName: "banner1",
-      bannerImage: carousel,
-      productid: "1",
-    ),
-    BannerModel(
-      bannerId: "2",
-      bannerName: "banner1",
-      bannerImage: carousel,
-      productid: "2",
-    ),
-    BannerModel(
-      bannerId: "2",
-      bannerName: "banner1",
-      bannerImage: carousel,
-      productid: "2",
+      image: carousel,
+      productId: "1",
+      description: "",
+      status: "",
     ),
   ];
 

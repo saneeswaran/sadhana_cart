@@ -19,23 +19,29 @@ class BannerModelAdapter extends TypeAdapter<BannerModel> {
     return BannerModel(
       bannerId: fields[0] as String,
       bannerName: fields[1] as String,
-      bannerImage: fields[2] as String,
-      productid: fields[3] as String,
+      image: fields[2] as String,
+      description: fields[3] as String,
+      productId: fields[4] as String,
+      status: fields[5] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, BannerModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.bannerId)
       ..writeByte(1)
       ..write(obj.bannerName)
       ..writeByte(2)
-      ..write(obj.bannerImage)
+      ..write(obj.image)
       ..writeByte(3)
-      ..write(obj.productid);
+      ..write(obj.description)
+      ..writeByte(4)
+      ..write(obj.productId)
+      ..writeByte(5)
+      ..write(obj.status);
   }
 
   @override
