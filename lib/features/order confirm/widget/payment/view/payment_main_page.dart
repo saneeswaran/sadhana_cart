@@ -212,7 +212,6 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
         ref,
       );
 
-      // Safe selected size
       final selectedSizeSafe =
           widget.selectedSize ??
           (widget.product.sizevariants != null &&
@@ -264,41 +263,12 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
       log("Shiprocket API Response: $apiResult");
 
       // --- STORE ONLY order_id AND status ---
-      if (apiResult != null &&
-          apiResult['order_id'] != null &&
-          apiResult['status'] != null &&
-          address != null) {
-        // Convert ProductModel to OrderProductModel
-        final orderProduct = OrderProductModel(
-          productid: widget.product.productid!,
-          name: widget.product.name!,
-          price: (widget.product.offerprice ?? 0.0).toDouble(),
-          stock: widget.product.stock ?? 0,
-          quantity: int.tryParse(widget.product.quantity.toString()) ?? 1,
-          sizevariants: widget.product.sizevariants,
-        );
-
-        // Prepare your OrderService data
-        final success = await OrderService.addSingleOrder(
-          totalAmount: (widget.product.offerprice ?? 0.0).toDouble(),
-          phoneNumber: address.phoneNumber ?? 0,
-          address:
-              "${address.title ?? ''}, ${address.streetName}, ${address.city}, ${address.state}, ${address.pinCode}",
-          latitude: address.lattitude,
-          longitude: address.longitude,
-          quantity: int.tryParse(widget.product.quantity.toString()) ?? 1,
-          product: orderProduct,
-          createdAt: Timestamp.now(),
-          ref: ref,
-          selectedSizeFromUser: widget.selectedSize.toString(),
-        );
-
-        // Combine with Shiprocket API response
+      if (apiResult['order_id'] != null && apiResult['status'] != null) {
         final userOrderRef = FirebaseFirestore.instance
-            .collection('users') // or your userCollection
+            .collection('users')
             .doc(currentUser)
             .collection('orders')
-            .doc(); // generates a new doc
+            .doc(); // generates a new order doc
 
         final orderMap = {
           "order_id": apiResult['order_id'],
@@ -310,7 +280,7 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
           "latitude": address.lattitude,
           "longitude": address.longitude,
           "quantity": int.tryParse(widget.product.quantity.toString()) ?? 1,
-          "product": orderProduct.toMap(), // make sure your model has toMap()
+          "product": widget.product.toMap(),
           "selectedSizeFromUser": widget.selectedSize.toString(),
           "createdAt": Timestamp.now(),
         };
@@ -432,24 +402,30 @@ class _PaymentMainPageState extends ConsumerState<PaymentMainPage> {
                     isPaymentProcessing = true;
                   });
 
-                  showCustomSnackbar(
-                    context: context,
-                    message: "Order placed successfully!",
-                    type: ToastType.success,
-                  );
-                  navigateToReplacement(
-                    context: context,
-                    screen: const PaymentSuccessPage(),
-                  );
+                  if (context.mounted) {
+                    showCustomSnackbar(
+                      context: context,
+                      message: "Order placed successfully!",
+                      type: ToastType.success,
+                    );
+                  }
+                  if (context.mounted) {
+                    navigateToReplacement(
+                      context: context,
+                      screen: const PaymentSuccessPage(),
+                    );
+                  }
                 } else {
                   setState(() {
                     isPaymentProcessing = false;
                   });
-                  showCustomSnackbar(
-                    context: context,
-                    message: "Failed to place order. Try again.",
-                    type: ToastType.error,
-                  );
+                  if (context.mounted) {
+                    showCustomSnackbar(
+                      context: context,
+                      message: "Failed to place order. Try again.",
+                      type: ToastType.error,
+                    );
+                  }
                 }
               }
             } else if (next.error != null) {

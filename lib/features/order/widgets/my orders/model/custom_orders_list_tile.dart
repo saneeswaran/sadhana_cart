@@ -58,12 +58,10 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
 
         // Format createdAt safely
         String createdAtText = "--";
-        if (order.createdAt != null) {
-          try {
-            order.createdAt!.toDate().toString();
-          } catch (e) {
-            createdAtText = "--";
-          }
+        try {
+          order.createdAt.toDate().toString();
+        } catch (e) {
+          createdAtText = "--";
         }
 
         return Container(
@@ -129,7 +127,7 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                     title: "Quantity: ",
                     titleFontWeight: FontWeight.bold,
                     titleColor: const Color(0xff777e90),
-                    value: order.quantity?.toString() ?? "0",
+                    value: order.quantity.toString(),
                     valueColor: Colors.black,
                     valueFontWeight: FontWeight.bold,
                   ),
@@ -138,7 +136,7 @@ class _CustomOrdersListTileState extends ConsumerState<CustomOrdersListTile> {
                     titleFontWeight: FontWeight.bold,
                     titleColor: const Color(0xff777e90),
                     value:
-                        "${Constants.indianCurrency} ${(order.totalAmount ?? 0).toStringAsFixed(2)}",
+                        "${Constants.indianCurrency} ${(order.totalAmount).toStringAsFixed(2)}",
                     valueColor: Colors.black,
                     valueFontWeight: FontWeight.bold,
                   ),

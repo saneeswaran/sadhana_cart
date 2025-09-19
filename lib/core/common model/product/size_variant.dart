@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:hive/hive.dart';
 
 part 'size_variant.g.dart';
@@ -24,17 +26,17 @@ class SizeVariant extends HiveObject {
     this.skuSuffix,
   });
 
-  factory SizeVariant.fromJson(Map<String, dynamic> json) =>
-      _$SizeVariantFromJson(json);
-
-  Map<String, dynamic> toJson() => _$SizeVariantToJson(this);
-
-  factory SizeVariant.fromMap(Map<String, dynamic> map) {
+  SizeVariant copyWith({
+    String? size,
+    String? color,
+    int? stock,
+    String? skuSuffix,
+  }) {
     return SizeVariant(
-      size: map['size'] as String,
-      color: map['color'] != null ? map['color'] as String : null,
-      stock: map['stock'] as int,
-      skuSuffix: map['skuSuffix'] != null ? map['skuSuffix'] as String : null,
+      size: size ?? this.size,
+      color: color ?? this.color,
+      stock: stock ?? this.stock,
+      skuSuffix: skuSuffix ?? this.skuSuffix,
     );
   }
 
@@ -46,6 +48,20 @@ class SizeVariant extends HiveObject {
       'skuSuffix': skuSuffix,
     };
   }
+
+  factory SizeVariant.fromMap(Map<String, dynamic> map) {
+    return SizeVariant(
+      size: map['size'] as String,
+      color: map['color'] != null ? map['color'] as String : null,
+      stock: map['stock'] as int,
+      skuSuffix: map['skuSuffix'] != null ? map['skuSuffix'] as String : null,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory SizeVariant.fromJson(String source) =>
+      SizeVariant.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -65,19 +81,5 @@ class SizeVariant extends HiveObject {
   @override
   int get hashCode {
     return size.hashCode ^ color.hashCode ^ stock.hashCode ^ skuSuffix.hashCode;
-  }
-
-  SizeVariant copyWith({
-    String? size,
-    String? color,
-    int? stock,
-    String? skuSuffix,
-  }) {
-    return SizeVariant(
-      size: size ?? this.size,
-      color: color ?? this.color,
-      stock: stock ?? this.stock,
-      skuSuffix: skuSuffix ?? this.skuSuffix,
-    );
   }
 }

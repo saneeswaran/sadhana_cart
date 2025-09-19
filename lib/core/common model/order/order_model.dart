@@ -19,8 +19,8 @@ class OrderModel {
   final List<OrderProductModel> products;
 
   // Shiprocket fields
-  final int? shiprocketOrderId; // API order_id
-  final String? shiprocketStatus; // API status
+  final int? shiprocketOrderId;
+  final String? shiprocketStatus;
 
   OrderModel({
     required this.quantity,
@@ -98,34 +98,33 @@ class OrderModel {
 
     final Timestamp fallbackDate = Timestamp.fromDate(
       DateTime(2025, 1, 1, 10, 0),
-    ); // demo value
+    );
 
     return OrderModel(
-      quantity: (map['quantity'] ?? 0) as int,
-      userId: map['userId']?.toString(),
-      totalAmount: (map['totalAmount'] ?? 0).toDouble(),
-      address: map['address']?.toString(),
-      phoneNumber: (map['phoneNumber'] ?? 0) as int,
-      latitude: (map['latitude'] ?? 0).toDouble(),
-      longitude: (map['longitude'] ?? 0).toDouble(),
-      orderStatus: map['status']?.toString() ?? map['orderStatus'],
-      orderDate: (map['orderDate'] is Timestamp)
-          ? map['orderDate'] as Timestamp
-          : (map['createdAt'] is Timestamp
-                ? map['createdAt'] as Timestamp
-                : fallbackDate),
-      orderId: map['order_id']?.toString() ?? map['orderId'],
-      createdAt: (map['createdAt'] is Timestamp)
-          ? map['createdAt'] as Timestamp
-          : fallbackDate,
-      products: map['product'] != null
-          ? [OrderProductModel.fromMap(map['product'] as Map<String, dynamic>)]
-          : [],
-      shiprocketOrderId: map['order_id'] != null
-          ? (map['order_id'] as num).toInt()
-          : map['shiprocketOrderId'],
-      shiprocketStatus:
-          map['shiprocketStatus']?.toString() ?? map['status']?.toString(),
+      quantity: map['quantity'] as int,
+      userId: map['userId'] != null ? map['userId'] as String : null,
+      totalAmount: map['totalAmount'] as double,
+      address: map['address'] != null ? map['address'] as String : null,
+      phoneNumber: map['phoneNumber'] as int,
+      latitude: map['latitude'] as double,
+      longitude: map['longitude'] as double,
+      orderStatus: map['orderStatus'] != null
+          ? map['orderStatus'] as String
+          : null,
+      orderDate: map['orderDate'] as Timestamp,
+      orderId: map['orderId'] != null ? map['orderId'] as String : null,
+      createdAt: map['createdAt'] as Timestamp,
+      products: List<OrderProductModel>.from(
+        (map['products'] as List<dynamic>).map<OrderProductModel>(
+          (x) => OrderProductModel.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      shiprocketOrderId: map['shiprocketOrderId'] != null
+          ? (map['shiprocketOrderId'] as num).toInt()
+          : null,
+      shiprocketStatus: map['shiprocketStatus'] != null
+          ? map['shiprocketStatus'] as String
+          : null,
     );
   }
 
